@@ -1,0 +1,56 @@
+Топ-20 дополнительных площадок для анонсов листингов мемкоинов (на основе 2025 источников):
+1. Seedify  
+2. Polkastarter  
+3. DAO Maker  
+4. Enjinstarter  
+5. GameFi.org  
+6. BSCPad  
+7. Red Kite  
+8. TrustPad  
+9. PAID Network  
+10. BullPerks  
+11. SolRazr  
+12. Solanium  
+13. StarLaunch  
+14. Flaunch  
+15. FourMeme  
+16. GFM  
+17. Bitget Launchpad  
+18. DxSale  
+19. Moonstarter  
+20. Solpad
+Объединенный JSON:  
+{  
+  "top_platforms": [  
+    { "id": 1, "name": "PushToken / Moonshot", "description": "агрегаторы и launchpad для новых монет icobench.com+7github.com+7nypost.com+7" },  
+    { "id": 2, "name": "CoinLaunch", "description": "платформа с календарём IDO/ICO/IEO ninjapromo.io+4coinlaunch.space+4icobench.com+4" },  
+    { "id": 3, "name": "ICO Bench Launchpads", "description": "рейтинг сервисов вроде yPredict, Dash2Trade, Enjinstarter 99bitcoins.com+15icobench.com+15ninjapromo.io+15" },  
+    { "id": 4, "name": "NinjaPromo", "description": "публикует сборки IDO/launchpad (Seedify, Polkastarter и др.) ninjapromo.io" },  
+    { "id": 5, "name": "TheHolyCoins", "description": "справочник presalelaunchpads nypost.com+7theholycoins.com+7ninjapromo.io+7" },  
+    { "id": 6, "name": "99Bitcoins “Crypto Presales”", "description": "статья с топ11 presales, включая Token6900, Snorter Bot и др. coinlaunch.space+1399bitcoins.com+13coinspeaker.com+13" },  
+    { "id": 7, "name": "CoinGabbar", "description": "список горячих пресейлов (Nexchain, Retik, Solaxy, BlastUP) nypost.com+2coingabbar.com+2coincentral.com+2" },  
+    { "id": 8, "name": "CoinCentral", "description": "освещение Nexchain, Aigent Launchpad, WeWake Finance coincentral.com+1ninjapromo.io+1" },  
+    { "id": 9, "name": "CoinSpeaker", "description": "подборка топ presales (Solaxy, Snorter, BTC Bull) coinlaunch.space+8coinspeaker.com+899bitcoins.com+8" },  
+    { "id": 10, "name": "Pump.fun", "description": "упомянута экспертами как активный launchpad nypost.com" },  
+    { "id": 11, "name": "PinkSale / Pump.fun", "description": "популярные для мемпресейлов (упоминались ранее)" },  
+    { "id": 12, "name": "AcceleRaytor (Raydium)", "description": "launchpad для проектов на Solana en.cryptonomist.ch+599bitcoins.com+5nypost.com+5" },  
+    { "id": 13, "name": "Moonshot.xyz", "description": "агрегатор новых токенов (упомянут с DexScreener) 99bitcoins.com+1nypost.com+1" },  
+    { "id": 14, "name": "CoinSniper", "description": "агрегатор анонсов presaleпроектов theholycoins.com+1nypost.com+1" },  
+    { "id": 15, "name": "Best Wallet Launchpad", "description": "интегрированная пресейлплатформа в кошельке nypost.com+2icobench.com+2nypost.com+2" },  
+    { "id": 16, "name": "CoinLaunch", "description": "календарь IDO/ICO/IEO: coinlaunch.space/projects/whitelist github.com+6bananagun.io+6github.com+6reddit.com+13bananagun.io+13coinlaunch.space+13" },  
+    { "id": 17, "name": "ICO Bench Launchpads", "description": "рейтинг launchpadплатформ: icobench.com/cryptocurrency/best-crypto-launchpad" },  
+    { "id": 18, "name": "NinjaPromo", "description": "подбор launchpadпроектов: ninjapromo.io/top-crypto-launchpads bananagun.io" },  
+    { "id": 19, "name": "TheHolyCoins", "description": "справочник launchpadмест: theholycoins.com/explore/presale-launchpads snortertoken.com+1en.cryptonomist.ch+1" },  
+    { "id": 20, "name": "99Bitcoins – Crypto Presales", "description": "обзор presaleпроектов: 99bitcoins.com/cryptocurrency/crypto-presales en.cryptonomist.ch" },  
+    { "id": 21, "name": "CoinGabbar", "description": "горячие presales (Retik, Solaxy и др.): coingabbar.com/en/list-of-top-crypto-tokens-presale" },  
+    { "id": 22, "name": "CoinCentral", "description": "обзоры Nexchain, WeWake Finance: coincentral.com/2025s-best-presale-crypto-list …" },  
+    { "id": 23, "name": "CoinSpeaker", "description": "Presales guide: coinspeaker.com/guides/best-crypto-presales" },  
+    { "id": 24, "name": "Pump.fun", "description": "launchpad для мемкоинов: pump.fun/sniperбот GitHub? (см. GitHub Sniper Bot) t.me+15github.com+15github.com+15" },  
+    { "id": 25, "name": "PinkSale / Pump.fun", "description": "популярные presaleплатформы: pumping at Pump.fun cryptoninjas.net+2coinspeaker.com+2coinspeaker.com+2" },  
+    { "id": 26, "name": "AcceleRaytor (Raydium)", "description": "Solanalaunchpad: acceleRaytor Raydium mention github.com+6quicknode.com+6github.com+6" },  
+    { "id": 27, "name": "Moonshot.xyz", "description": "агрегатор новых токенов: упоминание через DexScreener integration bananagun.io" },  
+    { "id": 28, "name": "CoinSniper", "description": "агрегатор presaleанонсов: как на TheHolyCoins" },  
+    { "id": 29, "name": "Best Wallet Launchpad", "description": "в составе кошелька: упоминание в ICOBench" },  
+    { "id": 30, "name": "PushToken / Moonshot", "description": "упомянуты разрабами ботов (см. GitHub Sniper Bot)" }  
+  ]  
+}

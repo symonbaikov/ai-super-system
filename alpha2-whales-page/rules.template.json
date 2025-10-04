@@ -1,0 +1,303 @@
+{
+  "rules": [
+    {
+      "rule_id": "prepool_v1",
+      "name": "Pre-Pool Tester",
+      "inputs": [
+        "onchain.transfers"
+      ],
+      "params": {
+        "time_window_min": 30,
+        "min_test_transfers": 5,
+        "min_unique_addresses": 4,
+        "min_test_value_sol": 0.01
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "test_transfer_count",
+          "op": ">=",
+          "value": "params.min_test_transfers"
+        },
+        {
+          "type": "aggregate",
+          "field": "unique_from_addresses",
+          "op": ">=",
+          "value": "params.min_unique_addresses"
+        },
+        {
+          "type": "aggregate",
+          "field": "avg_test_value_sol",
+          "op": ">=",
+          "value": "params.min_test_value_sol"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_candidate",
+          "scenario": "PrePool",
+          "priority_weight": 0.6
+        }
+      ]
+    },
+    {
+      "rule_id": "whale_cluster_v1",
+      "name": "Whale Cluster Detector",
+      "inputs": [
+        "onchain.transfers",
+        "onchain.swaps",
+        "social.events"
+      ],
+      "params": {
+        "time_window_min": 10,
+        "min_whales": 5,
+        "whale_value_sol": 50,
+        "min_followers": 100,
+        "follower_window_sec": 300
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "unique_whale_addresses",
+          "op": ">=",
+          "value": "params.min_whales"
+        },
+        {
+          "type": "aggregate",
+          "field": "followers_in_window",
+          "op": ">=",
+          "value": "params.min_followers"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_candidate",
+          "scenario": "WhaleCluster",
+          "priority_weight": 0.8
+        }
+      ]
+    },
+    {
+      "rule_id": "social_whale_v1",
+      "name": "Whale + Social Burst",
+      "inputs": [
+        "onchain.transfers",
+        "social.events"
+      ],
+      "params": {
+        "social_window_min": 15,
+        "social_spike_multiplier": 5,
+        "min_sources": 2,
+        "min_sentiment": 0.2
+      },
+      "conditions": [
+        {
+          "type": "flag",
+          "field": "on_chain_whale_event",
+          "eq": true
+        },
+        {
+          "type": "aggregate",
+          "field": "social_burst_score",
+          "op": ">",
+          "value": 0.5
+        },
+        {
+          "type": "aggregate",
+          "field": "verified_sources",
+          "op": ">=",
+          "value": "params.min_sources"
+        },
+        {
+          "type": "aggregate",
+          "field": "sentiment",
+          "op": ">=",
+          "value": "params.min_sentiment"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_candidate",
+          "scenario": "SocialWhale",
+          "priority_weight": 0.7
+        }
+      ]
+    },
+    {
+      "rule_id": "big_swap_v1",
+      "name": "Big Swap Hunter",
+      "inputs": [
+        "onchain.swaps"
+      ],
+      "params": {
+        "min_swap_sol": 5,
+        "route_consistency_min": 0.8,
+        "time_window_sec": 90,
+        "min_price_impact": 0.01
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "swap_value_sol",
+          "op": ">=",
+          "value": "params.min_swap_sol"
+        },
+        {
+          "type": "aggregate",
+          "field": "route_consistency",
+          "op": ">=",
+          "value": "params.route_consistency_min"
+        },
+        {
+          "type": "aggregate",
+          "field": "expected_price_impact",
+          "op": ">=",
+          "value": "params.min_price_impact"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_candidate",
+          "scenario": "BigSwap",
+          "priority_weight": 0.55
+        }
+      ]
+    },
+    {
+      "rule_id": "lp_manip_v1",
+      "name": "LP & Route Manipulation",
+      "inputs": [
+        "onchain.lp_events"
+      ],
+      "params": {
+        "lp_move_percent": 30,
+        "lp_moves_24h": 2
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "lp_move_percent",
+          "op": ">=",
+          "value": "params.lp_move_percent"
+        },
+        {
+          "type": "aggregate",
+          "field": "lp_moves_24h",
+          "op": ">=",
+          "value": "params.lp_moves_24h"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_candidate",
+          "scenario": "LPManip",
+          "priority_weight": 0.5
+        }
+      ]
+    },
+    {
+      "rule_id": "anti_rug_v1",
+      "name": "Anti‑Rug Gate",
+      "inputs": [
+        "sec.rugcheck",
+        "sec.solsniffer",
+        "onchain.lp_events"
+      ],
+      "params": {
+        "max_risk": 0.6,
+        "require_lp_lock_or_burn": true,
+        "max_dev_supply_pct": 30
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "rug_risk",
+          "op": "<=",
+          "value": "params.max_risk"
+        },
+        {
+          "type": "gate",
+          "field": "lp_locked_or_burned",
+          "eq": "params.require_lp_lock_or_burn"
+        },
+        {
+          "type": "aggregate",
+          "field": "dev_supply_pct",
+          "op": "<=",
+          "value": "params.max_dev_supply_pct"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_gate",
+          "key": "risk_ok",
+          "value": true
+        }
+      ]
+    },
+    {
+      "rule_id": "copynet_v1",
+      "name": "Copy Trader Surge",
+      "inputs": [
+        "onchain.swaps"
+      ],
+      "params": {
+        "follower_window_sec": 300,
+        "min_followers": 100,
+        "bot_pattern_similarity_max": 0.9
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "followers_in_window",
+          "op": ">=",
+          "value": "params.min_followers"
+        },
+        {
+          "type": "aggregate",
+          "field": "bot_signature_similarity",
+          "op": "<=",
+          "value": "params.bot_pattern_similarity_max"
+        }
+      ],
+      "actions": [
+        {
+          "type": "emit_tag",
+          "tag": "CopyNet"
+        }
+      ]
+    },
+    {
+      "rule_id": "trade_limit_v1",
+      "name": "Trade Limits",
+      "inputs": [
+        "decision"
+      ],
+      "params": {
+        "max_auto_buy_sol": 0.5,
+        "max_positions": 3
+      },
+      "conditions": [
+        {
+          "type": "aggregate",
+          "field": "current_positions",
+          "op": "<",
+          "value": "params.max_positions"
+        },
+        {
+          "type": "aggregate",
+          "field": "auto_buy_amount_sol",
+          "op": "<=",
+          "value": "params.max_auto_buy_sol"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_gate",
+          "key": "trade_limit_ok",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

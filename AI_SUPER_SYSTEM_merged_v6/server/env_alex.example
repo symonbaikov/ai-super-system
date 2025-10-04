@@ -1,0 +1,29 @@
+# === Solana & Blockchain APIs
+QUICKNODE_HTTP_URL="https://quiet-sleek-pine.solana-mainnet.quiknode.pro/14b934d36750863499f8ecf75c6da55fbc0d0f2b/"
+QUICKNODE_WSS_URL="wss://quiet-sleek-pine.solana-mainnet.quiknode.pro/14b934d36750863499f8ecf75c6da55fbc0d0f2b/"
+HELIUS_API_KEY="adaf987a-fc3c-420f-ba7c-3eb0a8f916df"
+
+# === Parsing & Data APIs
+DATAIMPULSE_API_KEY=""
+
+# === Market Data APIs
+DEXSCREENER_BASE_URL="https://api.dexscreener.com/latest/dex"
+BIRDEYE_API_KEY="3ff34d53fb72460383950dd49bedd0c6"
+SOLSCAN_API_KEY=""
+
+# === Security APIs
+RUGCHECK_API_KEY="CHAINBASE"
+GOPLUS_TOKEN_SECURITY_KEY=""
+GOPLUS_RUG_PULL_KEY=""
+GOPLUS_SIMULATION_KEY=""
+
+# === Models (paths or API)
+MISTRAL_7B_PATH=""
+LLAMA3_70B_PATH=""
+
+# === Other
+LOG_LEVEL="info"
+ENVIRONMENT="development"
+KEY_ROTATION_ENABLED=true
+
+# NOTE: Raw keys are stored in server/secrets/keys_raw.txt (not committed).

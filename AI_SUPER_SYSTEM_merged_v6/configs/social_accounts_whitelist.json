@@ -1,0 +1,8 @@
+{
+  "note": "Populate via /addons/terms/import-accounts using docs/raw_sources/*.docx",
+  "pending_import": true,
+  "telegram": [],
+  "twitter": [],
+  "twitter_total": 0,
+  "version": "2025-09-06"
+}

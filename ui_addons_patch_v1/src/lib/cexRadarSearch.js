@@ -1,0 +1,1 @@
+export async function runCexSearch(q){await new Promise(r=>setTimeout(r,300));return[{name:"DEMO-CEX",contract:q.slice(0,8)+"...",mint:"MintDemo",time:new Date().toISOString(),open:"https://birdeye.so"}];}

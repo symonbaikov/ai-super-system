@@ -1,0 +1,77 @@
+# CONFIG for Phase-1 (Twitter-only seed harvesting)
+
+frequency:
+  base_scan_minutes: 5         # scan celebrity accounts every 5 minutes
+  burst_scan_minutes: 1        # tighten to 1 minute for promoted seeds
+  burst_decay_minutes: 20      # if hype cools for 20m, return to base
+windows:
+  engagement_minutes: 30       # window for z-score
+  echo_minutes: 20             # window for unique author echo
+
+thresholds:
+  memeability_min: 0.60        # step-up to burst
+  memeability_yes: 0.75        # mark as Seed=YES
+  echo_unique_authors: 3       # min distinct authors in echo window
+  emoji_cluster_min: 2         # emojis from EMOJI_HINTS to boost
+weights:
+  memeability: 1.0
+  animal_onoma_bonus: 0.3
+  celebrity_weight: 0.8
+  engagement_zscore: 0.6
+  echo_bonus: 0.5
+  emoji_bonus: 0.2
+
+scoring_rules:
+  - rule: "promote_to_burst"
+    when:
+      any:
+        - condition: "unique_authors >= thresholds.echo_unique_authors"
+        - condition: "author_in_trusted_list == true"
+    and:
+      any:
+        - condition: "has_candidate_from_whitelist == true"
+        - condition: "has_ocr_anchor == true"
+        - condition: "emoji_hits >= thresholds.emoji_cluster_min"
+    and_also:
+      - condition: "memeability >= thresholds.memeability_min"
+
+  - rule: "seed_yes"
+    when:
+      all:
+        - condition: "memeability >= thresholds.memeability_yes"
+        - condition: "growth_echo_rate >= 2.0"
+      any:
+        - condition: "first_ticker_variant_seen == true"
+        - condition: "cross_author_image_echo == true"
+
+blacklist:
+  # generic noise to drop early
+  - today
+  - morning
+  - great
+  - happy
+  - check
+  - link
+  - subscribe
+  - meeting
+  - policy
+  - vote
+  - report
+  - giveaway
+  - airdrop
+  - whitelist
+  - referral
+  - presale
+  - bounty
+  - free
+  - claim
+
+io:
+  allow_runtime_updates: true   # enable live teaching
+  endpoints:
+    upload_docs: "/upload"
+    teach_seed: "/teach/seed"
+    teach_deny: "/teach/denylist"
+    export_snapshot: "/export_snapshot"
+    import_snapshot: "/import_snapshot"
+  snapshot_format: "v1"

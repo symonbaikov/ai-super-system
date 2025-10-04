@@ -1,0 +1,62 @@
+{
+  "version": "2.0.0",
+  "runtime": {
+    "manual_mode": true,
+    "max_run_hours": 8,
+    "retry": {
+      "max": 3,
+      "backoff_s": [
+        1,
+        3,
+        9
+      ]
+    }
+  },
+  "llm_router": {
+    "routes": [
+      "scout",
+      "analyst",
+      "judge"
+    ],
+    "fallback_enabled": true
+  },
+  "profiles": {
+    "twitter": {
+      "route": "scout",
+      "memeability_min": 0.6,
+      "freq_min": {
+        "5m": 3,
+        "15m": 7
+      },
+      "celeb_override": true
+    },
+    "pump": {
+      "route": "analyst",
+      "age_pool_max_min": 60,
+      "lp_min_usd": 2000,
+      "vol_5m_min_usd": 5000,
+      "b_s_min": 1.8,
+      "trades_5m_min": 10
+    },
+    "whales30d": {
+      "route": "analyst",
+      "win_rate_min": 0.6,
+      "pel_min": 1.5,
+      "median_hold_days_min": 1,
+      "fast_sells_max_pct": 20
+    },
+    "find_token": {
+      "route": "analyst",
+      "strict_mint_required": true
+    },
+    "listings": {
+      "route": "scout",
+      "days_max": 30
+    }
+  },
+  "judge": {
+    "route": "judge",
+    "majority_vote": true,
+    "tie_breaker": "analyst"
+  }
+}

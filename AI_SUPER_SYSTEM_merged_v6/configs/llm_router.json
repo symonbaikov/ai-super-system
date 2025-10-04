@@ -1,0 +1,65 @@
+{
+  "version": "3.0.0",
+  "generated_at": "2025-09-28T11:16:31.880194Z",
+  "routes": {
+    "scout": {
+      "provider": "groq",
+      "model": "llama3-8b-instruct",
+      "max_tokens": 512,
+      "max_latency_ms": 300,
+      "temperature": 0.2,
+      "use_cases": [
+        "classification",
+        "filters",
+        "entity_extract",
+        "memeability",
+        "antispam",
+        "short_summary"
+      ]
+    },
+    "analyst": {
+      "provider": "groq",
+      "model": "llama3-70b-instruct",
+      "max_tokens": 4096,
+      "max_latency_ms": 1200,
+      "temperature": 0.2,
+      "use_cases": [
+        "reasoning",
+        "merge_insights",
+        "risk_explain",
+        "report_md",
+        "report_docx"
+      ]
+    },
+    "judge": {
+      "provider": "openrouter",
+      "model": "mixtral-8x7b-instruct",
+      "max_tokens": 1024,
+      "max_latency_ms": 800,
+      "temperature": 0.0,
+      "use_cases": [
+        "consistency_check",
+        "policy_gate",
+        "hallucination_block",
+        "decision_vote"
+      ]
+    }
+  },
+  "fallback_chain": [
+    "scout",
+    "analyst",
+    "judge"
+  ],
+  "ensemble": {
+    "enabled": true,
+    "policy": {
+      "decision": "majority_vote",
+      "fields": [
+        "risk",
+        "decision",
+        "reasons"
+      ],
+      "tie_breaker": "analyst"
+    }
+  }
+}

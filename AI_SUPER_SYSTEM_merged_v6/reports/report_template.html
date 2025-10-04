@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Отчёт по тикеру — {{token}}</title>
+<style>
+body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0b0f14;color:#e8eef5;margin:0;padding:16px}
+.card{background:#0f1720;border:1px solid #1b2532;border-radius:16px;padding:16px;margin-bottom:12px}
+.tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid #213047;background:#162233;margin-right:6px}
+h1{font-size:20px;margin:0 0 8px}
+h2{font-size:16px;margin:0 0 6px}
+small{opacity:.8}
+</style></head>
+<body>
+<div class="card">
+  <h1>{{token}} <span id="badges"></span></h1>
+  <div><span class="tag">🔥 {{hype}}</span> <span class="tag">🐳 {{whales}}</span> <span class="tag">🛡 {{risk}}</span></div>
+  <small>Сгенерировано: {{ts}}</small>
+</div>
+
+<div class="card">
+  <h2>OG / Клоны</h2>
+  <div>OG: <b>{{og}}</b>, клонов: <b>{{clones}}</b></div>
+  <div>Оригинальные выражения/картинки: {{originals_count}}</div>
+  <ul>{{originals_list}}</ul>
+</div>
+
+<div class="card">
+  <h2>Соц‑эхо (X/Twitter приоритетом)</h2>
+  <div>Твиты: <b>{{tweets}}</b>, Ретвиты: <b>{{retweets}}</b>, Z-score: <b>{{zscore}}</b></div>
+  <div>Первый источник: <a href="{{first_src}}" target="_blank">{{first_src}}</a></div>
+</div>
+
+<div class="card">
+  <h2>Киты/Смарт‑деньги</h2>
+  <div>Китов: <b>{{whale_count}}</b>, Средний win rate: <b>{{avg_win_rate}}%</b>, Средний PnL: <b>{{avg_pnl}}%</b></div>
+  <div>Держатели 1–7 дней: <b>{{holder_1_7}}</b></div>
+</div>
+
+<div class="card">
+  <h2>Риск‑оценка</h2>
+  <div>Fail‑closed: <b>{{fail_closed}}</b>, Flags: {{flags}}</div>
+</div>
+
+<div class="card">
+  <h2>Торговый план</h2>
+  <div>TP: ×{{tp}} | SL: {{sl}}% | TSL: {{tsl}}%</div>
+</div>
+</body></html>

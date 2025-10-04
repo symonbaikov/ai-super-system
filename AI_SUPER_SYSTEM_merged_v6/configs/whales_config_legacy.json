@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "window_days": 30,
+  "sources": [
+    "Helius",
+    "SolanaFM"
+  ],
+  "filters": {
+    "win_rate_min": 0.6,
+    "pel_min": 1.5,
+    "median_hold_days_min": 1,
+    "fast_sells_max_pct": 20,
+    "avg_trade_size_min_sol": 50
+  },
+  "watchlist_path": "config/whales_watchlist.json",
+  "devs_top": {
+    "enabled": true,
+    "limit": 20,
+    "min_success_mc_usd": 100000,
+    "exclude_rug_history": true
+  }
+}

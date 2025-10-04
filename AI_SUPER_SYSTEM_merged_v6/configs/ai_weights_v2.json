@@ -1,0 +1,67 @@
+{
+  "features": {
+    "DEV_HOLD_PCT": {
+      "max": 10,
+      "weight": 0.05
+    },
+    "HOLDERS": {
+      "min": 20,
+      "weight": 0.08
+    },
+    "LIQ_USD": {
+      "max": 200000,
+      "min": 10000,
+      "weight": 0.12
+    },
+    "LP_LOCK_PCT": {
+      "min": 70,
+      "weight": 0.1
+    },
+    "MCAP_USD": {
+      "max": 200000,
+      "min": 7000,
+      "weight": 0.12
+    },
+    "SOCIAL_BURST": {
+      "min": 3,
+      "weight": 0.1
+    },
+    "TOP_HOLDER_PCT": {
+      "max": 20,
+      "weight": 0.1
+    },
+    "UNIQUENESS_SCORE": {
+      "min": 0.5,
+      "weight": 0.05
+    },
+    "VOL_5M_USD": {
+      "max": 30000,
+      "min": 3200,
+      "weight": 0.16
+    },
+    "WHALES_IN_USD": {
+      "min": 10000,
+      "weight": 0.12
+    }
+  },
+  "generated_at": "2025-09-28T10:51:20.960705Z",
+  "thresholds": {
+    "AUTO_ALERT": {
+      "holders_growth_10m_min": 15,
+      "vol_5m_spike_mult": 2.0,
+      "whales_in_usd_min": 10000
+    },
+    "AUTO_GRADUATE": {
+      "lp_lock_pct_min": 70,
+      "mcap_usd_min": 200000,
+      "vol_5m_usd_min": 30000
+    },
+    "RISK_REJECT": {
+      "blacklist_functions": true,
+      "honeypot": true,
+      "lp_lock_pct_lt": 50,
+      "top_holder_pct_gt": 35
+    }
+  },
+  "version": "2.2.0"
+}

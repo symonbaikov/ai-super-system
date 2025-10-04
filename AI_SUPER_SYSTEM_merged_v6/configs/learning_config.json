@@ -1,0 +1,49 @@
+{
+  "version": "3.0.0",
+  "online_learning": {
+    "enabled": true,
+    "features": [
+      "zscore_paths",
+      "engagement_spikes",
+      "whale_patterns",
+      "risk_outcomes",
+      "trade_outcomes"
+    ],
+    "update_interval_min": 60,
+    "safe_bounds": true,
+    "max_change_pct_per_day": 10
+  },
+  "ingestion": {
+    "allow_uploads": [
+      "image",
+      "text",
+      "pdf",
+      "epub",
+      "video"
+    ],
+    "chunking": {
+      "size": 1200,
+      "overlap": 200
+    },
+    "embeddings": {
+      "store": "chroma",
+      "collection": "knowledge"
+    },
+    "ocr": {
+      "enabled": true
+    }
+  },
+  "feedback": {
+    "endpoint": "/learn/feedback",
+    "schema": {
+      "action": [
+        "BUY",
+        "SELL",
+        "WATCH",
+        "IGNORE"
+      ],
+      "reason": "string",
+      "result_pnl_pct": "number"
+    }
+  }
+}

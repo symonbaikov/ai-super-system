@@ -1,0 +1,27 @@
+{
+  "version": "1.1.0",
+  "fail_closed": true,
+  "critical": {
+    "mint_authority_active": true,
+    "freeze_authority_active": true,
+    "balance_mutation": true,
+    "non_transferable": true,
+    "rugcheck_rugged_true": true,
+    "rugcheck_min_score": 20,
+    "solsniffer_min_score": 3
+  },
+  "base_requirements": {
+    "lp_locked_or_burned": true,
+    "max_fees_pct": 10,
+    "top10_holders_max_pct": 30
+  },
+  "override_policy": {
+    "buy_allowed": false,
+    "needs_override": true,
+    "required": {
+      "sl": 0.03,
+      "slippage_cap_pct": 0.5,
+      "max_buy_pct_lp": 1.0
+    }
+  }
+}

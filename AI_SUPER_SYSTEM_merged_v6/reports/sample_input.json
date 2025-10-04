@@ -1,0 +1,35 @@
+{
+  "token": "PEPE2025",
+  "hype": "HIGH",
+  "whales": "MID",
+  "risk": "🛡 fail-closed пройден",
+  "og": true,
+  "clones": 2,
+  "originals": [
+    {
+      "type": "text_hash",
+      "hash": "txthash_ab12...cd34",
+      "src": "https://twitter.com/someOG/status/1",
+      "ts": "2025-09-07T12:00:00Z"
+    },
+    {
+      "type": "img_phash",
+      "hash": "imgphash_9f0a...77b2",
+      "src": "https://twitter.com/og/status/2/photo/1",
+      "ts": "2025-09-07T12:01:30Z"
+    }
+  ],
+  "tweets": 128,
+  "retweets": 79,
+  "zscore": 3.2,
+  "first_src": "https://twitter.com/og/status/1",
+  "whale_count": 4,
+  "avg_win_rate": 62.5,
+  "avg_pnl": 35.0,
+  "holder_1_7": 3,
+  "fail_closed": false,
+  "flags": [],
+  "tp": "2/3",
+  "sl": 25,
+  "tsl": 15
+}

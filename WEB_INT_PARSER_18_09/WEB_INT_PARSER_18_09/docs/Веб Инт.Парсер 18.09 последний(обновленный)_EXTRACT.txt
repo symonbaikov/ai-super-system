@@ -1,0 +1,571 @@
+
+Самый последний , обновленный Веб Интерфейс Парсера  Alpha 2-Super parser
+
+
+import React, { useMemo, useRef, useState, useEffect, useContext, createContext } from &quot;react&quot;;
+import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from &quot;recharts&quot;;
+
+// Alpha2 — Super Parser AI (alt UI) — обновлённая версия с CEX Radar и Alerts
+// Один файл для Canvas: Dark UI, офлайн демо. Все данные сохраняются в localStorage.
+// Вкладки: Сигналы • Аккаунты • Фильтры • Алерты • Helius • CEX Radar • Учиться • Чат • Логи
+// Дополнено: кнопка &quot;CEX Radar&quot; в шапке Helius, статусстрока, Watchлисты, таймер листинга, Ask AI.
+
+// ───── helpers
+const cls = (...a) =&gt; a.filter(Boolean).join(&quot; &quot;);
+const pretty = (v) =&gt; (v===0?0:(v|| &quot;—&quot;));
+const download = (name, text, mime) =&gt; { const blob = new Blob([text], {type: mime||&quot;text/plain&quot;}); const url = URL.createObjectURL(blob); const a=document.createElement(&quot;a&quot;); a.href=url; a.download=name; a.click(); URL.revokeObjectURL(url); };
+const loadLS = (k, d) =&gt; { try{ const v = localStorage.getItem(k); return v? JSON.parse(v): d; }catch{return d;} };
+const saveLS = (k, v) =&gt; { try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} };
+
+// ───── mini UI kit
+const Card = ({className, ...p}) =&gt; &lt;div className={cls(&quot;rounded-2xl border border-zinc-800 bg-zinc-950&quot;, className)} {...p}/&gt;;
+const CardHeader = ({className, right, children, ...p}) =&gt; &lt;div className={cls(&quot;px-4 py-3 border-b border-zinc-800 flex items-center justify-between&quot;, className)} {...p}&gt;&lt;div&gt;{children}&lt;/div&gt;{right}&lt;/div&gt;;
+const CardTitle = ({className, ...p}) =&gt; &lt;div className={cls(&quot;text-sm font-semibold&quot;, className)} {...p}/&gt;;
+const CardContent = ({className, ...p}) =&gt; &lt;div className={cls(&quot;p-4&quot;, className)} {...p}/&gt;;
+const Button = ({variant=&quot;solid&quot;, size=&quot;md&quot;, className, ...p}) =&gt; (
+  &lt;button
+    className={cls(
+      &quot;inline-flex items-center justify-center rounded-lg transition-colors&quot;,
+      size===&quot;sm&quot;?&quot;h-8 px-3 text-sm&quot;:&quot;h-10 px-4 text-sm&quot;,
+      variant===&quot;ghost&quot;?&quot;bg-transparent border border-zinc-700 hover:bg-zinc-900&quot;:
+      variant===&quot;danger&quot;?&quot;bg-red-600 hover:bg-red-500&quot;:
+      variant===&quot;success&quot;?&quot;bg-emerald-600 hover:bg-emerald-500&quot;:&quot;bg-zinc-800 hover:bg-zinc-700&quot;,
+      className
+    )}
+    {...p}
+  /&gt;
+);
+const Input = React.forwardRef((props, ref)=&gt; (
+  &lt;input ref={ref} {...props} className={cls(&quot;h-10 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 text-sm outline-none focus:ring-1 focus:ring-zinc-600&quot;, props.className)}/&gt;
+));
+const NumberInput = (props)=&gt; &lt;Input type=&quot;number&quot; {...props}/&gt;;
+const Textarea = React.forwardRef((props, ref)=&gt; (
+  &lt;textarea ref={ref} {...props} className={cls(&quot;min-h-[120px] w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-zinc-600&quot;, props.className)}/&gt;
+));
+const Label = (p)=&gt; &lt;label className={cls(&quot;text-xs text-zinc-400&quot;, p.className)} {...p}/&gt;;
+const Badge = ({children, tone=&quot;default&quot;, className}) =&gt; (
+  &lt;span className={cls(&quot;inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium&quot;, tone===&quot;ok&quot;?&quot;bg-emerald-700 text-white&quot;:tone===&quot;warn&quot;?&quot;bg-amber-700 text-white&quot;:tone===&quot;bad&quot;?&quot;bg-red-700 text-white&quot;:&quot;bg-zinc-800 text-white&quot;, className)}&gt;{children}&lt;/span&gt;
+);
+
+// Tabs (контролируемые через контекст, чтобы переключать из разделов)
+const TabCtx = createContext({ val: &quot;signals&quot;, setVal: (v)=&gt;{} });
+const Tabs = ({value, onValueChange, children, className})=&gt;{
+  return (
+    &lt;TabCtx.Provider value={{val:value, setVal:onValueChange}}&gt;
+      &lt;div className={className}&gt;{children}&lt;/div&gt;
+    &lt;/TabCtx.Provider&gt;
+  );
+};
+const TabsList = ({className, children}) =&gt; &lt;div className={cls(&quot;flex flex-wrap gap-1 rounded-xl p-1 bg-zinc-900 border border-zinc-800&quot;, className)}&gt;{children}&lt;/div&gt;;
+const TabsTrigger = ({value, className, children}) =&gt; {
+  const {val, setVal} = useContext(TabCtx);
+  return &lt;button onClick={()=&gt;setVal(value)} className={cls(&quot;px-3 py-2 text-sm rounded-lg border&quot;, val===value?&quot;bg-zinc-800 border-zinc-700&quot;:&quot;bg-transparent border-transparent hover:bg-zinc-900&quot;, className)}&gt;{children}&lt;/button&gt;;
+};
+const TabsContent = ({value, className, children}) =&gt; { const {val}=useContext(TabCtx); return val===value? &lt;div className={cls(&quot;mt-4&quot;, className)}&gt;{children}&lt;/div&gt;: null; };
+
+// Table
+const Table = ({columns, data, onRowClick, emptyText}) =&gt; (
+  &lt;div className=&quot;w-full overflow-auto rounded-xl border border-zinc-800&quot;&gt;
+    &lt;table className=&quot;w-full text-left text-sm text-white&quot;&gt;
+      &lt;thead className=&quot;bg-zinc-900/60&quot;&gt;&lt;tr&gt;{columns.map(c=&gt; &lt;th key={c.key} className=&quot;px-4 py-3 font-medium whitespace-nowrap&quot;&gt;{c.title}&lt;/th&gt;)}&lt;/tr&gt;&lt;/thead&gt;
+      &lt;tbody&gt;
+        {(!data||data.length===0)&amp;&amp;(&lt;tr&gt;&lt;td colSpan={columns.length} className=&quot;px-4 py-10 text-center text-zinc-500&quot;&gt;{emptyText||&quot;Нет данных&quot;}&lt;/td&gt;&lt;/tr&gt;)}
+        {data.map((row,i)=&gt; (
+          &lt;tr key={row.id||i} className=&quot;border-t border-zinc-800/80 hover:bg-zinc-900/40&quot; onClick={()=&gt;onRowClick?.(row)}&gt;
+            {columns.map(c=&gt; &lt;td key={c.key} className=&quot;px-4 py-3 align-top&quot;&gt;{c.render? c.render(row): row[c.key]}&lt;/td&gt;)}
+          &lt;/tr&gt;
+        ))}
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+);
+
+// ───── seed/demo
+const seedSignals = [
+  { id:&quot;1&quot;, word:&quot;Dark MAGA&quot;, isOG:true, type:&quot;слово&quot;, detectedAt:&quot;2025-09-17 11:24&quot;, source:&quot;Twitter&quot;, author:&quot;@elonmusk&quot;, link:&quot;https://x.com/search?q=Dark%20MAGA&quot;, image:&quot;&quot;, tweetCount:842, communitySize:125000, nameChanges:0, spamScore:0.08, devTeam:null, communityLink:&quot;https://t.me/example&quot;, contract:&quot;&quot;, chain:&quot;Solana&quot;, safety:{noMint:true,burnLP:true,blacklist:false}, summary:&quot;Трендовая фраза — высокий шанс клонов. OG подтверждён.&quot; },
+  { id:&quot;2&quot;, word:&quot;STEVE&quot;, isOG:false, type:&quot;токен&quot;, detectedAt:&quot;2025-09-17 12:03&quot;, source:&quot;Telegram&quot;, author:&quot;@memelabs&quot;, link:&quot;https://t.me/memelabs/42&quot;, image:&quot;&quot;, tweetCount:120, communitySize:21000, nameChanges:2, spamScore:0.42, devTeam:&quot;unknown&quot;, communityLink:&quot;https://x.com/search?q=STEVE&quot;, contract:&quot;So1xxxx...abcd&quot;, chain:&quot;Solana&quot;, safety:{noMint:false,burnLP:false,blacklist:true}, summary:&quot;Много клонов, высокий спам-индекс. Вероятен быстрый памп/дамп.&quot; }
+];
+
+function genSeries(n=30, base=1){ const out=[]; let v=base; for(let i=0;i&lt;n;i++){ v = Math.max(0.1, v + (Math.random()-0.5)*0.05); out.push({i, v: +v.toFixed(4)});} return out; }
+
+async function fakeGroq(prompt){ await new Promise(r=&gt;setTimeout(r,250)); return { mixtral:`Стратегия: подтвердить комьюнити (≥200 тв/ч).\nПромпт: ${prompt.slice(0,120)}…`, llama:`OG: вход при burn LP + no mint.`, qwen:`Сигналы: ретвиты KOL, холдеры ≥250/ч. Трал 12%.`}; }
+
+// ───── App
+export default function App(){
+  // глобальные табы
+  const [tab, setTab] = useState(&quot;signals&quot;);
+
+  // running / экспорты / ключи
+  const fileInputRef = useRef(null);
+  const [running, setRunning] = useState(false);
+  const [keys,setKeys]=useState(loadLS(&quot;keys&quot;, {groq:&quot;&quot;, apify:&quot;&quot;, twitterBearer:&quot;&quot;, helius:&quot;&quot;, quicknode:&quot;&quot;, pumpfun:&quot;&quot;, nansen:&quot;&quot;}));
+  useEffect(()=&gt; saveLS(&quot;keys&quot;, keys), [keys]);
+
+  // сигналы
+  const [rows, setRows] = useState(seedSignals);
+  const [query, setQuery] = useState(&quot;&quot;);
+  const [onlyOG, setOnlyOG] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [cadenceMin, setCadenceMin] = useState(5);
+
+  // alerts &amp; logs
+  const [alerts, setAlerts] = useState(loadLS(&quot;alerts&quot;, [])); // {ts,type,msg,asset}
+  useEffect(()=&gt; saveLS(&quot;alerts&quot;, alerts), [alerts]);
+  const [unread, setUnread] = useState(0);
+  useEffect(()=&gt; setUnread(alerts.filter(a=&gt;!a.read).length), [alerts]);
+  const [logs,setLogs]=useState([]);
+
+  // watchлисты
+  const [watchCEX, setWatchCEX] = useState(loadLS(&quot;watchCEX&quot;, [])); // массив строк (тикер/контракт)
+  useEffect(()=&gt; saveLS(&quot;watchCEX&quot;, watchCEX), [watchCEX]);
+  const [watchOld, setWatchOld] = useState(loadLS(&quot;watchOld&quot;, [])); // для раздела Alerts — старые токены с потенциалом
+  useEffect(()=&gt; saveLS(&quot;watchOld&quot;, watchOld), [watchOld]);
+
+  // CEX Radar
+  const [cexQuery, setCexQuery] = useState(&quot;&quot;);
+  const [cexOnlyOG, setCexOnlyOG] = useState(true);
+  const [pollSec, setPollSec] = useState(loadLS(&quot;pollSec&quot;, 10));
+  useEffect(()=&gt; saveLS(&quot;pollSec&quot;, pollSec), [pollSec]);
+  const [statusLine, setStatusLine] = useState({helius:&quot;—&quot;, signals:&quot;—&quot;, filters:&quot;#sol #new #pump&quot;, ai:&quot;вход малым, SL 20%&quot;});
+  const [cexRows, setCexRows] = useState([]); // таблица по биржам
+  const [hovered, setHovered] = useState(null); // id строки для поповера графика
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [triggers, setTriggers] = useState(loadLS(&quot;alertTriggers&quot;, {volume15m:[10000,100000], priceJump:5}));
+  useEffect(()=&gt; saveLS(&quot;alertTriggers&quot;, triggers), [triggers]);
+
+  // Helius имитация: статусстрока с обновлением
+  useEffect(()=&gt;{
+    const i = setInterval(()=&gt;{
+      const a = [&quot;swap +$&quot;+(1000+Math.random()*9000).toFixed(0), `liq ${Math.random()&gt;0.5?&quot;+&quot;:&quot;-&quot;}${(5+Math.random()*20).toFixed(0)}%/10m`];
+      const s = [&quot;Pump↑&quot;,&quot;Spread↓&quot;,&quot;Vol↑&quot;][Math.floor(Math.random()*3)];
+      setStatusLine(v=&gt;({...v, helius: a.join(&quot;, &quot;), signals: s }));
+    }, 3000);
+    return ()=&gt;clearInterval(i);
+  },[]);
+
+  // Поллинг триггеров для Alerts
+  useEffect(()=&gt;{
+    const loop = setInterval(()=&gt;{
+      // имитация пробуждения старых токенов
+      if(watchOld.length){
+        const pick = watchOld[Math.floor(Math.random()*watchOld.length)];
+        if(Math.random()&gt;0.7){
+          const hit = Math.random()&gt;0.5? `объём &gt; $${triggers.volume15m[0]} за 15м` : `объём &gt; $${triggers.volume15m[1]} за 15м`;
+          pushAlert({type:&quot;wake&quot;, asset:pick, msg:`Проснулся: ${hit}`});
+        }
+      }
+      // имитация листинга из CEX Radar
+      if(timerRunning &amp;&amp; watchCEX.length &amp;&amp; Math.random()&gt;0.6){
+        const t = watchCEX[0];
+        pushAlert({type:&quot;listing&quot;, asset:t, msg:`Листинг начался на ${[&quot;Binance&quot;,&quot;OKX&quot;,&quot;Bybit&quot;,&quot;MEXC&quot;,&quot;Gate&quot;,&quot;HTX&quot;][Math.floor(Math.random()*6)]}`});
+        setTimerRunning(false);
+      }
+    }, pollSec*1000);
+    return ()=&gt;clearInterval(loop);
+  }, [watchOld, watchCEX, timerRunning, pollSec, triggers]);
+
+  function pushAlert(a){ setAlerts(x=&gt;[{ts:new Date().toISOString(), read:false, ...a}, ...x].slice(0,200)); }
+
+  // фильтрация сигналов
+  const filtered = useMemo(()=&gt; rows.filter(r=&gt; (!onlyOG||r.isOG) &amp;&amp; (!query || (`${r.word} ${r.author} ${r.summary||&quot;&quot;} ${r.contract||&quot;&quot;}`.toLowerCase().includes(query.toLowerCase())))), [rows,onlyOG,query]);
+
+  // экспорт/импорт
+  function exportJSON(){ download(&quot;signals.json&quot;, JSON.stringify(filtered,null,2), &quot;application/json&quot;); }
+  function exportCSV(){ const headers=[&quot;Название/слово&quot;,&quot;Дата/время&quot;,&quot;Автор&quot;,&quot;Твитов&quot;,&quot;Комьюнити&quot;,&quot;Смен&quot;,&quot;Спам%&quot;,&quot;Контракт&quot;,&quot;Резюме&quot;].join(&quot;,&quot;); const rowsCsv=filtered.map(r=&gt; [r.word,r.detectedAt,r.author,r.tweetCount??&quot;&quot;,r.communitySize??&quot;&quot;,r.nameChanges??&quot;&quot;, Math.round((r.spamScore??0)*100), r.contract??&quot;&quot;, (r.summary??&quot;&quot;).replace(/\n/g,&quot; &quot;)].map(x=&gt;`&quot;${String(x).replace(/&quot;/g,&apos;&quot;&quot;&apos;)}&quot;`).join(&quot;,&quot;)).join(&quot;\n&quot;); download(&quot;signals.csv&quot;, headers+&quot;\n&quot;+rowsCsv, &quot;text/csv;charset=utf-8&quot;); }
+  function exportDOC(){ const lines=filtered.map((r,i)=&gt; `${i+1}. ${r.word} — ${(r.summary||&quot;&quot;).replace(/\n/g,&quot; &quot;)}`); download(&quot;signals.doc&quot;, `Сигналы (предпросмотр)\n\n${lines.join(&quot;\n&quot;)}`, &quot;application/msword&quot;); }
+  function importJSONFile(file){ const R=new FileReader(); R.onload=()=&gt;{ try{ const data=JSON.parse(String(R.result)); if(Array.isArray(data)) setRows(data); }catch(e){ alert(&quot;Нужен JSONмассив сигналов&quot;); } }; R.readAsText(file); }
+
+  // Ask AI (общий)
+  async function askAI(asset){
+    const prompt = `Совет по активу ${asset}. Дай 1–2 строки: риск/вход/SL.`;
+    const out = await fakeGroq(prompt);
+    pushAlert({type:&quot;ai&quot;, asset, msg:`AI: ${(out.llama||&quot;Проверить риски&quot;).slice(0,120)}`});
+  }
+
+  // CEX Radar — поиск и отрисовка демо
+  function cexSearch(){
+    const base = (Math.random()*1.2+0.5).toFixed(4);
+    const mk = (ex)=&gt;({ exchange:ex, status:[&quot;scheduled&quot;,&quot;live&quot;,&quot;delisted&quot;][Math.floor(Math.random()*3)], price:+(base*(0.9+Math.random()*0.2)).toFixed(4), spread:+(Math.random()*0.8).toFixed(2), url:`https://example.com/${ex}/token/${encodeURIComponent(cexQuery||&quot;TOKEN&quot;)}`, series: genSeries(40, +base) });
+    setCexRows([mk(&quot;Binance&quot;), mk(&quot;OKX&quot;), mk(&quot;Bybit&quot;), mk(&quot;MEXC&quot;), mk(&quot;Gate&quot;), mk(&quot;HTX&quot;)]);
+    setStatusLine(v=&gt;({...v, ai:&quot;вход малым, SL 20%&quot;}));
+    setSelected({word: cexQuery||&quot;TOKEN&quot;, author:&quot;CEX Radar&quot;, source:&quot;exchanges&quot;, detectedAt:new Date().toISOString(), summary:&quot;Краткий анализ ИИ: Дивергенция цен между CEX, следим за спредом и объёмом.&quot;, contract: cexQuery.match(/^So/i)? cexQuery : &quot;—&quot;});
+  }
+  function watchAsset(){ if(!cexQuery) return; if(!watchCEX.includes(cexQuery)){ const next=[cexQuery, ...watchCEX].slice(0,100); setWatchCEX(next); pushAlert({type:&quot;watch&quot;, asset: cexQuery, msg:&quot;Добавлен в Watch (CEX Radar)&quot;}); } }
+  function startTimer(){ if(!watchCEX.length &amp;&amp; !cexQuery){ alert(&quot;Добавьте актив в Watch&quot;); return; } if(cexQuery &amp;&amp; !watchCEX.includes(cexQuery)) watchAsset(); setTimerRunning(true); pushAlert({type:&quot;timer&quot;, asset: cexQuery||watchCEX[0], msg:&quot;Таймер запущен — отслеживаем старт листинга&quot;}); }
+
+  // UI компонентов
+  const columnsSignals=[
+    { key:&quot;word&quot;, title:&quot;Название / слово&quot;, render:(r)=&gt; (
+      &lt;div className=&quot;flex items-center gap-3&quot;&gt;
+        &lt;div className=&quot;size-9 rounded-lg bg-zinc-800&quot;/&gt;
+        &lt;div&gt;
+          &lt;div className=&quot;font-medium&quot;&gt;{r.word}&lt;/div&gt;
+          &lt;div className=&quot;text-[11px] text-zinc-500&quot;&gt;{r.type} · {r.chain||&quot;-&quot;}&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;Badge tone={r.isOG?&quot;ok&quot;:&quot;&quot;} className=&quot;ml-2&quot;&gt;{r.isOG?&quot;OG&quot;:&quot;Clone&quot;}&lt;/Badge&gt;
+      &lt;/div&gt;
+    )},
+    { key:&quot;detectedAt&quot;, title:&quot;Дата/время&quot; },
+    { key:&quot;author&quot;, title:&quot;Автор&quot;, render:(r)=&gt; &lt;a className=&quot;text-sky-300&quot; href={r.link} target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;{r.author}&lt;/a&gt; },
+    { key:&quot;metrics&quot;, title:&quot;Метрики&quot;, render:(r)=&gt; &lt;div className=&quot;text-xs text-zinc-300 leading-5&quot;&gt;Твитов: &lt;b&gt;{r.tweetCount??&quot;-&quot;}&lt;/b&gt;&lt;br/&gt;Комьюнити: &lt;b&gt;{r.communitySize??&quot;-&quot;}&lt;/b&gt;&lt;br/&gt;Смен названия: &lt;b&gt;{r.nameChanges??0}&lt;/b&gt; · Спам: &lt;b&gt;{Math.round((r.spamScore??0)*100)}%&lt;/b&gt;&lt;/div&gt; },
+    { key:&quot;safety&quot;, title:&quot;Безопасность&quot;, render:(r)=&gt; &lt;div className=&quot;text-xs&quot;&gt;&lt;Badge className=&quot;mr-1&quot; tone={r.safety?.noMint?&quot;ok&quot;:&quot;&quot;}&gt;no mint&lt;/Badge&gt;&lt;Badge className=&quot;mr-1&quot; tone={r.safety?.burnLP?&quot;ok&quot;:&quot;&quot;}&gt;burn LP&lt;/Badge&gt;&lt;Badge className=&quot;mr-1&quot; tone={!r.safety?.blacklist?&quot;ok&quot;:&quot;bad&quot;}&gt;{r.safety?.blacklist?&quot;blacklist&quot;:&quot;ok&quot;}&lt;/Badge&gt;&lt;/div&gt; },
+    { key:&quot;contract&quot;, title:&quot;Контракт / ссылки&quot;, render:(r)=&gt; &lt;div className=&quot;text-xs&quot;&gt;&lt;div className=&quot;font-mono&quot;&gt;{pretty(r.contract)}&lt;/div&gt;{r.communityLink&amp;&amp; &lt;div className=&quot;mt-1&quot;&gt;&lt;a className=&quot;text-sky-300&quot; href={r.communityLink} target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Комьюнити&lt;/a&gt;&lt;/div&gt;}&lt;/div&gt; },
+    { key:&quot;summary&quot;, title:&quot;Резюме&quot; }
+  ];
+
+  const columnsCEX=[
+    { key:&quot;exchange&quot;, title:&quot;Биржа&quot; },
+    { key:&quot;status&quot;, title:&quot;Статус&quot;, render:r=&gt; &lt;Badge tone={r.status===&quot;live&quot;?&quot;ok&quot;: r.status===&quot;scheduled&quot;?&quot;warn&quot;:&quot;bad&quot;}&gt;{r.status}&lt;/Badge&gt; },
+    { key:&quot;price&quot;, title:&quot;Цена&quot; },
+    { key:&quot;spread&quot;, title:&quot;Спред, %&quot; },
+    { key:&quot;url&quot;, title:&quot;Ссылка&quot;, render:r=&gt; &lt;a className=&quot;text-sky-300&quot; href={r.url} target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;страница&lt;/a&gt; },
+    { key:&quot;chart&quot;, title:&quot;Чарт&quot;, render:r=&gt; (
+      &lt;div className=&quot;relative&quot; onMouseEnter={()=&gt;setHovered(r.exchange)} onMouseLeave={()=&gt;setHovered(null)}&gt;
+        &lt;div className=&quot;text-xs text-zinc-400 underline cursor-pointer&quot;&gt;hover&lt;/div&gt;
+        {hovered===r.exchange &amp;&amp; (
+          &lt;div className=&quot;absolute z-20 -left-2 top-6 w-64 h-36 rounded-lg border border-zinc-700 bg-zinc-900 p-2 shadow-lg&quot;&gt;
+            &lt;ResponsiveContainer width=&quot;100%&quot; height=&quot;100%&quot;&gt;
+              &lt;LineChart data={r.series} margin={{left:0,right:0,top:5,bottom:0}}&gt;
+                &lt;XAxis dataKey=&quot;i&quot; hide/&gt;
+                &lt;YAxis hide domain={[&quot;dataMin&quot;,&quot;dataMax&quot;]}/&gt;
+                &lt;Tooltip formatter={(v)=&gt;v} labelFormatter={(l)=&gt;`${l}s`} contentStyle={{background:&quot;#0a0a0a&quot;, border:&quot;1px solid #3f3f46&quot;}}/&gt;
+                &lt;Line type=&quot;monotone&quot; dataKey=&quot;v&quot; dot={false} strokeWidth={2}/&gt;
+              &lt;/LineChart&gt;
+            &lt;/ResponsiveContainer&gt;
+          &lt;/div&gt;
+        )}
+      &lt;/div&gt;
+    ) },
+  ];
+
+  // компоненты секций
+  const Signals = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Поток сигналов&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;mb-4 flex flex-col md:flex-row md:items-center gap-3&quot;&gt;
+          &lt;div className=&quot;flex-1&quot;&gt;&lt;Input placeholder=&quot;Поиск: слово, автор, контракт, резюме&quot; value={query} onChange={e=&gt;setQuery(e.target.value)}/&gt;&lt;/div&gt;
+          &lt;div className=&quot;flex items-center gap-2 text-sm&quot;&gt;&lt;input type=&quot;checkbox&quot; checked={onlyOG} onChange={e=&gt;setOnlyOG(e.target.checked)}/&gt;&lt;span&gt;Только OG&lt;/span&gt;&lt;/div&gt;
+          &lt;div className=&quot;flex items-center gap-2 text-sm text-zinc-400&quot;&gt;Каденс: {cadenceMin} мин&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;Table columns={columnsSignals} data={filtered} onRowClick={setSelected} emptyText=&quot;Нет сигналов. Запустите парсер или импортируйте JSON.&quot;/&gt;
+        {selected &amp;&amp; (
+          &lt;div className=&quot;mt-4 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4&quot;&gt;
+            &lt;div className=&quot;flex items-start justify-between&quot;&gt;
+              &lt;div&gt;
+                &lt;div className=&quot;text-lg font-semibold&quot;&gt;{selected.word}&lt;/div&gt;
+                &lt;div className=&quot;text-xs text-zinc-400 mt-1&quot;&gt;{selected.author} · {selected.source} · {selected.detectedAt}&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;flex gap-2&quot;&gt;
+                &lt;Button className=&quot;bg-emerald-700&quot; onClick={async()=&gt;{ const out=await fakeGroq(`План по ${selected.word}.`); const enriched={...selected, ai:out}; setSelected(enriched); setRows(rs=&gt; rs.map(x=&gt; x.id===selected.id? enriched: x)); pushAlert({type:&quot;ai&quot;, asset:selected.word, msg:&quot;AI сделал краткий анализ&quot;}); }}&gt;Groq ×3&lt;/Button&gt;
+                &lt;Button variant=&quot;ghost&quot; onClick={()=&gt;setSelected(null)}&gt;Закрыть&lt;/Button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div className=&quot;grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 text-sm&quot;&gt;
+              &lt;div className=&quot;space-y-2&quot;&gt;
+                &lt;div className=&quot;text-zinc-400&quot;&gt;Контракт&lt;/div&gt;
+                &lt;div className=&quot;font-mono&quot;&gt;{pretty(selected.contract)}&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;space-y-2&quot;&gt;
+                &lt;div className=&quot;text-zinc-400&quot;&gt;Метрики&lt;/div&gt;
+                &lt;div&gt;Твитов: &lt;b&gt;{pretty(selected.tweetCount)}&lt;/b&gt;&lt;/div&gt;
+                &lt;div&gt;Комьюнити: &lt;b&gt;{pretty(selected.communitySize)}&lt;/b&gt;&lt;/div&gt;
+                &lt;div&gt;Спаминдекс: &lt;b&gt;{Math.round((selected.spamScore||0)*100)}%&lt;/b&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;space-y-2&quot;&gt;
+                &lt;div className=&quot;text-zinc-400&quot;&gt;Безопасность&lt;/div&gt;
+                &lt;div className=&quot;text-xs&quot;&gt;
+                  &lt;Badge className=&quot;mr-1&quot; tone={selected.safety?.noMint?&quot;ok&quot;:&quot;&quot;}&gt;no mint&lt;/Badge&gt;
+                  &lt;Badge className=&quot;mr-1&quot; tone={selected.safety?.burnLP?&quot;ok&quot;:&quot;&quot;}&gt;burn LP&lt;/Badge&gt;
+                  &lt;Badge className=&quot;mr-1&quot; tone={!selected.safety?.blacklist?&quot;ok&quot;:&quot;bad&quot;}&gt;{selected.safety?.blacklist?&quot;blacklist&quot;:&quot;ok&quot;}&lt;/Badge&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div className=&quot;mt-4&quot;&gt;
+              &lt;div className=&quot;text-zinc-400 text-sm mb-1&quot;&gt;Резюме&lt;/div&gt;
+              &lt;div className=&quot;text-sm leading-6&quot;&gt;{selected.summary}&lt;/div&gt;
+            &lt;/div&gt;
+            {selected.ai &amp;&amp; (
+              &lt;div className=&quot;mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-zinc-300&quot;&gt;
+                &lt;Card&gt;&lt;CardHeader&gt;&lt;CardTitle&gt;Mixtral&lt;/CardTitle&gt;&lt;/CardHeader&gt;&lt;CardContent&gt;&lt;pre className=&quot;whitespace-pre-wrap&quot;&gt;{selected.ai.mixtral}&lt;/pre&gt;&lt;/CardContent&gt;&lt;/Card&gt;
+                &lt;Card&gt;&lt;CardHeader&gt;&lt;CardTitle&gt;LLaMA&lt;/CardTitle&gt;&lt;/CardHeader&gt;&lt;CardContent&gt;&lt;pre className=&quot;whitespace-pre-wrap&quot;&gt;{selected.ai.llama}&lt;/pre&gt;&lt;/CardContent&gt;&lt;/Card&gt;
+                &lt;Card&gt;&lt;CardHeader&gt;&lt;CardTitle&gt;Qwen&lt;/CardTitle&gt;&lt;/CardHeader&gt;&lt;CardContent&gt;&lt;pre className=&quot;whitespace-pre-wrap&quot;&gt;{selected.ai.qwen}&lt;/pre&gt;&lt;/CardContent&gt;&lt;/Card&gt;
+              &lt;/div&gt;
+            )}
+          &lt;/div&gt;
+        )}
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Accounts = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Аккаунты и пулы&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;p className=&quot;text-sm text-zinc-300&quot;&gt;(раздел без изменений)&lt;/p&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Filters = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Фильтры и поиск&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;grid grid-cols-1 md:grid-cols-3 gap-4&quot;&gt;
+          &lt;div&gt;
+            &lt;Label&gt;Поиск&lt;/Label&gt;
+            &lt;Input value={query} onChange={e=&gt;setQuery(e.target.value)} placeholder=&quot;REDW, автор, слово…&quot; className=&quot;mt-1&quot;/&gt;
+            &lt;p className=&quot;text-xs text-zinc-500 mt-1&quot;&gt;Ищет по названию, автору, резюме и контракту.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className=&quot;flex items-center gap-3 mt-6&quot;&gt;
+            &lt;input type=&quot;checkbox&quot; checked={onlyOG} onChange={e=&gt;setOnlyOG(e.target.checked)}/&gt;
+            &lt;span className=&quot;text-sm&quot;&gt;Только оригинальные (OG)&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;Label&gt;Интервал парсинга (мин)&lt;/Label&gt;
+            &lt;NumberInput min={1} max={60} value={cadenceMin} onChange={e=&gt;setCadenceMin(parseInt(e.target.value||&quot;5&quot;))} className=&quot;mt-1&quot;/&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const AlertsTab = (
+    &lt;Card&gt;
+      &lt;CardHeader right={&lt;div className=&quot;flex items-center gap-2 text-sm&quot;&gt;&lt;Badge tone={unread?&quot;warn&quot;:&quot;&quot;}&gt;🔔 {unread}&lt;/Badge&gt;&lt;Label&gt;Период, сек&lt;/Label&gt;&lt;NumberInput className=&quot;w-24&quot; min={3} value={pollSec} onChange={(e)=&gt;setPollSec(Math.max(3, parseInt(e.target.value||&quot;10&quot;)))} /&gt;&lt;/div&gt;}&gt;
+        &lt;CardTitle&gt;Alerts — наблюдение за старыми монетами&lt;/CardTitle&gt;
+      &lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;grid md:grid-cols-2 gap-4&quot;&gt;
+          &lt;div&gt;
+            &lt;Label&gt;Добавить токен&lt;/Label&gt;
+            &lt;div className=&quot;flex gap-2 mt-1&quot;&gt;
+              &lt;Input id=&quot;oldToken&quot; placeholder=&quot;тикер или контракт&quot;/&gt;
+              &lt;Button onClick={()=&gt;{ const el=document.getElementById(&quot;oldToken&quot;); const v=el&amp;&amp;el.value.trim(); if(v){ setWatchOld(w=&gt;[v, ...w.filter(x=&gt;x!==v)]); el.value=&quot;&quot;; } }}&gt;Save&lt;/Button&gt;
+            &lt;/div&gt;
+            &lt;div className=&quot;mt-2 text-xs text-zinc-500&quot;&gt;Всего: {watchOld.length}&lt;/div&gt;
+            &lt;div className=&quot;mt-2 max-h-48 overflow-auto rounded-lg border border-zinc-800&quot;&gt;
+              {watchOld.map((t,i)=&gt; (
+                &lt;div key={t+i} className=&quot;flex items-center justify-between px-3 py-2 border-b border-zinc-800/60&quot;&gt;
+                  &lt;span className=&quot;text-sm&quot;&gt;{t}&lt;/span&gt;
+                  &lt;Button size=&quot;sm&quot; variant=&quot;ghost&quot; onClick={()=&gt;setWatchOld(w=&gt;w.filter(x=&gt;x!==t))}&gt;Удалить&lt;/Button&gt;
+                &lt;/div&gt;
+              ))}
+              {!watchOld.length &amp;&amp; &lt;div className=&quot;px-3 py-6 text-center text-zinc-500 text-sm&quot;&gt;Пусто&lt;/div&gt;}
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;Label&gt;Триггеры&lt;/Label&gt;
+            &lt;div className=&quot;grid grid-cols-2 gap-3 mt-1&quot;&gt;
+              &lt;div className=&quot;flex items-center gap-2&quot;&gt;&lt;span className=&quot;text-sm&quot;&gt;Объём 15м ≥&lt;/span&gt;&lt;NumberInput className=&quot;w-24&quot; value={triggers.volume15m[0]} onChange={e=&gt;setTriggers(t=&gt;({...t, volume15m:[parseInt(e.target.value||&quot;10000&quot;), t.volume15m[1]]}))}/&gt;&lt;span className=&quot;text-sm&quot;&gt;$&lt;/span&gt;&lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-2&quot;&gt;&lt;span className=&quot;text-sm&quot;&gt;Объём 15м ≥&lt;/span&gt;&lt;NumberInput className=&quot;w-24&quot; value={triggers.volume15m[1]} onChange={e=&gt;setTriggers(t=&gt;({...t, volume15m:[t.volume15m[0], parseInt(e.target.value||&quot;100000&quot;)]}) )}/&gt;&lt;span className=&quot;text-sm&quot;&gt;$&lt;/span&gt;&lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-2&quot;&gt;&lt;span className=&quot;text-sm&quot;&gt;Скачок цены ≥&lt;/span&gt;&lt;NumberInput className=&quot;w-24&quot; value={triggers.priceJump} onChange={e=&gt;setTriggers(t=&gt;({...t, priceJump: parseFloat(e.target.value||&quot;5&quot;)}))}/&gt;&lt;span className=&quot;text-sm&quot;&gt;%&lt;/span&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;p className=&quot;text-xs text-zinc-500 mt-2&quot;&gt;Срабатывания появляются в списке событий ниже.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div className=&quot;mt-5&quot;&gt;
+          &lt;Label&gt;События&lt;/Label&gt;
+          &lt;div className=&quot;mt-1 rounded-lg border border-zinc-800 max-h-64 overflow-auto text-sm&quot;&gt;
+            {alerts.length? alerts.map((a,i)=&gt; (
+              &lt;div key={i} className=&quot;flex items-center justify-between px-3 py-2 border-b border-zinc-800/60&quot;&gt;
+                &lt;div&gt;
+                  &lt;span className=&quot;text-zinc-500 mr-2&quot;&gt;[{new Date(a.ts).toLocaleTimeString()}]&lt;/span&gt;
+                  &lt;Badge className=&quot;mr-2&quot; tone={a.type===&quot;wake&quot;?&quot;warn&quot;: a.type===&quot;listing&quot;?&quot;ok&quot;:&quot;&quot;}&gt;{a.type}&lt;/Badge&gt;
+                  &lt;span className=&quot;mr-2&quot;&gt;{a.asset}&lt;/span&gt;
+                  &lt;span className=&quot;text-zinc-300&quot;&gt;— {a.msg}&lt;/span&gt;
+                &lt;/div&gt;
+                {!a.read &amp;&amp; &lt;Button size=&quot;sm&quot; variant=&quot;ghost&quot; onClick={()=&gt; setAlerts(x=&gt; x.map((y,j)=&gt; j===i? {...y, read:true}: y))}&gt;Прочитано&lt;/Button&gt;}
+              &lt;/div&gt;
+            )): &lt;div className=&quot;px-3 py-8 text-center text-zinc-500&quot;&gt;Пока пусто&lt;/div&gt;}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Helius = (
+    &lt;Card&gt;
+      &lt;CardHeader right={&lt;Button onClick={()=&gt;setTab(&quot;cexradar&quot;)}&gt;CEX Radar&lt;/Button&gt;}&gt;
+        &lt;CardTitle&gt;Helius мониторинг (On-chain)&lt;/CardTitle&gt;
+      &lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;p className=&quot;text-sm text-zinc-300&quot;&gt;Ончейнвкладка без изменений. Кнопка справа открывает CEX Radar.&lt;/p&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const StatusLine = (
+    &lt;div className=&quot;rounded-xl border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-xs flex flex-wrap items-center gap-3&quot;&gt;
+      &lt;div&gt;&lt;span className=&quot;text-zinc-500&quot;&gt;Helius:&lt;/span&gt; &lt;span className=&quot;text-emerald-300&quot;&gt;{statusLine.helius}&lt;/span&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;span className=&quot;text-zinc-500&quot;&gt;Signals:&lt;/span&gt; &lt;span className=&quot;text-amber-300&quot;&gt;{statusLine.signals}&lt;/span&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;span className=&quot;text-zinc-500&quot;&gt;Фильтры:&lt;/span&gt; &lt;span className=&quot;text-sky-300&quot;&gt;{statusLine.filters}&lt;/span&gt;&lt;/div&gt;
+      &lt;div&gt;&lt;span className=&quot;text-zinc-500&quot;&gt;AI:&lt;/span&gt; &lt;span className=&quot;text-fuchsia-300&quot;&gt;{statusLine.ai}&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  );
+
+  const CEXRadar = (
+    &lt;Card&gt;
+      &lt;CardHeader right={&lt;div className=&quot;flex items-center gap-2&quot;&gt;&lt;Button onClick={()=&gt;startTimer()}&gt;Таймер&lt;/Button&gt;&lt;Button onClick={()=&gt;{ if(selected?.word) askAI(selected.word); else if(cexQuery) askAI(cexQuery); else alert(&quot;Сначала выберите актив&quot;); }}&gt;🤖 Ask AI&lt;/Button&gt;&lt;/div&gt;}&gt;
+        &lt;CardTitle&gt;CEX Radar&lt;/CardTitle&gt;
+      &lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        {StatusLine}
+
+        &lt;div className=&quot;mt-3 grid grid-cols-1 md:grid-cols-3 gap-3&quot;&gt;
+          &lt;div className=&quot;md:col-span-2 flex items-center gap-2&quot;&gt;
+            &lt;Input placeholder=&quot;контракт или тикер / название&quot; value={cexQuery} onChange={e=&gt;setCexQuery(e.target.value)}/&gt;
+            &lt;Button onClick={cexSearch}&gt;Поиск&lt;/Button&gt;
+            &lt;Button variant=&quot;ghost&quot; onClick={watchAsset}&gt;Watch&lt;/Button&gt;
+            &lt;div className=&quot;flex items-center gap-2 text-sm ml-2&quot;&gt;&lt;input type=&quot;checkbox&quot; checked={cexOnlyOG} onChange={e=&gt;setCexOnlyOG(e.target.checked)}/&gt;&lt;span&gt;Только OG&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div className=&quot;flex items-center gap-2 text-sm&quot;&gt;
+            &lt;Label&gt;Период опроса&lt;/Label&gt;
+            &lt;NumberInput className=&quot;w-24&quot; min={3} value={pollSec} onChange={(e)=&gt;setPollSec(Math.max(3, parseInt(e.target.value||&quot;10&quot;)))} /&gt;
+            &lt;span className=&quot;text-zinc-500&quot;&gt;сек&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div className=&quot;mt-2 text-xs text-zinc-500&quot;&gt;Watch: {watchCEX.length? watchCEX.join(&quot;, &quot;) : &quot;пусто&quot;}&lt;/div&gt;
+
+        &lt;div className=&quot;mt-4&quot;&gt;
+          &lt;div className=&quot;mb-2 text-sm text-zinc-300&quot;&gt;All CEX Radar (Binance / OKX / MEXC / Bybit / HTX / Gate)&lt;/div&gt;
+          &lt;Table columns={columnsCEX} data={cexRows} emptyText=&quot;Нажмите Поиск, чтобы получить демоданные&quot;/&gt;
+        &lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Learn = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Учиться (Knowledge)&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;p className=&quot;text-sm text-zinc-300&quot;&gt;(без изменений)&lt;/p&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Chat = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Чат с ИИ (демо)&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;max-h-64 overflow-auto rounded-lg border border-zinc-800 p-2 text-sm bg-zinc-900/40&quot;&gt;
+          &lt;div className=&quot;text-zinc-500&quot;&gt;Пусто&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;mt-2 flex gap-2&quot;&gt;
+          &lt;Input id=&quot;ask&quot; placeholder=&quot;Спросить у ИИ…&quot;/&gt;
+          &lt;Button onClick={()=&gt;{ const el=document.getElementById(&quot;ask&quot;); const v=el&amp;&amp;el.value; if(v){ pushAlert({type:&quot;ai&quot;, asset:&quot;chat&quot;, msg:&quot;ИИ сформировал ответ по памяти&quot;}); el.value=&quot;&quot;; } }}&gt;Спросить&lt;/Button&gt;
+        &lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  const Logs = (
+    &lt;Card&gt;
+      &lt;CardHeader right={&lt;Badge tone={unread?&quot;warn&quot;:&quot;&quot;}&gt;🔔 {unread}&lt;/Badge&gt;}&gt;&lt;CardTitle&gt;Логи&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;text-xs text-zinc-300 whitespace-pre-wrap min-h-[120px]&quot;&gt;{logs.length? logs.map(l=&gt;`[${l.ts}] ${l.msg}`).join(&quot;\n&quot;): &quot;Логи пусты&quot;}&lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  // ───── Selftests
+  const [tests, setTests] = useState([]);
+  useEffect(()=&gt;{
+    const T = [];
+    const A=(name, cond, details=&quot;&quot;)=&gt;T.push({name, ok:!!cond, details});
+    // 1) regex replace for newlines
+    const s1 = &quot;a\nb\nc&quot;;
+    const r1 = s1.replace(/\n/g, &quot; &quot;);
+    A(&quot;replace\\n -&gt; space&quot;, r1 === &quot;a b c&quot;, r1);
+    // 2) CSV join with \n
+    const rowsCsv = [&quot;x,y&quot;,&quot;1,2&quot;].join(&quot;\n&quot;);
+    A(&quot;join\\n lines=2&quot;, rowsCsv.split(&quot;\n&quot;).length===2, rowsCsv);
+    // 3) genSeries length
+    const gs = genSeries(10, 1);
+    A(&quot;genSeries(10)&quot;, gs.length===10 &amp;&amp; typeof gs[0].v === &quot;number&quot;);
+    // 4) LS roundtrip
+    saveLS(&quot;__t&quot;, {a:1});
+    const rt = loadLS(&quot;__t&quot;, {});
+    A(&quot;localStorage roundtrip&quot;, rt &amp;&amp; rt.a===1, JSON.stringify(rt));
+    setTests(T);
+  },[]);
+
+  const SelfTests = (
+    &lt;Card&gt;
+      &lt;CardHeader&gt;&lt;CardTitle&gt;Selftests&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+      &lt;CardContent&gt;
+        &lt;div className=&quot;grid sm:grid-cols-2 lg:grid-cols-3 gap-2&quot;&gt;
+          {tests.map((t,i)=&gt;(
+            &lt;div key={i} className=&quot;flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm&quot;&gt;
+              &lt;Badge tone={t.ok?&quot;ok&quot;:&quot;bad&quot;}&gt;{t.ok?&quot;PASS&quot;:&quot;FAIL&quot;}&lt;/Badge&gt;
+              &lt;span&gt;{t.name}&lt;/span&gt;
+              {t.details? &lt;code className=&quot;text-zinc-400 truncate&quot;&gt;{String(t.details)}&lt;/code&gt;: null}
+            &lt;/div&gt;
+          ))}
+          {!tests.length &amp;&amp; &lt;div className=&quot;text-zinc-500&quot;&gt;Running…&lt;/div&gt;}
+        &lt;/div&gt;
+      &lt;/CardContent&gt;
+    &lt;/Card&gt;
+  );
+
+  return (
+    &lt;div className=&quot;min-h-screen w-full bg-black text-white&quot;&gt;
+      &lt;div className=&quot;mx-auto max-w-[1400px] px-6 py-6&quot;&gt;
+        {/* Header */}
+        &lt;div className=&quot;flex items-center justify-between&quot;&gt;
+          &lt;div&gt;
+            &lt;h1 className=&quot;text-xl font-semibold&quot;&gt;Super Parser AI — альтернативный интерфейс&lt;/h1&gt;
+            &lt;p className=&quot;text-xs text-zinc-400&quot;&gt;Dark UI • Groq · Apify · Helius · QuickNode · Pumpfun · Nansen&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className=&quot;flex items-center gap-2&quot;&gt;
+            &lt;Button className=&quot;bg-emerald-600&quot; onClick={()=&gt;setRunning(!running)}&gt;{running?&quot;Стоп&quot;:&quot;Старт&quot;}&lt;/Button&gt;
+            &lt;Button onClick={exportJSON}&gt;JSON&lt;/Button&gt;
+            &lt;Button onClick={exportCSV}&gt;CSV&lt;/Button&gt;
+            &lt;Button onClick={exportDOC}&gt;DOC&lt;/Button&gt;
+            &lt;Button variant=&quot;ghost&quot; onClick={()=&gt;setTab(&quot;alerts&quot;)}&gt;🔔 {unread}&lt;/Button&gt;
+            &lt;label className=&quot;inline-flex items-center gap-2&quot;&gt;
+              &lt;input ref={fileInputRef} type=&quot;file&quot; accept=&quot;application/json&quot; className=&quot;hidden&quot; onChange={e=&gt; e.target.files&amp;&amp;importJSONFile(e.target.files[0])}/&gt;
+              &lt;Button variant=&quot;ghost&quot; onClick={()=&gt;fileInputRef.current?.click()}&gt;Импорт JSON&lt;/Button&gt;
+            &lt;/label&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        {/* Keys */}
+        &lt;div className=&quot;mt-4 grid grid-cols-1 md:grid-cols-3 gap-3&quot;&gt;
+          &lt;div className=&quot;col-span-1 md:col-span-3 text-xs text-zinc-500&quot;&gt;Ключи хранятся локально в памяти браузера.&lt;/div&gt;
+          {Object.keys(keys).map(k=&gt; (
+            &lt;div key={k} className=&quot;flex items-center gap-2&quot;&gt;&lt;Label className=&quot;w-32 capitalize&quot;&gt;{k}&lt;/Label&gt;&lt;Input type=&quot;password&quot; value={keys[k]} onChange={e=&gt;setKeys({...keys, [k]: e.target.value})} placeholder={`ключ ${k}`}/&gt;&lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+
+        &lt;Tabs value={tab} onValueChange={setTab} className=&quot;mt-6&quot;&gt;
+          &lt;TabsList&gt;
+            &lt;TabsTrigger value=&quot;signals&quot;&gt;Сигналы&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;accounts&quot;&gt;Аккаунты&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;filters&quot;&gt;Фильтры&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;alerts&quot;&gt;Алерты&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;helius&quot;&gt;Helius&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;cexradar&quot;&gt;CEX Radar&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;learn&quot;&gt;Учиться&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;chat&quot;&gt;Чат&lt;/TabsTrigger&gt;
+            &lt;TabsTrigger value=&quot;logs&quot;&gt;Логи&lt;/TabsTrigger&gt;
+          &lt;/TabsList&gt;
+
+          &lt;TabsContent value=&quot;signals&quot;&gt;{Signals}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;accounts&quot;&gt;{Accounts}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;filters&quot;&gt;{Filters}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;alerts&quot;&gt;{AlertsTab}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;helius&quot;&gt;{Helius}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;cexradar&quot;&gt;{CEXRadar}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;learn&quot;&gt;{Learn}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;chat&quot;&gt;{Chat}&lt;/TabsContent&gt;
+          &lt;TabsContent value=&quot;logs&quot;&gt;{Logs}&lt;/TabsContent&gt;
+        &lt;/Tabs&gt;
+
+        &lt;div className=&quot;mt-6&quot;&gt;{SelfTests}&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}

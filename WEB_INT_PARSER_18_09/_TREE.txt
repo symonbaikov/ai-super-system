@@ -1,0 +1,12 @@
+WEB_INT_PARSER_18_09/README.md
+WEB_INT_PARSER_18_09/configs/parser_rules.json
+WEB_INT_PARSER_18_09/configs/ui_config.json
+WEB_INT_PARSER_18_09/docs/api_spec.md
+WEB_INT_PARSER_18_09/docs/ui_spec.md
+WEB_INT_PARSER_18_09/docs/Веб Инт.Парсер 18.09 последний(обновленный)_EXTRACT.txt
+WEB_INT_PARSER_18_09/docs/инструкция_EXTRACT.txt
+WEB_INT_PARSER_18_09/docs/raw_sources/Веб Инт.Парсер 18.09 последний(обновленный).docx
+WEB_INT_PARSER_18_09/docs/raw_sources/инструкция.docx
+WEB_INT_PARSER_18_09/scripts/validate_config.py
+WEB_INT_PARSER_18_09/src/main.py
+WEB_INT_PARSER_18_09/web/index.html

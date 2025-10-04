@@ -1,0 +1,70 @@
+Merged build v4: base=v3_FIXED + overlay(v1 deploy & extras)
+
+Merge notes:
+- risk_policy: added key 'min_scores' from v1
+- risk_policy: added key 'warnings' from v1
+- risk_policy: added key 'override_policy' from v1
+- copied v1 configs/whales_config.json → configs/whales_config_legacy.json
+
+Files:
+MANIFEST.txt
+configs/accounts_watchlist.json
+configs/learning_config.json
+configs/llm_router.json
+configs/profiles_config.json
+configs/risk_policy.json
+configs/search_templates.json
+configs/trading_config.json
+configs/whales_config_legacy.json
+configs/whales_watchlist.json
+reports/report_template.html
+reports/sample_input.json
+reports/sample_report.docx
+reports/sample_report.html
+scripts/generate_report.py
+scripts/validate_config.py
+server/.env.example
+server/README.md
+server/docker-compose.yml
+server/env_alex.example
+server/env_golib.example
+server/openapi.yaml
+server/secrets/keys_raw.txt
+web/index.html
+[Triple-AI Files]
+configs/accounts_watchlist.json
+configs/ai_fine_filters.json
+configs/ai_global_rules.json
+configs/ai_supercenter.json
+configs/ai_weights_v2.json
+configs/alerts_presets.json
+configs/learning_config.json
+configs/llm_router.json
+configs/profiles_config.json
+configs/risk_policy.json
+configs/search_templates.json
+configs/social_accounts_whitelist.json
+configs/trading_config.json
+configs/whales_config_legacy.json
+configs/whales_providers.json
+configs/whales_watchlist.json
+docs/README_TRIPLE_AI.md
+docs/addons_api_patch.md
+data/seed_whitelist.txt
+data/vision_anchors.txt
+docs/raw_sources/5профилей JSON.docx
+docs/raw_sources/Основа 1( а).docx
+docs/raw_sources/Объединенный_документ.docx
+
+[Vendors]
+vendors/vllm-main/
+vendors/llama.cpp-master/
+vendors/mistral-inference-main/
+vendors/mistral-inference-main (1)/
+vendors/Qwen2-main/
+[Services]
+services/compose/docker-compose.ai.yml
+services/compose/.env.ai.example
+scripts/launch_triple_ai.sh
+scripts/download_weights.py
+configs/llm_endpoints.json

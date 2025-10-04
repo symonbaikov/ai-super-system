@@ -1,0 +1,25 @@
+openapi: 3.0.3
+info:
+  title: Super‑ИИ Crypto Backend
+  version: "1.0.0"
+paths:
+  /ingest/social_alert:
+    post:
+      summary: Принять соц‑алерт (Twitter/TG/Discord)
+      responses:
+        '200': {description: OK}
+  /risk/evaluate:
+    post:
+      summary: Оценка риска
+      responses:
+        '200': {description: OK}
+  /trade/buy:
+    post:
+      summary: Купить через Jupiter (+Jito)
+      responses:
+        '200': {description: OK}
+  /trade/sell:
+    post:
+      summary: Продать через Jupiter
+      responses:
+        '200': {description: OK}

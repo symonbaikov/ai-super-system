@@ -1,0 +1,34 @@
+{
+  "arkham": {
+    "api": true,
+    "free": true,
+    "role": "deep_research"
+  },
+  "dexcheck": {
+    "api": true,
+    "features": [
+      "whale_tracking",
+      "wallet_profiler",
+      "KOL index",
+      "webhooks"
+    ],
+    "free": true,
+    "role": "primary_realtime",
+    "ws": true
+  },
+  "gmgn": {
+    "api": false,
+    "free": true,
+    "role": "pumpfun_monitor"
+  },
+  "kolscan": {
+    "api": false,
+    "free": true,
+    "role": "fast_visual_sol_monitor"
+  },
+  "nansen": {
+    "api": true,
+    "free": false,
+    "role": "historical_smart_money"
+  }
+}

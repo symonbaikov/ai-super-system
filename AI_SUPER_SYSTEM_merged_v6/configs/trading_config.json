@@ -1,0 +1,28 @@
+{
+  "jito": {
+    "enabled": true,
+    "priority_fee_mode": "high",
+    "tip_lamports": 50000
+  },
+  "jupiter": {
+    "max_buy_pct_lp": 1.0,
+    "max_slippage_bps_cap": 50,
+    "quote_url": "https://quote-api.jup.ag/v6/quote",
+    "slippage_bps_default": 50,
+    "swap_url": "https://quote-api.jup.ag/v6/swap"
+  },
+  "risk_controls": {
+    "max_hold_min": 20,
+    "stop_loss_pct": 25,
+    "take_profit_x": [
+      2.0,
+      3.0
+    ],
+    "trailing_sl_pct": 15
+  },
+  "ui": {
+    "confirmations_required": 1,
+    "default_sol_allocation": 1.0
+  },
+  "version": "1.0.0"
+}

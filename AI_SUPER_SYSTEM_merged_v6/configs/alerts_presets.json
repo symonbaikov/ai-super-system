@@ -1,0 +1,29 @@
+{
+  "dexscreener": {
+    "liquidity_usd_min": 10000,
+    "mcap_usd_min": 14000,
+    "vol_5m_usd_min": 10000
+  },
+  "pumpfun": {
+    "age_min_min": 60,
+    "bundle_pct_max": 70,
+    "dev_hold_pct_max": 10,
+    "insiders_pct_max": 50,
+    "mcap_usd_min": 20000,
+    "snipers_pct_max": 70,
+    "top_holder_pct_max": 35,
+    "vol_usd_min": 35000
+  },
+  "whales": {
+    "advice": "Avoid first whale ping; prefer confirmations by 3-4th with 200% vol growth 5m",
+    "entry_window_min": [
+      5,
+      15
+    ],
+    "min_unique_whales": 3,
+    "single_whale_alt_in_sol": [
+      10,
+      20
+    ]
+  }
+}

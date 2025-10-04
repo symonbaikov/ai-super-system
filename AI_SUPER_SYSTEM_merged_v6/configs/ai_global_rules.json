@@ -1,0 +1,57 @@
+{
+  "generated_at": "2025-09-28T10:51:20.960705Z",
+  "principles": [
+    "DYOR; always verify narrative, community and on-chain before entry",
+    "Patience; avoid FOMO; aim for consistent daily PnL not lottery wins",
+    "Risk 1% per trade; stop-loss mandatory; partial take-profits x2/x3",
+    "Diversify; isolate high-risk in burner wallet"
+  ],
+  "psychology": {
+    "behavioural_tools": [
+      "rubber_band_refocus",
+      "breathing_2min"
+    ],
+    "journal_required": true,
+    "loss_streak_pause_after": 3,
+    "use_checklist": true
+  },
+  "security": {
+    "blacklist_functions_forbidden": true,
+    "honeypot_check_tools": [
+      "RugCheck",
+      "GoPlus",
+      "Sniffer"
+    ],
+    "lp_lock_pct_min": 70,
+    "max_tax_pct": 10,
+    "max_top_holder_pct": 20,
+    "mint_authority_burned": true
+  },
+  "sources": [
+    "Global Rules for AI",
+    "Глобальные правила для ИИ"
+  ],
+  "trader_quotes": [
+    {
+      "advice": "Avoid overdiversification; focus on few high-conviction plays",
+      "name": "Ackman"
+    },
+    {
+      "advice": "Invest in what you understand; ignore volatility noise",
+      "name": "Buffett"
+    },
+    {
+      "advice": "Circle of competence; keep a learning journal",
+      "name": "Lynch"
+    },
+    {
+      "advice": "Test small; cut losses quickly",
+      "name": "Soros"
+    },
+    {
+      "advice": "Use data and automation to overcome emotion",
+      "name": "Simons"
+    }
+  ],
+  "version": "2.2.0"
+}

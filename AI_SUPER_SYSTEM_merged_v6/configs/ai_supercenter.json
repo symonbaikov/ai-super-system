@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-09-28T11:16:31.880194Z",
+  "modules": {
+    "M1_SocialScout": {
+      "role": "Real‑time narrative & meme seed detection (Twitter/TG/Discord)",
+      "cycle": {
+        "base_minutes": 5,
+        "boost_minutes": 1,
+        "boost_conditions": [
+          "unique_authors_20m >= 3",
+          "trusted_account_hit == true",
+          "memeability >= 0.6"
+        ]
+      },
+      "inputs": [
+        "social_batch.json",
+        "seed_whitelist.txt",
+        "vision_anchors.txt"
+      ],
+      "outputs": [
+        "SocialAlert(v1)",
+        "candidate_terms.json"
+      ],
+      "gateways": [
+        "regex_tickers",
+        "regex_mint_links",
+        "denylist_tickers"
+      ],
+      "uses_llm_route": "scout"
+    },
+    "M2_OnchainAnalyst": {
+      "role": "On‑chain merge, whales, security & scoring",
+      "steps": [
+        "resolve_token",
+        "snapshot_onchain",
+        "security_gate",
+        "whales_probe",
+        "scoring"
+      ],
+      "inputs": [
+        "Helius/Birdeye/Dexscreener",
+        "alerts_presets.json",
+        "ai_fine_filters.json",
+        "ai_weights_v2.json"
+      ],
+      "outputs": [
+        "AnalysisCard",
+        "RiskDecision(risk, reasons, policy)"
+      ],
+      "uses_llm_route": "analyst"
+    },
+    "M3_JudgePolicy": {
+      "role": "Consistency judge, policy enforcement, memory & audit trail",
+      "checks": [
+        "global_rules_consistency",
+        "hallucination",
+        "explainability_required",
+        "fail_closed_policy"
+      ],
+      "kb": {
+        "chroma_collection": "social_kb",
+        "write_policy": "accepted_and_rejected"
+      },
+      "outputs": [
+        "FinalDecision(BUY|WATCH|NO)",
+        "AuditLog",
+        "KnowledgeWrite"
+      ],
+      "uses_llm_route": "judge"
+    }
+  },
+  "orchestration": [
+    "M1_SocialScout -> SocialAlert -> M2_OnchainAnalyst -> DraftDecision",
+    "M3_JudgePolicy consumes DraftDecision + GlobalRules -> FinalDecision"
+  ],
+  "schemas": {
+    "SocialAlert": {
+      "required": [
+        "alert_id",
+        "created_at",
+        "profile",
+        "focus",
+        "confidence",
+        "zscore",
+        "sources[]",
+        "summary",
+        "decision_hint"
+      ],
+      "optional": [
+        "token_guess",
+        "og",
+        "clones",
+        "dex_banner",
+        "name_changes",
+        "sentiment",
+        "media[]",
+        "trace_id",
+        "debug"
+      ]
+    },
+    "RiskDecision": {
+      "fields": [
+        "risk",
+        "critical[]",
+        "warnings[]",
+        "policy{buy_allowed,needs_override,required{sl,slippage_cap_pct,max_buy_pct_lp}}"
+      ]
+    }
+  }
+}

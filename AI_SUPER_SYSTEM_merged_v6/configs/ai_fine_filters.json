@@ -1,0 +1,107 @@
+{
+  "bullx_stages": {
+    "AboutToGraduate": {
+      "mcap_usd_min": 14000,
+      "vol_usd_min": 5000
+    },
+    "Graduated": {
+      "mcap_usd_min": 200000,
+      "vol_usd_min": 30000
+    },
+    "New": {
+      "holders_min": 20,
+      "mcap_usd_min": 7000,
+      "vol_usd_min": 3200
+    }
+  },
+  "exits": {
+    "emergency_exit_vol_spike_mult": 4.0,
+    "move_to_be_at": "x2",
+    "tp_cascade": [
+      {
+        "at": "x2",
+        "pct": 33
+      },
+      {
+        "at": "x3",
+        "pct": 33
+      },
+      {
+        "at": "x5",
+        "pct": 34
+      }
+    ],
+    "trail_atr_mult": 1.5
+  },
+  "generated_at": "2025-09-28T10:51:20.960705Z",
+  "indicators": {
+    "atr": {
+      "mult_stop": 2.0
+    },
+    "bollinger": {
+      "period": 20,
+      "stddev": 2
+    },
+    "ema": {
+      "fast": 20,
+      "mid": 50,
+      "slow": 200
+    },
+    "envelopes": {
+      "band_pct": 5,
+      "sma_period": 20
+    },
+    "fibo": {
+      "extensions": [
+        127,
+        161.8,
+        200
+      ],
+      "retracements": [
+        38.2,
+        50,
+        61.8
+      ]
+    },
+    "macd": {
+      "fast": 12,
+      "signal": 9,
+      "slow": 26
+    },
+    "psar": {
+      "max": 0.2,
+      "step": 0.02
+    },
+    "rsi": {
+      "overbought": 70,
+      "oversold": 30,
+      "period": 14
+    },
+    "stochastic": {
+      "d": 3,
+      "high": 80,
+      "k": 5,
+      "low": 20,
+      "smooth": 3
+    }
+  },
+  "onchain_filters": {
+    "anti_honeypot_required": true,
+    "dev_hold_pct_max": 10,
+    "holders_min": 100,
+    "liquidity_usd_min": 10000,
+    "lp_lock_pct_min": 70,
+    "tax_pct_max": 10,
+    "top_holder_pct_max": 30,
+    "vol_5m_usd_min": 10000
+  },
+  "version": "2.2.0",
+  "whale_filters": {
+    "alert_inflow_usd_min": 10000,
+    "max_hold_days": 3,
+    "max_top_holder_pct": 20,
+    "min_hold_days": 1,
+    "min_pnl_pct": 70,
+    "tracked_top_n": 50
+  }
+}

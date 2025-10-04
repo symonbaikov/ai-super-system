@@ -1,0 +1,22 @@
+{
+  "minus_words": [
+    "airdrop",
+    "presale",
+    "whitelist",
+    "wl",
+    "giveaway",
+    "free mint",
+    "bounty",
+    "casino",
+    "forex",
+    "signals group",
+    "copytrade"
+  ],
+  "broad": [
+    "(pepe OR doge OR \"cat ceo\" OR \"elon meme\" OR \"trump coin\" OR #memecoin)",
+    "(pump OR moon OR \"new pool\" OR \"just launched\" OR \"created on raydium\" OR \"go live\" OR pump.fun)",
+    "(#solana OR raydium OR jupiter OR orca)",
+    "-airdrop -presale -whitelist -giveaway -bounty -copytrade",
+    "lang:en"
+  ]
+}

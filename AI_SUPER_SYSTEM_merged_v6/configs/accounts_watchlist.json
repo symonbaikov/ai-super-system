@@ -1,0 +1,30 @@
+{
+  "version": "3.0.0",
+  "generated_at": "2025-09-07T11:05:34.054532Z",
+  "prioritization": {
+    "mode": "tiered_top50_first",
+    "tweets_first": true,
+    "retweets_weight": 0.2,
+    "fallback_general_stream": true,
+    "fallback_rules": {
+      "zscore_min": 2.2,
+      "min_unique_accounts_5m": 20,
+      "language_filter": [
+        "en",
+        "ru",
+        "es"
+      ],
+      "minus_words": [
+        "airdrop",
+        "presale",
+        "whitelist",
+        "giveaway",
+        "free mint",
+        "casino",
+        "referral"
+      ]
+    }
+  },
+  "top50": [],
+  "rest": []
+}

@@ -1,0 +1,1486 @@
+{
+  "version": "3.0.0",
+  "generated_at": "2025-09-07T11:05:34.115963Z",
+  "chains": [
+    "solana",
+    "evm"
+  ],
+  "labels": {
+    "smart_money": true,
+    "cluster_by_behavior": true
+  },
+  "filters": {
+    "win_rate_min": 0.6,
+    "pnl_min_usd": 0,
+    "min_hold_days": 1,
+    "max_fast_unload_pct": 20,
+    "min_avg_trade_size_sol": 50
+  },
+  "holding_style": {
+    "prefer_hodlers_days_min": 1,
+    "prefer_hodlers_days_max": 7,
+    "penalize_instant_dumps": true
+  },
+  "wallets": [
+    {
+      "wallet": "BXc3AmNKjD2Sp5tVH1fZV8qeffk9ivtUYjudoSApbCTr",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "9YKu7hu1NnTesTvTuVMof9mUktfhBoZQ5sXZgbkrxsuR",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "BGBYz455uKuQRpUoYmcYQvo4X6U9q5LDxDcg2r3VCktP",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "ENXoBfYdhawsRcrr5kfuLu3VP9kbbrgeAJEcGva8AUAR",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "AmdrcKmdPedRYaFDeeLh16qDUQ6JMt8t4X5BTMLJwkeq",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "854RaRWBjPV8LmKqVw3BbiW5YQ5wtfSTeC1BkGFfd7pe",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "cornGuBy1GCTZ5vot2iRnKVX6Fr341zvnHDMBWR2goN",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "9w7r5evRAKbbsKtLANLNmY3VswsRiqxMH7KDPWCCWNuV",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "HAu7Jx2Y1P9zyT2tQ8RismeUUTqPVHyMJcHJFj5iMuDR",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "46awYYmrncDQfM1DoqcAGcg6WoEJo3txAwY698FXN14R",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "3y7d5AfnngarnBiyzFXKYg5oD9Y4LLxNgJe5dyS2qoki",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "2LqnvBGYZMFZjegfGAHqjn67QyJxi7HqKVEBkj5tQUWS",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "HnhbDVsSan6R2xc5PUkTtFZYBPwQS7pF5ScDFmx5wbFQ",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "6UFLbgXz8LX19WbQWZ5zC34oVteXzLbKHXcPfE1hKhvo",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "9ex23LM7UgMqWv9M9iE5wGvas6NiYKSsEUKHdK5XoUcn",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "27geggynwSk2qEJwVg9QYff6NX8NW84m4PmwRKyGFFGF",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "BKk3oZFbBxt7EEyP3G9hdPZMLq3BoQoUfJbfoLD381kj",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "AQXPaNNWWGScNgdnjRvrEw5ht3ko1G4rft4zwAZHxJJk",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "m99HR6tFZt8JwS5WbbHZfBn9LaidXafmNj2PvUz8zct",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "2C5n9nGrWkniwgcN9UZQk16QQU1sPBe9v9Fg9Y9VKmDo",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "4ixH7Q9mVhbouf2ycUTCj3UKVz54FRJejj7GnSqv8UZG",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "2bdcq3CfFZfZ5e5RNMv4w3nTFHGzyJEM1cuFf8E4AQth",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "Hz41edwpUMc4xCZ3ezon8YjnwcMjzX7zeMGLsBL51RY1",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "FJbp8NtbeVGACD4ZyE4Uc915NPieQPzEspcwecYsZysW",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "6neoWX8Ak3wTHdFkbE487gfiK8gPnMmKWMNq9n2vzzvL",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "2EpbedUB51BPyDK3WeKAMjdBTBjoHY7qn5c9rNwNEPWs",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "Gv52eyXoRgbW7fmrSLMb1pm3v3HQ4enUmmRbPUZANR3f",
+      "source": "лучшие кошельки. киты.odt"
+    },
+    {
+      "wallet": "4aDdi3EiDPMbeZ3e5BvbFMt4vfJaoahaHxZuwKQRtFc1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EcJWNtETrzdbj8s2dXpaE4Tu4r7fxALD6TNw9H8S6ksz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3pZ59YENxDAcjaKa3sahZJBcgER4rGYi4v6BpPurmsGj",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3jN1M8gWLk2ryTGnscrcwRK1Gy4Ttzq5QizWT8uizZsT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CPydqKcEEeKTR6wt3L15G8S5Ea4bxjS2vvjiW9vw1UwK",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "na9E1w4pXVEcVMtqxkQHDs93TayXggt1yrxZbE2epfZ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AM84n1iLdxgVTAyENBcLdjXoyvjentTbu5Q6EpKV1PeG",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "62FZUSWPMX9pofoV1uWHMdzFJRjwMa1LHgh2zhdEB7Zj",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4jRX4iW2F5wBnfYMyB7RjS2PU5MjXrST3fB9DoV4BjHa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ECCKBDWX3MkEcf3bULbLBb9FvrEQLsmPMFTKFpvjzqgP",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3pkY4S76Jw1UDS8Qgz4wD3DxrTxz7QfyC8yTbXJoZcMT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G4fiaoKwBPTXH2JMekciosBUqjAQY3rQpWyGwZzPpb98",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HLv6yCEpgjQV9PcKsvJpem8ESyULTyh9HjHn9CtqSek1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2T5NgDDidkvhJQg8AHDi74uCFwgp25pYFMRZXBaCUNBH",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9UpbpCY3nbQTMF4XXnKr4DgwCJBUMLxysXdUJRzZFDiU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9ru9BSVFSUqSRQFwdjjnkzQGf9yUdpRTjpjXPKc4BvxX",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5rkPDK4JnVAumgzeV2Zu8vjggMTtHdDtrsd5o9dhGZHD",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ApH45VZp3bhgGeFb2UBHTymxkjsGvNbrfAybd8TfXQLu",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "26kZ9rg8Y5pd4j1tdT4cbT8BQRu5uDbXkaVs3L5QasHy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5B52w1ZW9tuwUduueP5J7HXz5AcGfruGoX6YoAudvyxG",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BCnqsPEtA1TkgednYEebRpkmwFRJDCjMQcKZMMtEdArc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FmRGqwoNfFsCz8T1C4aqHVFmpwD7fKBsLYfipvVCQQ4",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G3g1CKqKWSVEVURZDNMazDBv7YAhMNTjhJBVRTiKZygk",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HtucFepgUkMpHdrYsxMqjBNN6qVBdjmFaLZneNXopuJm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9FNz4MjPUmnJqTf6yEDbL1D4SsHVh7uA8zRHhR5K138r",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "F9TWs2Jmwpcvt8Zzr1wLnA9f4UQKj1huX74eM8vDoXTm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "F2SuErm4MviWJ2HzKXk2nuzBC6xe883CFWUDCPz6cyWm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CwodPaTCAow3H5LygvkAXTuUKyNHavRLyiTCfWnXn2Zx",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7N4bAyZX6z39RozQh7GC8VQmgjvjkkWmSyAt1wdMjEmq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6LChaYRYtEYjLEHhzo4HdEmgNwu2aia8CM8VhR9wn6n7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "B3wagQZiZU2hKa5pUCj6rrdhWsX3Q6WfTTnki9PjwzMh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5V9zsFPtN2nxoA53Xm6FKbx797NBnBZFxMdr84H1QXNL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "65ba3MNkbDS1DMyaS8dofX32gfTZHqGCyKhwJBMjWdg1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7M3AinEXjZ7okFPh8Xw7ESEayZFZzFAKGJTf6yNATPpn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "96sErVjEN7LNJ6Uvj63bdRWZxNuBngj56fnT9biHLKBf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "UxuuMeyX2pZPHmGZ2w3Q8MysvExCAquMtvEfqp2etvm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DjM7Tu7whh6P3pGVBfDzwXAx2zaw51GJWrJE3PwtuN7s",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3YXWkE7eAYGjSKefXiq5Qa5YorUbH7vGJ217SphmP1Zh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HkFt55P3PhRWHXoTFeuvkKEE4ab26xZ1bk6UmXV88Pwz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BTf4A2exGK9BCVDNzy65b9dUzXgMqB4weVkvTMFQsadd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "B5ScJw8Dw7e1zXoh2ut2F81WVXmGaPWqZZ6JEYBZfAJK",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Eg4yfrdkkfQG3LWWuGxfUdvSCUmSecBV1nYT5Tit5bvB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "m7Kaas3Kd8FHLnCioSjCoSuVDReZ6FDNBVM6HTNYuF7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2PPEZXmP3qDhMV66kZs9fKmMpXtUyGUsicEhVu4rj8p9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8zFZHuSRuDpuAR7J6FzwyF3vKNx4CVW3DFHJerQhc7Zd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AVAZvHLR2PcWpDf8BXY4rVxNHYRBytycHkcB5z5QNXYm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "34ZEH778zL8ctkLwxxERLX5ZnUu6MuFyX9CWrs8kucMw",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FWuPsvShrLG4r6iYjc3dDCoPneHFdYqDGX4MXuhTDf6y",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HA1L7GhQfypSRdfBi3tCkkCVEdEcBVYqBSQCENCrwPuB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "48kx1v5iNdpwmWKAcfwNKL8brRCZqATJrmrCAw8wnN29",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9vWutdTBs66hWkeCmxaLFpkKy4q5RSe8DsFjfdxj5yFA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5jMW1hzAKZSYbLvpHf6UviQ8PoSMmdh8LY8ZYPyb94ve",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "A3C2zYBNeah7ArKPwCcWrtiYcbbb8WvvKMDJucqDT525",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FiwjgGxrWeq4Bjnf9nNFA1wdWZCCZyLqgureN7qpEowi",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "22kFm8b2Vb7itdz51dNGd1tn9hkKgF82sc2jNEQkGafp",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5B79fMkcFeRTiwm7ehsZsFiKsC7m7n1Bgv9yLxPp9q2X",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2F19ZXrvQDCoYXdBoFBiBcEmgrAKYAheZHnQxZksHQhN",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BXNiM7pqt9Ld3b2Hc8iT3mA5bSwoe9CRrtkSUs15SLWN",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GmM5UFm8xu6TnZD7avwYcQ1zq25hD5yvHfYyAksHu9vB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Bbwo561kyb33PKB1EJr1urRHY9PjYfxap3FXQfTPjDA5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AJ6MGExeK7FXmeKkKPmALjcdXVStXYokYNv9uVfDRtvo",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FpD6n8gfoZNxyAN6QqNH4TFQdV9vZEgcv5W4H2YL8k4X",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "J6TDXvarvpBdPXTaTU8eJbtso1PUCYKGkVtMKUUY8iEa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "73LnJ7G9ffBDjEBGgJDdgvLUhD5APLonKrNiHsKDCw5B",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EnQLCLB7NWojruXXNopgH7jhkwoHihTpuzsrtsM2UCSe",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "VyGNiGZ3PS3kHmnk5h3fkrcMBjLKFgX5acsnS4qaYKy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2HWT2KLLdN2wxYTqdSuko5SBzg2SEJASgV4GE2tD7TML",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DKgvpfttzmJqZXdavDwTxwSVkajibjzJnN2FA99dyciK",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3sKZ35AWKZ3rLJfWyempj7tywMHgTfmTh1hpkVwgHngW",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ExbFNs7eACox3U3swHDu75xtesdLSthcwk6iUVcG4b5D",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AMPhmcp3uVyYShFnaJDtLAM22CvJPLxwVFWarLHf2Fw5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AAhnidQyZbh2ej1Ubqc3DAP7oKM72akPzxtYpaZpUe8r",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "51E2YUDFcnpjs5YwS5Ffk42R9PWzS9RNNgSu6db3CHe7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "LJ2X58hCR38qtvLBTEhwVAMALz7bbqR1YVvq2mnVnqq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HD5fsofvcEaSimExUkPQxYPec3nT8g2tP2tw8oGPrpBT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Hq9iEGnpQ4KpJ91MjedVeHZcVMCWCsiJDE9i7j7SUUKF",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "99i9uVA7Q56bY22ajKKUfTZTgTeP5yCtVGsrG9J4pDYQ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2QMXjBufQprAfEutzh4gMWRuMp1impcjk5BLpfYEHAsb",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AeLaMjzxErZt4drbWVWvcxpVyo8p94xu5vrg41eZPFe3",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "LuLZie4Gm28mHSHC7bsPpNcMBZShM6QhAqd4jJEhAZa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5Etkx7VQFFVMSTtTLWWZoYGn8iPWYLr1TrC3xyrY2fyf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2JUsjGsrU9aKKWRFGxSKNV61HXbPZakM5JJYufwFaWhm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Ehg5YkU2SZBTvuT87rUsvxArGp3HLeye1fXaSDfuMyaf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FEDt3TPMu2KTJpzPBMmxHN3zebs1oYGJrbxuE1ycKG9s",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Nsgx8SAf9jSmwqewSttpXbEKAHSPZPae2gFLfj6Yu44",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Gitmf7ap4gYgbEVzkaiy4sLtXev4kHPu8VYdbpcXTV3w",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Gnn6JcAeoqCa9UiUCfjcrnZS3mFJiXW4Sbzah6wYvGMt",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4YzpSZpxDdjNf3unjkCtdWEsz2FL5mok7e5XQaDNqry8",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2CXbN6nuTTb4vCrtYM89SfQHMMKGPAW4mvFe6Ht4Yo6z",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EdDCRfDDeiiDXdntrP59abH4DXHFNU48zpMPYisDMjA7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EWWRf3Mp8btcEQRpjkn8Nfy4ypnfsjFyALjukMJFXSMV",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GcBHigybW9ViomdK1rNXGKyBnv5EWjVhmYciZuR65XaH",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "C2Wj63zMet6bnHg1J8Dwk52DUEGTraNySrCDu6e8APK5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6RjncKRpraJBYHAstPfys99ZEaL2pvKo3Sj66HD9agwv",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DiTQyLH8aT9D7aPMNTxwcTbRddMuY8X9qm4gmVvTBPM3",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8oQoMhfBQnRspn7QtNAq2aPThRE4q94kLSTwaaFQvRgs",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BcagckXeMChUKrHEd6fKFA1uiWDtcmCXMsqaheLiUPJd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "D2wBctC1K2mEtA17i8ZfdEubkiksiAH2j8F7ri3ec71V",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FRbUNvGxYNC1eFngpn7AD3f14aKKTJVC6zSMtvj2dyCS",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3tc4BVAdzjr1JpeZu6NAjLHyp4kK3iic7TexMBYGJ4Xk",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "H6vJEEvDeDyXspU82kVfw1KVGFxqd5fWotqYT1gCgfd9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3vLy64QGk87jcRu3VDUq9w89N7fVLmeuDCUcgXtJDQuh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HGrYmcXeRbiHWNpvRN8Vep25K14dogTPBbWHDKZ3rzFS",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6VFDBxHad8hcqZ2xH2DM2q84YNrNq2Z4itQX19EXmEFP",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7XckukzciEVBU3iBuCTLU3CQttGWJd814WYtQ2YYW18W",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6ZddMpdAgo1BNncaQkZcLCCj6ZGwMpLSpiwfMHg9cVxc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DZAa55HwXgv5hStwaTEJGXZz1DhHejvpb7Yr762urXam",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HcPE7DGP3iRzBv9BJ4fYA5D5rLK84CHaRTn3dwukGxXe",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7iabBMwmSvS4CFPcjW2XYZY53bUCHzXjCFEFhxeYP4CY",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8DmxdnkWivweA4EpmUMdfbjHtdzQ8anrx13hz1Pm27uh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DjpzbYPXReZzSPPgT4DntqdD9qxcrf4euMeb1dY7nqm6",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GfqQkmJZ8h8Th7epmpyJgBXBtm7JA11L8KbnPxisDeHc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BtMBMPkoNbnLF9Xn552guQq528KKXcsNBNNBre3oaQtr",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "LDKWiNTRqaQZATGCme9F1fvotCZjkyYYmAfpjmvF4gv",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HmBmSYwYEgEZuBUYuDs9xofyqBAkw4ywugB1d7R7sTGh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4hSXPtxZgXFpo6Vxq9yqxNjcBoqWN3VoaPJWonUtupzD",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GpCTWXotFfwyBZBW9EuXcVnaX8PkcjHPFKkM6SJGCedT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "xXpRSpAe1ajq4tJP78tS3X1AqNwJVQ4Vvb1Swg4hHQh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BkWpyDT1BGN3AxVsnmpg2TF1LCTeXhHWNhwht2pwjkki",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "mW4PZB45isHmnjGkLpJvjKBzVS5NXzTJ8UDyug4gTsM",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DuLFfm5kEAqwEq7d8ufoaTrKe5uPrigDYav8espMjBdU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G6fUXjMKPJzCY1rveAE6Qm7wy5U3vZgKDJmN1VPAdiZC",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CS8fTA2vkL7zKLbAre65uXyQheTqsBKYVBSJd4Qvg6gy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8QVfDrEPy3NqgecFea7N9nhiv1ZtYur8TSx53TzNvNpb",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9ha3rJRznYVzNkoJ5xyov3ZBjthrC8e8WNdjn48FQyDd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BQVz7fQ1WsQmSTMY3umdPEPPTm1sdcBcX9sP7o6kPRmB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CBNaEWC8QfXJM76N7qGdCuPHc3HrYkExHxZBGEEt9o3v",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7i7vHEv87bs135DuoJVKe9c7abentawA5ydfWcWc8iY2",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DfMxre4cKmvogbLrPigxmibVTTQDuzjdXojWzjCXXhzj",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "71CPXu3TvH3iUKaY1bNkAAow24k6tjH473SsKprQBABC",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Gr34KrdUAQvH5Hz3VYpa2BiZLx9N4MDLccE4ksaHPubp",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "fNrJmJ1aQMx1vgnGwJcLWkUCBrDy7GF7ZpVqiXuRFrJ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6HJetMbdHBuk3mLUainxAPpBpWzDgYbHGTS2TqDAUSX2",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2AtFkEamLgK9ByuFX5XmG7WHZ9CVLFC6pxhWpfYkL1KZ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7QZGS7MQ4S6hRmE8iXoFTXgQ2hXVUCho2ZhgeWvLNPZT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "28ipXVfkdmu1PDowCHbcSfzkpH9edZmSiVoDhY5xGVfR",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "87MZqjjJgpuFvaU8GyQJKbZGnCFFhX82qAjBGLRXPfcn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "F5TjPySiUJMdvqMZHnPP85Rc1vErDGV5FR5P2vdVm429",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BjKcAznmCYoE6sfqaFWQRGzWmFPYVqPMJgMjWupChPWC",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4nvNc7dDEqKKLM4Sr9Kgk3t1of6f8G66kT64VoC95LYh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BD7oWkEQsUwE8sj4UT7jtrGjHC8Gq1iRqXY7U6DTbJpf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HQRMufaDM3YpMrF9urrV114n2mTmzoDEAqNYZPAZrUgA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5PAhQiYdLBd6SVdjzBQDxUAEFyDdF5ExNPQfcscnPRj5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5TuiERc4X7EgZTxNmj8PHgzUAfNHZRLYHKp4DuiWevXv",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7w7tQnyfZUpdHNTbTX9MVZHhWdaNcYKZuWaSSweMJxUJ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ApRnQN2HkbCn7W2WWiT2FEKvuKJp9LugRyAE1a9Hdz1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G5nxEXuFMfV74DSnsrSatqCW32F34XUnBeq3PfDS7w5E",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5M8ACGKEXG1ojKDTMH3sMqhTihTgHYMSsZc6W8i7QW3Y",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EhRp3PVPqCe2ms3Cjgxg9LSXygxCkJfehPZnVPGienpg",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9uyDy9VDBw4K7xoSkhmCAm8NAFCwu4pkF6JeHUCtVKcX",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3ubt1SkopkPkL8raULj9sXMgnhh52LQZQRX7AzuFd8ux",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ATFRUwvyMh61w2Ab6AZxUyxsAfiiuG1RqL6iv3Vi9q2B",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4nwfXw7n98jEQn93VWY7Cuf1jnn1scHXuXCPGVYS9k6T",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "831qmkeGhfL8YpcXuhrug6nHj1YdK3aXMDQUCo85Auh1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8T9ychy4shZUYRu6LFjgNYDWPEQ14KEwyNXsr76fcNZy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CfyPKSXiFRLnq8cKrefgHKEFjFunwFMDZootqdbeZdfE",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "deadqdS1jakJTPAZQkjxFJ656jqy4aDqUqmPAfEeDqa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CNudZYFgpbT26fidsiNrWfHeGTBMMeVWqruZXsEkcUPc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7SDs3PjT2mswKQ7Zo4FTucn9gJdtuW4jaacPA65BseHS",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "orcACRJYTFjTeo2pV8TfYRTpmqfoYgbVi9GeANXTCc8",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5PA7XYpE4p78fWvH1HiSD1SQiRKGUWgbWc6jxzWiDpYT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4WPTQA7BB4iRdrPhgNpJihGcxKh8T43gLjMn5PbEVfQw",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4sZm6CRqUTUz9EE3nE8wPfdTHBHzQHWj1Tcx4m1htfWX",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "f3h6NjfFzEFkTm6ZR13dito2cAJxmKx7KcUcFtpJL6a",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9nJ72hhtwyGHoUbEN3xfGuiLnrX3SnLYX52hkoahn2YH",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CNYdrnBpRb1qgdDkEtjAH3Rv2wGjx2DJkwR29mfj16WD",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ACHhRQMbTxuWqU3bmbBbgUNGsPsYnvB8KLcPkkXCY1C7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AVCXrniTeG4qxzumJCuNejLZ5Wx6RaSegEr1Cpctx9Fz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EABXkKHLdH8Cb8YjJ2Zcj4ybnY4xUDbXELs9cy6rMQi8",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Bu1PpWTD6KNBmbYTL5HDW95HYSQKRcK73ErucxdfqgVP",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DurhcdHPVkZ5xzxPiutMe9jv3HR9bU8wcLvpkUbAgTY4",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BhK7Rrx2hgB7hHQC2DhRoJbLrQrbX2Cwv7bCQQMGA3iU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BYhH8QatT4Aue5TxLCiYeHBcZ2ufr6KCwdQPQnedVewy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FaicXNV5FVqtfbpn4Zccs71XcfGeyxBSGbqLDyDJZjke",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3kebnKw7cPdSkLRfiMEALyZJGZ4wdiSRvmoN4rD1yPzV",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3Bufr622AC4ZVBtztvrsS7impwgR4stvVnwZ5aDynY5x",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "55SoJzCa7fdY2tKP8Yy5wRkn9yS7wvDsatfidCmRjVFH",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "sAdNbe1cKNMDqDsa4npB3TfL62T14uAo2MsUQfLvzLT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4dd26T5b5gAsHyf3MSc7QFeKssMnTHWWo1dgModGbnUo",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4Fz34tZXEHhQMu8spdyewW6hqno23CzoG14eVx1k12q4",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "wifq4CRwpXCK8NYtKNsQAYoDethT1aR7R1DaKCLFgAd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "vQ33AcEii7mciXznW7TAqzpv18Z77PQHxSfJ7xNBHwU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3h65MmPZksoKKyEpEjnWU2Yk2iYT5oZDNitGy5cTaxoE",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "53BnNc49Ajgstciq3CRoyxuBpkkW1r8pgPyvr7JGYnsh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DHEKS3dMShJfdqoUQ5EgGZA5DdKZopMwqD2hWqK2i6gW",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2WrSFw3dsFfqPKU7HWEDwsVS9jEaCsnZiXHhD2afkXYp",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3BLjRcxWGtR7WRshJ3hL25U3RjWr5Ud98wMcczQqk4Ei",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FQh5cst4aKhCZbNxqunns4wZViD52Z2PVTNR3eSYQBhw",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3uswT1DpBfrpkyJzwZndLV5ZuytAsUvr8dXjYx3pWccq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4vw54BmAogeRV3vPKWyFet5yf8DTLcREzdSzx4rw9Ud9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2YJbcB9G8wePrpVBcT31o8JEed6L3abgyCjt5qkJMymV",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "578UjSucbedCVpv4bSJdr7hJGaL1qJXbKrgQhK5aW8WD",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9HhafAZc6jo6rXxeJ7F4RN1BQfsTm6xLRs6YYAq6nhAn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GgG65z3MXpmGnV3ZapKv5ayDqox1x7CJnqP1LD8FaZdt",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "mpa4abUkjQoAvPzREkh5Mo75hZhPFQ2FSH6w7dWKuQ5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HABhDh9zrzf8mA4SBo1yro8M6AirH2hZdLNPpuvMH6iA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FrNpLY7k6ktsp9em8c2fThYJe5yncE9iC4ArFXWLBs4g",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AT6FsbUy1jNR2AHE35WCVh3nSdDtYADtdhA2KitQXmL5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "831PnqDVKRAHYcDtUUSa5PerdKrjTUa6VpyjUSc63mwg",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5YkZmuaLhrPjFv4vtYE2mcR6J4JEXG1EARGh8YYFo8s4",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5Ljrp8yErX9jJtKxP8CZToT7i6TQod7ri44xGfq3KYPL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HaZtFxgw99iM97LxmwFuDW6k4MP1XwsWTGoy7GUoSELj",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G2VzymsKt3zNAn4CKBndYcS67w6Kny5sDEp7Y2W1aTf6",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FWznbcNXWQuHTawe9RxvQ2LdCENssh12dsznf4RiouN5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2jDcvHtGYXuGm71QLtxkkgWgK4rm3c6eD8g1PHZReoaW",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CyaE1VxvBrahnPWkqm5VsdCvyS2QmNht2UFrKJHga54o",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7ABz8qEFZTHPkovMDsmQkm64DZWN5wRtU7LEtD2ShkQ6",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HL3FZ8XWnLnn1HuktmgpNRyFRjuAxWbXNQVj5fPPzZwt",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DnfuF1L62WWyW3pNakVkyGGFzVVhj4Yr52jSmdTyeBHm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DUQYDumJCrByjbSNtAzQsyG7iipmFQCXmF2EUeugRYMR",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4BdKaxN8G6ka4GYtQQWk4G4dZRUTX2vQH9GcXdBREFUk",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DYAn4XpAkN5mhiXkRB7dGq4Jadnx6XYgu8L5b3WGhbrt",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "98T65wcMEjoNLDTJszBHGZEX75QRe8QaANXokv4yw3Mp",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HiMomFaRLrcRuasmmpE9ixUrQKa4EgoP5r2HaHo73Qt1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Cbj482ar1f5b7RvoEFJZEPCeZQ3SYEA5oxFYXmX4Wrio",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9cqgXsqhksd16hLnupey9jt86jKDfbD6ZWVANccW1233",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6quKVtdvEjtxwRN7DnACboG1iiGyh17QB34ZfkdxJLH1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BcnqsPEtA1TkgednYEebRpkmwFRJDCjMQcKZMMtEdArc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "XDgpjPubjN5soLAFmAMjD2uVR1XZxUKgNpMU6Eo97H7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6RYVUPzp1rPaDQth8LaNLaMcZg4HRe3L9LhpJDV9ZZWf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EXPw1tMuJFsx8vfpeHwuwxLXjMKcXj9vMEHAZNPrVbfU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GJyhzLoZAxZHZGPvF3V1wsyGUnoGSQ55n6hN6nHv7W8B",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4XMPyWFsYdNcCN4FG8geyytyTeUNacn4QundBzMqbGGT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BHhRbqadwedgwerPRKQYyf3QHvQyMJ6tFjt5rybaCxjU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BT2sdwJeDWqXNUNBJwtKWBD7RjquACfjo1rT9vpZLUSA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7CmXBbwsE5gcuDisSVC1syRgrVC5kYb9Lwb54M8ZadW1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2pUUZYtokRgDV2YzL6M5pjb1jyoHE367yU1sdQ7ac3ea",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Btf4A2exGK9BCVDNzy65b9dUzXgMqB4weVkvTMFQsadd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GFJhtZuENEB9StZiacHUd1aoBoCtY2wWLskhgwcyfaYN",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CCUcjek5p6DLoH2YNtjizxYhAnStXAQAGVxhp1cYJF7w",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DgDqqoQm27saZeJBMPtJQtbdMGKQbpVS2BuK1AV5ikQe",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AbcX4XBm7DJ3i9p29i6sU8WLmiW4FWY5tiwB9D6UBbcE",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "niggerd597QYedtvjQDVHZTCCGyJrwHNm2i49dkm5zS",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "J359swDwM6DMrpTveYZt6Z9AVhZHJ3mVs1y8Gn4wKYGF",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DpNVrtA3ERfKzX4F8Pi2CVykdJJjoNxyY5QgoytAwD26",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9jyqFiLnruggwNn4EQwBNFXwpbLM9hrA4hV59ytyAVVz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FAicXNV5FVqtfbpn4Zccs71XcfGeyxBSGbqLDyDJZjke",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "iWinRYGEWcaFFqWfgjh28jnqWL72XUMmUfhADpTQaRL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Av3xWHJ5EsoLZag6pr7LKbrGgLRTaykXomDD5kBhL9YQ",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EVNLVqUuCdbU2ebAwmSPWRcQ73iR4W5cho6shH7fXXir",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CRVidEDtEUTYZisCxBZkpELzhQc9eauMLR3FWg74tReL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "13E1Ut5Tu4AzLeazjgEWyfU44QXP7jkfya5qRfxdUx48",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Di75xbVUg3u1qcmZci3NcZ8rjFMj7tsnYEoFdEMjS4ow",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "D9VNWx8oZX788VRQ9H4qyvHASiQLfWbd2MP3DHKSFvK5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BiqkWhrJ4dfpE6TeNY34tA4GssG23SBH8CU8mqB7xZ6t",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Fxj1j5ohVoRos1yQnvx6bsvYCt493VGpyLbMiq4eLff3",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "F72vY99ihQsYwqEDCfz7igKXA5me6vN2zqVsVUTpw6qL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GM7Hrz2bDq33ezMtL6KGidSWZXMWgZ6qBuugkb5H8NvN",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6ryvxoTHMYkVUgTTexpqntYLfY4La582UGX7TSX4KRh7",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GTvBQnRvAPweU2qmYg8MDLND2PAAyYFKe35aKQGMRDaL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8MaVa9kdt3NW4Q5HyNAm1X5LbR8PQRVDc1W8NMVK88D5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5sLbBRU6KBpfSVXHrLtEWJmfyLtbbjidmVeiUzjPEMe5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HrWt6V3kjv26bfUTzBroVAp87W62AWD3LsRfsNdgXJrc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "831yhv67QpKqLBJjbmw2xoDUeeFHGUx8RnuRj9imeoEs",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "86AEJExyjeNNgcp7GrAvCXTDicf5aGWgoERbXFiG1EdD",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8deJ9xeUvXSJwicYptA9mHsU2rN2pDx37KWzkDkEXhU6",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EY5udSh8BjxKq3zqKJVtNgRWr1jWkcJtCrHCvAoBLmRW",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7Dt5oUpxHWuKH8bCTXDLz2j3JyxA7jEmtzqCG6pnh96X",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9UWZFoiCHeYRLmzmDJhdMrP7wgrTw7DMSpPiT2eHgJHe",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "RFSqPtn1JfavGiUD4HJsZyYXvZsycxf31hnYfbyG6iB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HrHJputHcA8mkwrcQB3GkrJ2u1f7Fm4LzAZptSYSsUcf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "JDd3hy3gQn2V982mi1zqhNqUw1GfV2UL6g76STojCJPN",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ATmKENkRrL1JQQnoUNAQvkiwgjiHKUkzyncxTGxyzQL1",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "6RoLbZJWJHpTk4sdPsWzocEHiRtzPS36WcBjnMXuQrfU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8iRuMD31AxPHHVGhDNbKHdRnuYriBMHCQbNHVfGy4PTz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ACzzqa4zbRwgyYBd7dwrgZMFf4Fn7Wir1qA4zpeue3uU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HyYNVYmnFmi87NsQqWzLJhUTPBKQUfgfhdbBa554nMFF",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "49nSpmxwnTTyXujNm3zHqoin1mg1y1rKd1THXwJjYdLa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GrXjXop95XkVPYJafDJNCLFzK9K8LkpopxYcgUUn2H87",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HCQb4Qrtk4qCfChDH8XvM5onymmCSmRj9bddV6QCPdRe",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EHg5YkU2SZBTvuT87rUsvxArGp3HLeye1fXaSDfuMyaf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Bar5csYtpWoNpwhUjixX7ZPHXkUciFZzjBp9uNxZXJPh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FhJKaSYUL4Rcpwx6wWYe2sMPrmELbYivnsM21Tq9wetn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4sAUSQFdvWRBxR8UoLBYbw8CcXuwXWxnN8pXa4mtm5nU",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HrTZPWV4ZPebBiwyzoTBajCD49kQqVwf4dwsLuYG8CXX",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CRqmUZ9KpQ3ztURNt6qMqHQyL3jxuGnYX7c3U1vwsZcs",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "ASJFbQms4WUTWd9MwwUygujEYobug3mcWjEMi8GzdYYy",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "DNfuF1L62WWyW3pNakVkyGGFzVVhj4Yr52jSmdTyeBHm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "J23qr98GjGJJqKq9CBEnyRhHbmkaVxtTJNNxKu597wsA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CkxVhktjqYuhsVfNQzqEZkwQ2gMU1wEFPM3FSSVXGjM9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9wpuL27tRTSzK8pZL8euLs1rTnTgx3ixKzSv9XjdZwux",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "AonDkSa2EZ19U365YrY3bKLDbLf7cU1herGFTGxXYrcm",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5vR5f7BtxvHCGw1EciwKuEv5EDyvnD3aavrHqRjXyevg",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CvNiezB8hofusHCKqu8irJ6t2FKY7VjzpSckofMzk5mB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EKDDjxzJ39Bjkr47NiARGJDKFVxiiV9WNJ5XbtEhPEXP",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "CPcDUe51Xh8Jq7NdBsr8qd2wXN7tYov5iLGtNYskkXLb",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7w7f4P284zJhv3zotjCUmaNsZSsrHQKtpXGBJFq8gdzq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BSTCv51qzfhT9q9mEMfXRrzCn5eLWXt2aRappBCbWziq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GednEH4dgpdvTdUgDNHg4BAHLa5KPQojbcHSF6eg38JB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FvTBarKFhrnhL9Q55bSJnMmAdXisayUb5u96eLejhMF9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "5XVKfruE4Zzeoz3aqBQfFMb5aSscY5nSyc6VwtQwNiid",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HJXRy9JA6xXhFPZCNfJhenAq6MpfTpV83X4p5nhzQiaz",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "E69FvNvAc1d484uZMWyKR4LDSCmsTxsxaoGnhG5QyfRc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GJA1HEbxGnqBhBifH9uQauzXSB53to5rhDrzmKxhSU65",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "kQdJVZvix2BPCz2i46ErUPk2a74Uf37QZL5jsRdAD8y",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GjyhzLoZAxZHZGPvF3V1wsyGUnoGSQ55n6hN6nHv7W8B",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7VBTpiiEjkwRbRGHJFUz6o5fWuhPFtAmy8JGhNqwHNnn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HUpPyLU8KWisCAr3mzWy2FKT6uuxQ2qGgJQxyTpDoes5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EhQ7iJNjXFiajR5zwJmXoKo5faQc2X2JHtFx7zWJKTaV",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2m5498hY3hpSvm1pVyZwwyU6bpQGFGu3PADSoEoZFXQB",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "kaiUXfbLaRkCXUd1bT4znGnRBvXqhHZnGcrEkXHvkai",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9yYya3F5EJoLnBNKW6z4bZvyQytMXzDcpU5D6yYr4jqL",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EbjSyRcDPGL4hLQDeuF8FrytiDwJGys8QeoVrX1XLRMx",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8yJFWmVTQq69p6VJxGwpzW7ii7c5J9GRAtHCNMMQPydj",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "7tiRXPM4wwBMRMYzmywRAE6jveS3gDbNyxgRrEoU6RLA",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4Uq8kK9rzb1BhLKez5LgfzQLHUn2TTX1LRnyfkxFBrDo",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "NFJKkZ7yeoAvfHLWNiqAw6CYKWnVAVAQu5PE3AC3qYt",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FKY9K9K2WjXP5i4FrAo3EZsyfqV4u9CjQAwj59QXh8Uv",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "c3XGUoDSBaJDA8qaJ5pUkCnamMERwZLJBVjxdkNepGo",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "HYWo71Wk9PNDe5sBaRKazPnVyGnQDiwgXCFKvgAQ1ENp",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4S9U8HckRngscHWrW418cG6Suw62dhEZzmyrT2hxSye5",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "A77HErqtfN1hLLpvZ9pCtu66FEtM8BveoaKbbMoZ4RiR",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "RH6epK9UW5vA5rm23FcLi4rPuTJjwya6UQJeG1tigv3",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BCagckXeMChUKrHEd6fKFA1uiWDtcmCXMsqaheLiUPJd",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9TyNvx98wE1UX3BRq2oBViJ4Kx4saX8FVhiaan3Hgq9c",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8rvAsDKeAcEjEkiZMug9k8v1y8mW6gQQiMobd89Uy7qR",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3rSZJHysEk2ueFVovRLtZ8LGnQBMZGg96H2Q4jErspAF",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "qNGhUruCGJpXJdsnV74USHErcbm3CrXRsnP8D6Z34Hh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8mEWo5njoMR1CDemTQ739jDDkjvgHCcuQLL4cWojxKoT",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "G1pRtSyKuWSjTqRDcazzKBDzqEF96i1xSURpiXj3yFcc",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "FAwHi11KyJVh2pR2b2vNFEbbunTVkMFpdNBuD2dh9NRf",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2kv8X2a9bxnBM8NKLc6BBTX2z13GFNRL4oRotMUJRva9",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "EAnB5151L8ejp3SM6haLgyv3snk6oqc8acKgWEg9T5J",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "D3Z7weHeLGWA7eg1qwVB66NCs8YLxiDTBVE6Eb1tTmwg",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "3NzdGknBeQivGUoDzHhaHxLEDN7tNWUyKj5xkqyb4mui",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "9N5pGaJFEsdwsRyB4XFuJPqTxmPqzUbj6SViTn4KHiTa",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "64ymeD9XTAkNJgHtXgrG6JCNZmBC9fSVcmgkL54pFikE",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "BFhPpAumvEZ5XeHvGtXUdUJb1SBLPf8LEC36J2Qj7Xdr",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "8p8neuY9rH2SBxYbyqA3pWtS7WiYG2p11DWb5GtyvvGg",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "2RssnB7hcrnBEx55hXMKT1E7gN27g9ecQFbbCc5Zjajq",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4DdrfiDHpmx55i4SPssxVzS9ZaKLb8qr45NKY9Er9nNh",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "4jSmEmBkuBi1JxZHM1khkf57xPR2oW1EnkRxqehq1cSK",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "GfXQesPe3Zuwg8JhAt6Cg8euJDTVx751enp9EQQmhzPH",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    },
+    {
+      "wallet": "Fi2hrxExy6TJnKcbPtQpo6iZzX9SUVbB9mDw6d29NgCn",
+      "source": "Смарт_кошельки_объединено_only3.docx"
+    }
+  ]
+}

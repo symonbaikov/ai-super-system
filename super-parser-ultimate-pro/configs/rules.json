@@ -1,0 +1,46 @@
+{
+  "risk": {
+    "per_trade": 0.01,
+    "rr": "1:2",
+    "trail_atr_mult": 2.0,
+    "moon_bag_pct": 0.1
+  },
+  "entry_filters": {
+    "rsi": {
+      "period": 14,
+      "oversold": 30,
+      "overbought": 70
+    },
+    "ema": {
+      "fast": 20,
+      "mid": 50,
+      "trend": 200
+    },
+    "bb": {
+      "period": 20,
+      "stddev": 2
+    },
+    "volume_spike_x": 3
+  },
+  "security": {
+    "lp_lock_min_pct": 70,
+    "taxes_max_pct": 10,
+    "holder_cap_pct": 20,
+    "no_blacklist": true,
+    "mint_burned": true
+  },
+  "sessions": {
+    "europe_night": {
+      "start": "19:00",
+      "end": "04:00",
+      "tz": "Europe/Madrid"
+    }
+  },
+  "alerts": {
+    "vol15m": [
+      10000,
+      100000
+    ],
+    "price_jump_pct": 5
+  }
+}

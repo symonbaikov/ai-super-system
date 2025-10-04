@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "routes": {
+    "scout": {
+      "base_url": "http://localhost:8001/v1",
+      "type": "openai"
+    },
+    "analyst": {
+      "base_url": "http://localhost:8002/v1",
+      "type": "openai"
+    },
+    "judge": {
+      "base_url": "http://localhost:8003/v1",
+      "type": "openai"
+    }
+  },
+  "profiles": {
+    "direct": {
+      "scout": {
+        "base_url": "http://localhost:8001/v1",
+        "type": "openai"
+      },
+      "analyst": {
+        "base_url": "http://localhost:8002/v1",
+        "type": "openai"
+      },
+      "judge": {
+        "base_url": "http://localhost:8003/v1",
+        "type": "openai"
+      }
+    },
+    "via_gateway": {
+      "scout": {
+        "base_url": "http://localhost:8080/api/scout/v1",
+        "type": "openai"
+      },
+      "analyst": {
+        "base_url": "http://localhost:8080/api/analyst/v1",
+        "type": "openai"
+      },
+      "judge": {
+        "base_url": "http://localhost:8080/api/judge/v1",
+        "type": "openai"
+      },
+      "judge_llamacpp": {
+        "base_url": "http://localhost:8080/api/judge-llamacpp/v1",
+        "type": "openai"
+      }
+    }
+  }
+}

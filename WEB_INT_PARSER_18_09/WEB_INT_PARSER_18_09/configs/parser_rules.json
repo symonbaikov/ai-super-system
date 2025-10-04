@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "sources": {
+    "twitter": true,
+    "telegram": true,
+    "discord": true,
+    "rss": false
+  },
+  "rate_limits": {
+    "twitter_rpm": 60,
+    "telegram_rps": 2,
+    "discord_rps": 2
+  },
+  "keywords": {
+    "include": [],
+    "exclude": [],
+    "whitelist_file": "../data/seed_whitelist.txt"
+  },
+  "media": {
+    "enable_ocr": true,
+    "enable_alt_text": true
+  },
+  "dedup": {
+    "window_sec": 300,
+    "by": [
+      "text_hash",
+      "url"
+    ]
+  },
+  "output": {
+    "format": "ndjson",
+    "path": "../data/stream.ndjson"
+  },
+  "alerts": {
+    "memeability_min": 0.6,
+    "burst_5m_min": 3
+  }
+}

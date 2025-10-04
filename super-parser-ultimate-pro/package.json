@@ -1,0 +1,29 @@
+{
+  "name": "super-parser-ultimate",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node tests/test_engine.js",
+    "test:smoke": "node tests/test_smoke.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "ws": "^8.16.0",
+    "node-fetch": "^3.3.2",
+    "prom-client": "^15.1.2",
+    "@sentry/node": "^7.120.0",
+    "@solana/web3.js": "^1.95.3",
+    "@project-serum/anchor": "^0.26.0",
+    "viem": "^2.17.5",
+    "bullmq": "^5.7.7",
+    "ioredis": "^5.4.1",
+    "amqplib": "^0.10.4",
+    "technicalindicators": "^3.1.0",
+    "eventemitter3": "^5.0.1"
+  }
+}

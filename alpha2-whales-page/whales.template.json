@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "as_of": "2025-09-30T00:00:00Z",
+  "labels": [
+    "market_maker",
+    "early_minter",
+    "clean_whale"
+  ],
+  "whales": [
+    {
+      "address": "SoLx...A1",
+      "labels": [
+        "clean_whale"
+      ],
+      "weight": 0.9
+    },
+    {
+      "address": "SoLx...B2",
+      "labels": [
+        "market_maker"
+      ],
+      "weight": 0.7
+    }
+  ]
+}

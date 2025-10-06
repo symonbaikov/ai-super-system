@@ -48,6 +48,12 @@ This repository bundles the full Super Parser AI stack: FastAPI gateway, BullMQ 
    docker compose down
    ```
 
+> Development stack: for live code mounts and forwarded ports use the new `docker-compose.dev.yml` file.
+> ```bash
+> docker compose -f docker-compose.dev.yml up --build -d
+> ```
+> Stop it the same way with `docker compose -f docker-compose.dev.yml down`.
+
 ## 4. Local Test Suites
 
 ### Backend (FastAPI, Triple-AI)
@@ -81,7 +87,63 @@ npm test
 
 Vitest covers key UI components, context state, and API helpers.
 
-## 5. Verifying Critical Flows
+## 5. Verifying Critical Flows & Integrations
+
+### 5.0 API integrations (Groq, Apify, Helius, QuickNode)
+
+**Groq advice endpoint** — requires `GROQ_API_KEY` in `backend/.env`.
+```bash
+curl -k -X POST https://api.localhost/api/advice \
+  -H 'Content-Type: application/json' \
+  -d '{
+        "prompt": "Evaluate meme coin momentum",
+        "metadata": {
+          "profile": "pump",
+          "metrics": {"SOCIAL_BURST":6, "FREQ_5M":7, "MENTIONS":200}
+        }
+      }'
+```
+Expect `200 OK` with a `decision` block and the `chain` field (`scout → analyst → judge`).
+
+**Apify webhook** — see §5.2 for full pipeline instructions (make sure `ALERTS_SIGNATURE_SECRET` is set).
+
+**Helius webhook intake** — with `HELIUS_WEBHOOK_SECRET`, send a signed sample:
+```bash
+tee tmp_helius_payload.json <<'JSON'
+{
+  "data": [{
+    "type": "transfer",
+    "transactionSignature": "demo-signature",
+    "account": "demo-account",
+    "nativeTransfers": [{"amount": 750000000000}],
+    "tokenTransfers": [],
+    "events": {},
+    "raw": {}
+  }]
+}
+JSON
+
+export HELIUS_SECRET=$(grep ^HELIUS_WEBHOOK_SECRET backend/.env | cut -d= -f2)
+python3 - <<'PY'
+import hmac, hashlib, os
+secret = os.environ['HELIUS_SECRET'].encode()
+body = open('tmp_helius_payload.json','rb').read()
+print(hmac.new(secret, body, hashlib.sha256).hexdigest())
+PY
+
+curl -k -X POST https://api.localhost/api/helius/webhook \
+  -H 'Content-Type: application/json' \
+  -H 'x-helius-signature: <hex-signature>' \
+  --data-binary @tmp_helius_payload.json
+```
+Worker logs should show a whale alert if the transfer crosses `HELIUS_HIGH_VALUE_SOL`.
+
+**QuickNode integration** — set `QUICKNODE_URL` (and optional `QUICKNODE_TOKEN`) in `backend/.env`, then run:
+```bash
+cd backend
+npm test -- tests/test_providers.js
+```
+This validates the `QuickNodeProvider` response parsing. When the worker runs with the real URL, watch `docker compose logs -f worker` for `[quicknode]` price fetch messages.
 
 ### 5.1 Parser → Candidate → Worker Loop
 
@@ -176,4 +238,3 @@ Expected results:
 - `docs/web_interface_adjusments.txt` — UI tweaks and backlog
 
 For troubleshooting, inspect `docker compose logs <service>` and confirm environment variables are correctly set.
-

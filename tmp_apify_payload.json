@@ -1,0 +1,22 @@
+{
+  "actorRun": {
+    "id": "run-local-123",
+    "status": "SUCCEEDED",
+    "startedAt": "2025-10-06T20:00:00.000Z",
+    "finishedAt": "2025-10-06T20:05:00.000Z",
+    "succeeded": true
+  },
+  "datasetItems": [
+    {
+      "symbol": "TEST",
+      "score": 87,
+      "tweet": "Test signal from Apify"
+    }
+  ],
+  "meta": {
+    "priority": 7,
+    "sources": ["twitter"],
+    "filters": ["hot"],
+    "requested_by": "apify-demo"
+  }
+}

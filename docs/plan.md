@@ -144,12 +144,12 @@
 ## Compliance Check
 - *Phase I:* ✅ Completed — Корневая структура соответствует `docs/rules.md:13-65`, отражено в `docs/architecture.md`.
 - *Phase II:* ✅ Completed — План детализирован по фазам, ссылки на спецификации добавлены в разделы.
-- *Phase III:* ☐ Pending
-- *Phase IV:* ☐ Pending
-- *Phase V:* ☐ Pending
-- *Phase VI:* ☐ Pending
-- *Phase VII:* ☐ Pending
-- *Phase VIII:* ☐ Pending
-- *Phase IX:* ☐ Pending
+- *Phase III:* ✅ Completed — FastAPI слой (`backend/api/*`) реализует требуемые эндпоинты и покрыт тестами.
+- *Phase IV:* ✅ Completed — BullMQ воркер (`backend/src/worker/*`) обрабатывает очереди parser/apify/helius и рассылает алерты в FastAPI.
+- *Phase V:* ✅ Completed — React UI (Tabs + Context + SSE/REST) реализован в `web/src`, сборка `npm run build` проходит.
+- *Phase VI:* ✅ Completed — Triple-AI pipeline подключён через `/api/advice`, risk policy из `ai_core/configs` применяется и покрыта интеграционными тестами.
+- *Phase VII:* ✅ Completed — Docker Compose стек (proxy/ui/api/worker/ai-core/redis/postgres) с TLS и healthchecks задокументирован в `docs/deploy.md`.
+- *Phase VIII:* ✅ Completed — GitHub Actions (`.github/workflows/ci.yml`) выполняет pytest, npm/ Vitest и Docker build-check перед деплоем.
+- *Phase IX:* ✅ Completed — e2e сценарий (`backend/tests/e2e/test_full_cycle.py`) покрывает сигнал→AI→алерт→трейд; отчёт фиксируется в `docs/release_report.md`.
 
 > Примечание: текстовые расшифровки `.docx` использованы из `backend/docs/sources/*.txt` и `web/docs/*`. Перед началом каждой фазы необходимо актуализировать соответствующие документы.

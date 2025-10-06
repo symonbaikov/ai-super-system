@@ -1,0 +1,82 @@
+Alpha‑2 Backend — FastAPI + BullMQ Worker (Demo Setup)
+Этот документ описывает демо‑архитектуру для интеграции FastAPI и BullMQ Worker в проект Alpha‑2. Фрилансеру Семёну необходимо собрать и протестировать модуль, чтобы он соответствовал UI‑интерфейсу PR111 + патчи.
+1. Что прислать в демо
+1) docker-compose.flowith.yml — сервисы api (FastAPI), worker (Node+BullMQ), redis
+2) .env.example — ключи: REDIS_URL, GEMINI_API_KEY, HELIUS_API_KEY, BIRDEYE_API_KEY, RUGCHECK_API_KEY, GROQ_API_KEY
+3) README.md (10 строк) — как поднять: docker compose up -d, где открывать API
+4) Postman/Bruno коллекция с эндпоинтами
+5) Короткий лог E2E: PUT → job queued → processed → UI JSON
+2. Контракт API
+Основные эндпоинты и примеры ответов.
+	GET /api/metrics/latency-usage
+{
+  "apify_ms":132,"helius_ms":88,"parser_ms":41,
+  "apify_credits_used":12,"groq_credits_used":3,
+  "suggestion":"Снизить частоту Apify до 10м"
+}
+	POST /api/cex-radar/search
+{ "query": "OPTIMUS" } → 202 + { "jobId": "..." }
+	GET /api/cex-radar/result
+[
+  {"exchange":"Binance","date":"2025-10-06","time":"12:30:00",
+   "team":"doxxed","url":"https://birdeye.so/token/So1...","social":{"tw_1h":240,"tg_online":1800}}
+]
+	GET /api/helius/mints
+[
+  {"name":"$DOGE99","mint":"So1...","team":"anon","original":true,
+   "safe":true,"hasTw":true,"sol":12.3,"ts":"2025-10-06 11:44:10"}
+]
+	POST /api/whales/scan
+{ "jobId": "..." }
+	GET /api/whales/top3
+[
+  {"mint":"So1abc...","name":"$TRUMP42","whales":5,"sol_sum":38.2}
+]
+	POST /api/ai/infer
+{ "provider":"gemini","model":"gemini-2.5-flash","prompt":"..." }
+3. FastAPI main.py (основной сервер)
+Сервер FastAPI управляет очередями, интеграцией Redis и отдаёт JSON‑ответы под UI.
+
+from fastapi import FastAPI, Body, Query
+from pydantic import BaseModel
+import os, json, time
+import redis
+
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+r = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+
+app = FastAPI(title="Alpha-2 API")
+
+def enqueue(queue: str, payload: dict) -> str:
+    job_id = f"{queue}:{int(time.time()*1000)}"
+    r.lpush(f"{queue}:jobs", json.dumps({ "id": job_id, **payload }))
+    r.hset(f"{queue}:status", job_id, "queued")
+    return job_id
+
+4. Worker (Node.js + BullMQ)
+Node‑воркер обрабатывает очереди и обновляет Redis‑метрики. Использует BullMQ и IORedis.
+См. код worker/index.js — обработчики для CEX Radar, Whales и AI Infer.
+5. docker-compose.flowith.yml
+Пример docker‑конфигурации для Redis, API и Worker. Поднимает три сервиса: redis, api, worker.
+
+services:
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+  api:
+    build:
+      context: ./api
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on: [redis]
+    ports: ["8080:8080"]
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers 1
+  worker:
+    build:
+      context: ./worker
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on: [redis]
+
+6. Примечание о Gemini 2.5 Flash
+Gemini 2.5 Flash — оптимальное решение для текстовых подсказок, анализа и суммаризации. Формат запроса: provider, model, prompt → {text, tokens, cost}. Будет добавлен учёт стоимости и лимиты по токенам и RPS.

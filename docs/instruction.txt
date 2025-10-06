@@ -1,0 +1,64 @@
+Я встроил Три-АИ-модуль (Scout → Analyst → Judge) прямо в вашу систему v5, добавил все глобальные правила/фильтры/советы и новые источники, и упаковал в оба формата.
+Ссылки на готовые архивы
+	ZIP: AI_SUPER_SYSTEM_merged_v5.zip
+	TAR.GZ: AI_SUPER_SYSTEM_merged_v5.tar.gz
+Оба архива я проверил автотестом по обязательным путям — 0 пропусков.
+
+Что именно добавлено (поверх вашей v5)
+Новые файлы конфигурации (три ИИ-модуля)
+	configs/llm_router.json — маршрутизатор на 3 модели:
+	scout → Groq llama3-8b-instruct (быстрые: классификация, фильтры, memeability, антиспам).
+	analyst → Groq llama3-70b-instruct (глубокий разбор, скоринг, объяснения/отчёты).
+	judge → mixtral-8x7b-instruct (проверка консистентности, policy-gate, majority vote).
+	configs/ai_supercenter.json — роли M1/M2/M3, входы/выходы, цепочка M1 → M2 → M3, схемы SocialAlert и RiskDecision, эскалация 5м → 1м.
+	configs/profiles_config.json — 5 профилей (Twitter, Pump, Whales30d, FindToken, Listings) привязаны к маршрутам scout/analyst/judge.
+	configs/risk_policy.json — fail-closed политика (mint/freeze/blacklist/honeypot → красная зона; override только с обязательными SL/капами).
+Уже были и сохранены (собраны из ваших документов)
+	configs/ai_global_rules.json — глобальные правила (дисциплина, безопасность, риск-менеджмент, психология).
+	configs/ai_fine_filters.json — тонкие фильтры: RSI/Stoch/EMA/MACD/ATR/PSAR/Фибо + on-chain пороги и стадии.
+	configs/ai_weights_v2.json — веса и пороги скоринга (MCAP, VOL_5m, LIQ, LP-Lock, Whales, SocialBurst и т.д.).
+	configs/alerts_presets.json — пресеты алертов (DEX, Whale, Pump.fun).
+	configs/whales_providers.json — матрица провайдеров кит-сигналов (DexCheck/Kolscan/GMGN/Arkham/Nansen).
+Новые вспомогательные данные/документация
+	data/seed_whitelist.txt — исходный вайтлист мем-семян (из присланного файла).
+	data/vision_anchors.txt — визуальные якоря/подписи для OCR/ALT-классификации.
+	configs/config.yaml — добавлен ваш конфиг YAML как референс.
+	docs/README_TRIPLE_AI.md — краткое описание архитектуры SuperCenter (3 ИИ-модуля).
+	docs/addons_api_patch.md — расширения API под 3-модельный роутинг (/ai/route, /ai/alert/social, /ai/health).
+	docs/ui_spec.md, docs/addons_api.md — спецификация интерфейса и базовых эндпойнтов.
+	docs/raw_sources/… — все ваши .docx, включая новые:
+5профилей JSON.docx, Основа 1( а).docx, Объединенный_документ.docx, а также ранее загруженные (глобальные правила/фильтры, списки X/инфлюенсеров, киты, планы и т.п.).
+Всё остальное как в v5
+	server/ (compose, openapi, env*, secrets), scripts/, reports/, web/, MANIFEST.txt, README_MERGE_NOTES.md.
+
+Как это работает теперь (в двух словах)
+1.	M1 SocialScout (scout) — парсит X/TG/Discord по whitelist, оценивает memeability, визуальные якоря (ALT/OCR), антиспам; при вспышке эскалирует период до 1 мин; отдаёт SocialAlert.
+2.	M2 OnchainAnalyst (analyst) — подтягивает Helius/Birdeye/Dexscreener, проверяет security (LP-lock, mint/freeze, tax), киты/объём, считает risk/pump по ai_fine_filters.json + ai_weights_v2.json, готовит DraftDecision.
+3.	M3 JudgePolicy (judge) — сверяет с ai_global_rules.json и risk_policy.json, применяет majority vote / policy-gate, формирует FinalDecision с объяснением и пишет в аудит/память.
+
+Куда положено «новое»
+AI_SUPER_SYSTEM_merged_v5/
+  configs/
+    llm_router.json          ← 3 маршрута ИИ
+    ai_supercenter.json      ← оркестрация M1/M2/M3
+    profiles_config.json     ← 5 профилей → маршруты
+    risk_policy.json         ← fail-closed политика
+    config.yaml              ← ваш YAML
+    ... (остальные JSON с правилами/весами/фильтрами)
+  data/
+    seed_whitelist.txt       ← списки ключевых терминов
+    vision_anchors.txt       ← визуальные якоря
+    meme_terms_seed.json
+  docs/
+    README_TRIPLE_AI.md
+    addons_api_patch.md
+    ui_spec.md
+    addons_api.md
+    raw_sources/             ← все ваши DOCX
+
+Что дальше (по желанию)
+	Включить авто-импорт аккаунтов X/TG из docs/raw_sources/*.docx при первом запуске (сейчас можно через /addons/terms/import-accounts).
+	Добавить JSON-схемы валидации (я могу сгенерировать *.schema.json для всех configs/).
+	Настроить тонкие пороги под «любимые сценарии» прямо в ai_weights_v2.json (Pump.fun ранний вход / китовый копитрейд / пред-CEX).
+Если хочешь, скажи «включай авто-импорт и схемы» — сделаю и перезапакую тут же.
+

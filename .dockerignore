@@ -1,0 +1,13 @@
+.git
+.gitignore
+.DS_Store
+.vscode
+.venv
+**/__pycache__
+**/*.pyc
+backend/node_modules
+web/node_modules
+web/dist
+ai_core/data
+reports
+logs

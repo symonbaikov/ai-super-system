@@ -1,0 +1,24 @@
+{
+  admin off
+}
+
+{env.APP_FQDN} {
+  tls internal
+  encode gzip
+  reverse_proxy web:80
+}
+
+{env.API_FQDN} {
+  tls internal
+  encode gzip
+  route /stream* {
+    reverse_proxy worker:8811
+  }
+  reverse_proxy api:9000
+}
+
+{env.AI_FQDN} {
+  tls internal
+  encode gzip
+  reverse_proxy ai-core:9500
+}

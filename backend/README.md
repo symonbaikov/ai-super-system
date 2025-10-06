@@ -34,3 +34,20 @@ node src/index.js
 - Реализовать whale-события (Helius/QuickNode) и передавать их как `whale_in` сигналы
 - Привязать `/advice` к бэку Голиба (3 модели) — см. `.env.sample`
 ```
+
+## FastAPI слой (Phase III)
+- Запуск: `python -m backend.api` (порт по умолчанию `API_PORT` из `.env`).
+- Маршруты:
+  - `POST /api/parser/run` — ставит задачу парсинга в очередь и создаёт запись в `candidates`.
+  - `POST /api/apify/callback` — принимает callback Apify и прокладывает события в очередь.
+  - `POST /api/helius/webhook` — подписка на события Helius (подпись через `HELIUS_WEBHOOK_SECRET`).
+  - `POST /api/alerts` / `GET /api/alerts` — CRUD алертов + публикация в Redis канал.
+  - `POST /api/trade/confirm` — фиксирует подтверждения сделок.
+- Зависимости: `backend/requirements.txt` (FastAPI, SQLAlchemy async, Redis, httpx).
+- Для миграции схемы БД используем автосоздание при старте (или позднее Alembic).
+
+## BullMQ worker
+- Воркеры запускаются вместе с Express-сервисом через `startWorkers()` (смотри `src/worker/index.js`).
+- Очереди FastAPI (`parser:run`, `apify:dataset`, `helius:events`) бриджатся через Redis в BullMQ и обрабатываются обработчиками в `src/worker/handlers/*`.
+- Для отправки алертов используется REST `/api/alerts` FastAPI (`FASTAPI_URL` в `.env`).
+- Поддерживаются проверки RugCheck/Sniffer (настройка через `RUGCHECK_API_URL`, `SNIFFER_API_URL`).

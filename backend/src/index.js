@@ -7,6 +7,7 @@ import { initSentry } from './monitoring/sentry.js'
 import { createQueue } from './adapters/queues/index.js'
 import { computeSignals } from './signals/engine.js'
 import { bus } from './server/sse.js'
+import { startWorkers } from './worker/index.js'
 
 const app = express()
 app.use(cors())
@@ -56,6 +57,13 @@ mountSSE(app)
 const port = parseInt(process.env.PORT||'8811')
 app.listen(port, ()=> console.log('[super-parser-ultimate] up on', port))
 
+const workerController = await startWorkers()
+const shutdown = async ()=>{
+  try { await workerController?.stop?.() } catch(err){ console.error('[worker] shutdown error', err) }
+  process.exit(0)
+}
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)
 
 // ---- pipelines & jobs wiring (demo) ----
 import { runIngestOnchain } from './pipelines/ingest_onchain.js'

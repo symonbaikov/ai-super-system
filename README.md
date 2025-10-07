@@ -1,7 +1,8 @@
-# Super Parser AI — Runbook (English Edition)
+# Super Parser AI — Runbook
 
 This repository bundles the full Super Parser AI stack: FastAPI gateway, BullMQ worker, Triple-AI Core service, React control center, Redis, Postgres, and a Caddy proxy. The guide below explains how to configure, run, and test every component end to end.
 
+## Demo
 
 https://github.com/user-attachments/assets/2fe563ee-ffad-41be-a886-42bf1315f52f
 

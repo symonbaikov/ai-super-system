@@ -192,12 +192,14 @@ Expected results:
    ```
 
 2. Send the callback:
-   ```bash
-   curl -k -X POST https://api.localhost/api/apify/callback \
-     -H 'Content-Type: application/json' \
-     -H 'x-apify-signature: <hex-signature>' \
-     --data-binary @tmp_apify_payload.json
-   ```
+```bash
+curl -k -X POST https://api.localhost/api/apify/callback \
+  -H 'Content-Type: application/json' \
+  -H 'x-apify-signature: <hex-signature>' \
+  --data-binary @tmp_apify_payload.json
+```
+
+Expect a `200 OK` response in under ~2 seconds.
 
 3. Verify end-to-end:
    - Candidate stored: `docker compose exec postgres psql -U parser -d super_parser -c "SELECT symbol,status FROM candidates ORDER BY created_at DESC LIMIT 5;"`
@@ -236,5 +238,7 @@ Expected results:
 - `docs/integrations.md` — Groq, Apify, Helius, QuickNode integration notes
 - `docs/demo_setup.txt` — scripted scenarios for demos
 - `docs/web_interface_adjusments.txt` — UI tweaks and backlog
+- Git branching: submit changes via the `feature/apify-integration` branch targeting `dev`
+- Logging: view service logs with `docker compose[ -f docker-compose.dev.yml] logs <service>` (stdout/err)
 
 For troubleshooting, inspect `docker compose logs <service>` and confirm environment variables are correctly set.

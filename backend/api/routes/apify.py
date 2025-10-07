@@ -69,7 +69,7 @@ async def apify_run(
     return ApifyRunResponse(actor_id=actor_id, run_id=run_id, status=status_label, data=run_data or {})
 
 
-@router.post("/callback", status_code=status.HTTP_202_ACCEPTED)
+@router.post("/callback", status_code=status.HTTP_200_OK)
 async def apify_callback(
     request: Request,
     session: AsyncSession = Depends(get_db_session),

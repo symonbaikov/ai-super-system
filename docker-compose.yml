@@ -44,6 +44,8 @@ services:
     build:
       context: .
       dockerfile: ai_core/Dockerfile
+      args:
+        AI_CORE_SRC: ai_core
     environment:
       AI_CORE_CONFIG_DIR: ai_core/configs
     volumes:

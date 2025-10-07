@@ -11,10 +11,11 @@ RUN apt-get update \
 
 WORKDIR /srv/ai_core
 
-COPY ai_core/requirements.txt ./requirements.txt
+ARG AI_CORE_SRC=.
+COPY ${AI_CORE_SRC}/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ai_core ./ai_core
+COPY ${AI_CORE_SRC}/ ./ai_core
 
 EXPOSE 9500
 

@@ -1,5 +1,6 @@
 from backend.api import dependencies
 import uuid
+from pathlib import Path
 
 import pytest
 
@@ -217,6 +218,7 @@ async def test_gemini_infer_returns_ranked_accounts(api_client):
     assert any("@aeyakovenko" == entry["handle"] for entry in data["accounts"])
     assert "Gemini scanned" in data["text"]
     assert "Strategy context" in data["text"]
+    assert data["provider"] == "corpus"
 
 
 @pytest.mark.asyncio
@@ -228,4 +230,69 @@ async def test_gemini_infer_requires_prompt(api_client):
     )
     assert response.status_code == 400
     assert response.json()["detail"] == "prompt is required"
+
+
+@pytest.mark.asyncio
+async def test_gemini_infer_uses_flowith_when_available(monkeypatch, api_client):
+    client, _ = api_client
+
+    class DummyResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict:
+            return self._payload
+
+    class DummyClient:
+        def __init__(self, payload):
+            self.payload = payload
+            self.calls: list[dict[str, object]] = []
+
+        def post(self, url, json=None, headers=None):
+            self.calls.append({"url": url, "json": json, "headers": headers})
+            return DummyResponse(self.payload)
+
+    fake_payload = {
+        "text": "Flowith summary",
+        "tokens": {"input": 64, "output": 32},
+        "cost": {"usd": 0.045},
+        "accounts": [
+            {"handle": "@flowith", "description": "Flowith AI", "score": 9.9, "keywords": ["flowith"]},
+        ],
+        "analysis": {"sentiment": {"score": 0.88, "label": "bullish"}},
+    }
+    fake_client = DummyClient(fake_payload)
+
+    from backend.api.services.gemini import GeminiService
+
+    service = GeminiService(
+        Path("."),
+        api_url="https://api.flowith.io/v1/gemini",
+        api_key="test-token",
+        http_client=fake_client,  # type: ignore[arg-type]
+    )
+    monkeypatch.setattr(dependencies, "_gemini_service", service, raising=False)
+
+    try:
+        response = await client.post(
+            "/api/ai/infer",
+            json={
+                "provider": "gemini",
+                "prompt": "Give me Flowith insights",
+            },
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["provider"] == "flowith"
+        assert data["text"] == "Flowith summary"
+        assert data["tokens"] == {"input": 64, "output": 32}
+        assert data["cost_usd"] == 0.045
+        assert data["analysis"]["sentiment"]["label"] == "bullish"
+        assert data["accounts"][0]["handle"] == "@flowith"
+        assert fake_client.calls[0]["headers"]["Authorization"] == "Bearer test-token"
+    finally:
+        service.close()
 

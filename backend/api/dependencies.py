@@ -32,7 +32,12 @@ if not _ai_config_path.is_absolute():
     repo_root = Path(__file__).resolve().parents[2]
     _ai_config_path = (repo_root / _ai_config_path).resolve()
 _ai_pipeline = AIPipelineService(_ai_config_path, groq_client=_groq_client if _settings.groq_api_key else None)
-_gemini_service = GeminiService(Path(__file__).resolve().parents[2])
+_gemini_service = GeminiService(
+    Path(__file__).resolve().parents[2],
+    api_url=_settings.gemini_base_url,
+    api_key=_settings.gemini_api_key,
+    timeout=_settings.http_timeout_seconds,
+)
 
 
 def get_settings_dependency() -> Settings:

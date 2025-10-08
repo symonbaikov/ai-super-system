@@ -1,10 +1,13 @@
+from datetime import datetime, timezone
+
 from backend.api import dependencies
+from backend.api.schemas.whales import WhaleScanResult, WhaleTopEntry
 import uuid
 from pathlib import Path
 
 import pytest
 
-from backend.tests.conftest import FakeQueue, _fetch_alerts, _fetch_candidates
+from backend.tests.conftest import _fetch_alerts, _fetch_candidates
 
 
 @pytest.mark.asyncio

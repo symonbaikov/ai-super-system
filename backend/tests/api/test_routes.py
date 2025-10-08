@@ -111,6 +111,66 @@ async def test_trade_confirm_updates_candidate(api_client):
 
 
 @pytest.mark.asyncio
+async def test_signals_endpoint_maps_candidate_metadata(api_client):
+    client, _ = api_client
+    metadata = {
+        "word": "$DOGE",
+        "type": "токен",
+        "detected_at": "2025-09-17T10:15:00Z",
+        "source": "twitter",
+        "author": "@elonmusk",
+        "link": "https://x.com/elon/status/1",
+        "tweet_count": 420,
+        "community_size": 125000,
+        "name_changes": 2,
+        "spam_score": 12,
+        "dev_team": "unknown",
+        "community_link": "https://t.me/example",
+        "contract": "So1xxxx...abcd",
+        "chain": "Solana",
+        "safety": {"no_mint": True, "burn_lp": False, "blacklist": True},
+        "summary": "Высокий хайп, но есть риски с листингом.",
+        "is_og": True,
+    }
+    response = await client.post(
+        "/api/parser/run",
+        json={
+            "symbol": "DOGE",
+            "sources": ["twitter"],
+            "priority": 4,
+            "metadata": metadata,
+        },
+    )
+    assert response.status_code == 202
+
+    listing = await client.get("/api/signals")
+    assert listing.status_code == 200
+    signals = listing.json()
+    assert len(signals) == 1
+    signal = signals[0]
+
+    assert signal["word"] == "$DOGE"
+    assert signal["type"] == "токен"
+    assert signal["source"] == "Twitter"
+    assert signal["author"] == "@elonmusk"
+    assert signal["link"] == "https://x.com/elon/status/1"
+    assert signal["tweetCount"] == 420
+    assert signal["communitySize"] == 125000
+    assert signal["nameChanges"] == 2
+    assert signal["spamScore"] == 0.12
+    assert signal["devTeam"] == "unknown"
+    assert signal["communityLink"] == "https://t.me/example"
+    assert signal["contract"] == "So1xxxx...abcd"
+    assert signal["chain"] == "Solana"
+    assert signal["isOG"] is True
+    assert signal["safety"]["noMint"] is True
+    assert signal["safety"]["burnLP"] is False
+    assert signal["safety"]["blacklist"] is True
+    assert signal["summary"] == metadata["summary"]
+    assert signal["detectedAt"] == "2025-09-17 10:15"
+
+
+@pytest.mark.asyncio
 async def test_apify_run_triggers_actor(api_client):
     client, _ = api_client
 
@@ -135,4 +195,37 @@ async def test_apify_run_triggers_actor(api_client):
     finally:
         if original is not None:
             dependencies._apify_client = original
+
+
+@pytest.mark.asyncio
+async def test_gemini_infer_returns_ranked_accounts(api_client):
+    client, _ = api_client
+    response = await client.post(
+        "/api/ai/infer",
+        json={
+            "provider": "gemini",
+            "model": "gemini-2.5-flash",
+            "prompt": "Highlight Solana ecosystem founders and key influencers",
+            "strategyId": "S1",
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["tokens"]["input"] >= 5
+    assert data["tokens"]["output"] >= 5
+    assert data["cost_usd"] > 0
+    assert any("@aeyakovenko" == entry["handle"] for entry in data["accounts"])
+    assert "Gemini scanned" in data["text"]
+    assert "Strategy context" in data["text"]
+
+
+@pytest.mark.asyncio
+async def test_gemini_infer_requires_prompt(api_client):
+    client, _ = api_client
+    response = await client.post(
+        "/api/ai/infer",
+        json={"provider": "gemini", "model": "gemini-2.5-flash"},
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "prompt is required"
 

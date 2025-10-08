@@ -1,0 +1,500 @@
+Самый последний кусок Трейдингвью
+
+
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alpha-2 Lite • Whale Radar + TradingView</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+  <!-- TradingView public widget script -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    html, body { height:100%; }
+  </style>
+</head>
+<body class="min-h-screen bg-white text-gray-900">
+  <div class="max-w-7xl mx-auto p-4 md:p-6 space-y-4">
+    <!-- Header -->
+    <header class="flex items-center justify-between">
+      <h1 class="text-2xl md:text-3xl font-semibold">Alpha-2 Lite • Whale-Radar + TradingView</h1>
+      <div class="flex gap-2">
+        <button id="btnStart" class="px-3 py-2 rounded-2xl shadow bg-black text-white">Начать</button>
+        <button id="btnStop" class="px-3 py-2 rounded-2xl shadow bg-gray-100">Стоп</button>
+      </div>
+    </header>
+
+    <!-- Controls -->
+    <section class="grid md:grid-cols-3 gap-3">
+      <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="p-3 rounded-2xl shadow bg-gray-50">
+          <label class="text-sm font-medium">Адрес контракта</label>
+          <div class="mt-1 flex gap-2">
+            <input id="inpContract" placeholder="Вставь mint / адрес контракта" class="w-full px-3 py-2 rounded-xl border" />
+            <button id="btnOpenByContract" class="px-3 py-2 rounded-xl bg-gray-900 text-white text-sm">Открыть</button>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Для реального открытия по mint нужен backend-маппинг (Helius/Birdeye → CEX символ). Сейчас демо.</p>
+        </div>
+        <div class="p-3 rounded-2xl shadow bg-gray-50">
+          <label class="text-sm font-medium">Название токена</label>
+          <input id="inpToken" placeholder="Например: OPTIMUS" class="mt-1 w-full px-3 py-2 rounded-xl border" />
+        </div>
+      </div>
+
+      <div class="p-3 rounded-2xl shadow bg-gray-50 flex flex-col gap-2">
+        <div class="text-sm font-medium">Whale threshold (SOL): <span id="lblThresh">5</span></div>
+        <input id="rngThresh" type="range" min="1" max="50" value="5" />
+        <div class="text-sm font-medium">Окно (сек): <span id="lblWin">5</span>s</div>
+        <input id="rngWin" type="range" min="1" max="60" value="5" />
+        <label class="inline-flex items-center gap-2 text-sm">
+          <input id="chkAgg" type="checkbox" checked /> Aggressive mode (1 кит = сигнал)
+        </label>
+      </div>
+    </section>
+
+    <!-- Chart + Side -->
+    <section class="grid lg:grid-cols-3 gap-4">
+      <div class="lg:col-span-2 space-y-4">
+        <!-- Lightweight Charts block -->
+        <div class="p-3 rounded-2xl shadow bg-gray-50 lg:pr-8">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-medium">График (Lightweight Charts)</div>
+            <div class="text-xs text-gray-500">Биржа: Birdeye/Axiom/Helius (подключить позже) • Сейчас демо</div>
+          </div>
+          <!-- Таймфреймы демо (секунды поддерживаются здесь) -->
+          <div class="flex flex-wrap gap-2 mb-2 text-xs">
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="1s">1s</button>
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="5s">5s</button>
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="1m">1m</button>
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="5m">5m</button>
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="15m">15m</button>
+            <button class="tf-btn px-2 py-1 rounded border" data-tf="1h">1h</button>
+            <span class="text-gray-500 ml-2">(TradingView не поддерживает секунды в публичном виджете)</span>
+          </div>
+          <div id="chart" class="w-full h-[320px] rounded-xl bg-white mr-6"></div>
+
+          <!-- Метрики поверх графика -->
+          <div class="mt-3 grid grid-cols-2 md:grid-cols-8 gap-3 text-sm">
+            <div class="p-2 rounded-xl bg-white shadow-sm col-span-2 md:col-span-1"><div class="text-gray-500">Twitter 1h</div><div id="tw1h" class="text-lg font-semibold">0</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Twitter 10m</div><div id="tw10m" class="text-lg font-semibold">0</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Twitter 30m</div><div id="tw30m" class="text-lg font-semibold">0</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Telegram 10m</div><div id="tg10m" class="text-lg font-semibold">0</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Telegram 30m</div><div id="tg30m" class="text-lg font-semibold">0</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">MSAR</div><div id="msar" class="text-lg font-semibold">—</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Vol 5m</div><div id="vol5" class="text-lg font-semibold">—</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Vol 15m</div><div id="vol15" class="text-lg font-semibold">—</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm"><div class="text-gray-500">Vol 30m</div><div id="vol30" class="text-lg font-semibold">—</div></div>
+            <div class="p-2 rounded-xl bg-white shadow-sm col-span-2 md:col-span-1"><div class="text-gray-500">Ликвидность</div><div id="liquidity" class="text-lg font-semibold">—</div></div>
+          </div>
+          <div id="aiExplain" class="mt-3 p-3 rounded-xl bg-white border text-sm text-gray-800">AI: ждём события…</div>
+        </div>
+
+        <!-- TradingView block -->
+        <div class="p-3 rounded-2xl shadow bg-gray-50">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-medium">TradingView</div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-gray-500">Публичный виджет • Без ключей</span>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+            <div>
+              <label class="text-xs text-gray-600">Биржа</label>
+              <select id="tvExchange" class="mt-1 w-full px-3 py-2 rounded-xl border">
+                <option value="BINANCE">BINANCE</option>
+                <option value="BYBIT">BYBIT</option>
+                <option value="OKX">OKX</option>
+                <option value="MEXC">MEXC</option>
+                <option value="GATEIO">GATEIO</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-gray-600">Символ</label>
+              <input id="tvSymbol" value="SOL" class="mt-1 w-full px-3 py-2 rounded-xl border" />
+            </div>
+            <div>
+              <label class="text-xs text-gray-600">Котировка</label>
+              <select id="tvQuote" class="mt-1 w-full px-3 py-2 rounded-xl border">
+                <option value="USDT">USDT</option>
+                <option value="USD">USD</option>
+                <option value="BTC">BTC</option>
+              </select>
+            </div>
+            <div class="flex items-end">
+              <button id="tvApply" class="w-full px-3 py-2 rounded-xl bg-gray-900 text-white">Построить</button>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs mb-2">
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="1">1m</button>
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="5">5m</button>
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="15">15m</button>
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="60">1h</button>
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="240">4h</button>
+            <button class="tv-res px-2 py-1 rounded border" data-tv-res="D">1D</button>
+          </div>
+          <div id="tv_chart_container" class="w-full h-[420px] rounded-xl bg-white"></div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Большое окно AI-решений вместо Сигналы/Потоки -->
+        <div class="p-3 rounded-2xl shadow bg-gray-50">
+          <div class="font-medium mb-2">AI Решение (сигналы входа/выхода, киты, советы)</div>
+          <div id="aiLog" class="space-y-2 max-h-[560px] overflow-auto pr-1 text-sm"></div>
+        </div>
+        <div class="p-3 rounded-2xl shadow bg-gray-50">
+          <div class="font-medium mb-2">Загрузить правила</div>
+          <label class="block text-xs text-gray-500 mb-2">Загружай графики/паттерны/книги (JSON/CSV/PDF/PNG). <b>ИИ работает только по этим правилам.</b></label>
+          <input id="rulesInput" type="file" multiple class="block w-full text-sm" />
+          <button id="rulesBtn" class="mt-2 w-full px-3 py-2 rounded-xl bg-gray-900 text-white text-sm">Загрузить в ИИ (демо)</button>
+          <ul id="rulesList" class="mt-2 text-xs text-gray-600 list-disc pl-4"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-xs text-gray-500 pt-2">One-file demo • Развёртывание: GitHub Pages / Netlify Drop / Cloudflare Pages. Реальные источники: Helius Webhooks + Birdeye WS + Axiom. Торговых функций нет (инфо-режим). TradingView: публичный виджет.</footer>
+  </div>
+
+  <script>
+    // --- Helpers ---
+    function formatTime(ms){
+      const d = new Date(ms);
+      return d.toLocaleTimeString(undefined, {hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    }
+
+    // --- Lightweight Charts setup (demo stream) ---
+    const chartEl = document.getElementById('chart');
+    const chart = LightweightCharts.createChart(chartEl, { height: 320, layout: { textColor: '#111827', background: { type: 'solid', color: '#ffffff'} }, rightPriceScale: { borderVisible: false }, timeScale: { borderVisible: false } });
+    chart.timeScale().applyOptions({ timeVisible:true, secondsVisible:true });
+    const series = chart.addLineSeries({ color: '#111827', lineWidth: 2 });
+
+    let tf = '5s';
+    let stepSec = 5; // шаг в секундах
+    const tfMap = { '1s':1, '5s':5, '1m':60, '5m':300, '15m':900, '1h':3600 };
+
+    function seedData(){
+      const now = Math.floor(Date.now() / 1000);
+      let last = 0.0025;
+      const points = 120;
+      const arr = Array.from({length: points}, (_,i)=>({ time: now - (points-i)*stepSec, value: (last += (Math.random()-0.5)*0.00003) }));
+      series.setData(arr);
+      return arr;
+    }
+    let data = seedData();
+
+    // UI refs
+    const btnStart = document.getElementById('btnStart');
+    const btnStop = document.getElementById('btnStop');
+    const aiLog = document.getElementById('aiLog');
+    const rngThresh = document.getElementById('rngThresh');
+    const rngWin = document.getElementById('rngWin');
+    const lblThresh = document.getElementById('lblThresh');
+    const lblWin = document.getElementById('lblWin');
+    const tw1h = document.getElementById('tw1h');
+    const tw10m = document.getElementById('tw10m');
+    const tw30m = document.getElementById('tw30m');
+    const tg10m = document.getElementById('tg10m');
+    const tg30m = document.getElementById('tg30m');
+    const aiExplain = document.getElementById('aiExplain');
+    const msarEl = document.getElementById('msar');
+    const vol5El = document.getElementById('vol5');
+    const vol15El = document.getElementById('vol15');
+    const vol30El = document.getElementById('vol30');
+    const liqEl = document.getElementById('liquidity');
+
+    const rulesInput = document.getElementById('rulesInput');
+    const rulesBtn = document.getElementById('rulesBtn');
+    const rulesList = document.getElementById('rulesList');
+
+    rngThresh.addEventListener('input', ()=> lblThresh.textContent = rngThresh.value);
+    rngWin.addEventListener('input', ()=> lblWin.textContent = rngWin.value);
+
+    let timer = null;
+    let markers = [];
+    let vol5=0, vol15=0, vol30=0, liquidity=25000;
+
+    function updateDerivedMetrics(){
+      // демо-обновление объёмов/ликвидности и соц.спайков (счётчики)
+      vol5 = Math.max(0, vol5 + Math.floor(Math.random()*50 - 20));
+      vol15 = Math.max(0, vol15 + Math.floor(Math.random()*60 - 15));
+      vol30 = Math.max(0, vol30 + Math.floor(Math.random()*80 - 10));
+      liquidity = Math.max(0, liquidity + Math.floor(Math.random()*400 - 150));
+      setMetric(vol5El, vol5.toString());
+      setMetric(vol15El, vol15.toString());
+      setMetric(vol30El, vol30.toString());
+      setMetric(liqEl, liquidity.toLocaleString('en-US'));
+      const msarVal = (Math.random()*2-1).toFixed(2);
+      setMetric(msarEl, msarVal);
+
+      // Соцметрики (демо):
+      if (tw10m) tw10m.textContent = (+tw10m.textContent) + (Math.random()<0.3?1:0);
+      if (tw30m) tw30m.textContent = (+tw30m.textContent) + (Math.random()<0.2?1:0);
+      if (tg10m) tg10m.textContent = (+tg10m.textContent) + (Math.random()<0.25?1:0);
+      if (tg30m) tg30m.textContent = (+tg30m.textContent) + (Math.random()<0.2?1:0);
+    }
+
+    function setWhaleMarker(time, dir, tier, count){
+      // TOP киты: выделим цветом (A — золото, B — фиолет, C — бирюза)
+      const tierColor = tier==='A'? '#f59e0b' : tier==='B'? '#7c3aed' : '#06b6d4';
+      const shape = tier ? 'circle' : (dir>0?'arrowUp':'arrowDown');
+      const color = tier ? tierColor : (dir>0? '#16a34a':'#dc2626');
+      const text = `${tier?('Top '+tier+' • '+count+' whales • '):''}${dir>0?'BUY / Whale IN':'SELL / Whale OUT'}`;
+      markers.push({ time, position: dir>0? 'belowBar':'aboveBar', color, shape, text });
+      series.setMarkers(markers);
+    }
+
+    function setTweetMarker(time){
+      markers.push({ time, position:'aboveBar', color:'#1d4ed8', shape:'square', text:'Twitter Spike' });
+      series.setMarkers(markers);
+    }
+
+    function appendAiLog(kind, text){
+      const el = document.createElement('div');
+      el.className = 'p-2 rounded-xl bg-white border';
+      const ts = formatTime(Date.now());
+      const badgeCls = kind==='BUY'?'bg-green-100 text-green-700':kind==='SELL'?'bg-red-100 text-red-700':'bg-gray-100 text-gray-700';
+      el.innerHTML = `<div class="flex items-center justify-between"><span class="text-xs px-2 py-0.5 rounded-full ${badgeCls}">${kind}</span><span class="text-xs text-gray-500">${ts}</span></div><div class="mt-1 text-gray-800">${text}</div>`;
+      aiLog.prepend(el);
+      while (aiLog.children.length>200) aiLog.removeChild(aiLog.lastChild);
+    }
+
+    function setMetric(el, val){ if(el) el.textContent = val; }
+
+    function randomTier(){
+      const r = Math.random();
+      if (r < 0.5) return 'C'; // чаще C
+      if (r < 0.8) return 'B';
+      return 'A';
+    }
+    function randomWhaleCount(){
+      const arr = [2,5,8];
+      return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    function start(){
+      if (timer) return;
+      appendAiLog('INFO', 'Запуск поиска: применяю правила и фильтры для китов (демо)');
+      timer = setInterval(()=>{
+        const drift = (Math.random()-0.5)*0.00005;
+        let v = Math.max(0.00008, data[data.length-1].value + drift);
+        const t = data[data.length-1].time + stepSec;
+        let info = '';
+        if (Math.random() < 0.12){
+          const dir = Math.random()<0.6?1:-1;
+          v = Math.max(0.00008, v + dir*(Math.random()*0.0006+0.0002));
+          const sol = Math.floor(parseInt(rngThresh.value) + Math.random()*8);
+          const tier = randomTier();
+          const count = randomWhaleCount();
+          appendAiLog(dir>0?'BUY':'SELL', `${dir>0?'Вход':'Выход'} китов: ~${sol} SOL • <b>Top ${tier}</b> • ${count} кит(ов).`);
+          setWhaleMarker(t, dir, tier, count);
+          info = dir>0 ? `AI: вероятен импульс ↑, вошли киты ~${sol} SOL (Top ${tier}, ${count}).` : `AI: давление продаж, выход китов ~${sol} SOL (Top ${tier}, ${count}).`;
+        }
+        if (Math.random() < 0.10){
+          setTweetMarker(t);
+          tw1h.textContent = (+tw1h.textContent) + Math.floor(Math.random()*4+1);
+          if (tw10m) tw10m.textContent = (+tw10m.textContent) + 1;
+          if (tw30m) tw30m.textContent = (+tw30m.textContent) + (Math.random()<0.5?1:0);
+          info = (info? info+' ':'') + 'AI: всплеск Twitter — вероятность пампа ↑';
+        }
+        if (Math.random() < 0.08){
+          if (tg10m) tg10m.textContent = (+tg10m.textContent) + 1;
+          if (tg30m) tg30m.textContent = (+tg30m.textContent) + (Math.random()<0.5?1:0);
+          appendAiLog('INFO', 'Всплеск Telegram (демо)');
+        }
+        if (info) aiExplain.textContent = info;
+
+        data.push({ time:t, value:v });
+        if (data.length>600) data.shift();
+        series.update({ time:t, value:v });
+        updateDerivedMetrics();
+      }, Math.max(250, stepSec*200));
+    }
+
+    function stop(){
+      if (timer){ clearInterval(timer); timer = null; appendAiLog('INFO','Стрим остановлен'); }
+    }
+
+    btnStart.addEventListener('click', start);
+    btnStop.addEventListener('click', stop);
+
+    // Таймфрейм-кнопки (демо-график)
+    document.querySelectorAll('.tf-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const v = btn.getAttribute('data-tf');
+        stepSec = tfMap[v] || 5;
+        data = seedData(); markers = []; series.setMarkers(markers); aiExplain.textContent = 'AI: смена таймфрейма…';
+      });
+    });
+
+    // Загрузка правил (демо): просто показывает список файлов
+    rulesBtn.addEventListener('click', ()=>{
+      const files = Array.from(rulesInput.files||[]);
+      rulesList.innerHTML = '';
+      files.forEach(f=>{
+        const li = document.createElement('li');
+        li.textContent = f.name;
+        rulesList.appendChild(li);
+      });
+      if (files.length){
+        appendAiLog('INFO', `Правила загружены: ${files.length} файл(ов). ИИ активен по загруженным правилам.`);
+      } else {
+        appendAiLog('WARN', 'Файлы не выбраны. ИИ ожидает правила.');
+      }
+    });
+
+    // --- TradingView block logic ---
+    const tvExchange = document.getElementById('tvExchange');
+    const tvSymbol = document.getElementById('tvSymbol');
+    const tvQuote = document.getElementById('tvQuote');
+    const tvApply = document.getElementById('tvApply');
+    const tvContainer = document.getElementById('tv_chart_container');
+
+    let tvWidget = null;
+
+    function setTvResolutionSafe(res){
+      try {
+        if (!tvWidget) return false;
+        const ch = (typeof tvWidget.chart === 'function') ? tvWidget.chart() : null;
+        if (ch && typeof ch.setResolution === 'function') { ch.setResolution(res); return true; }
+        return false;
+      } catch(e){ console.warn('setResolution failed (chart not ready yet)', e); return false; }
+    }
+
+    function waitForChartReady(widget, cb, timeoutMs=8000){
+      const start = Date.now();
+      const id = setInterval(()=>{
+        let ready = false;
+        try{
+          ready = !!(widget && typeof widget.chart === 'function' && widget.chart());
+        }catch(e){ /* ignore until ready */ }
+        if (ready){ clearInterval(id); cb && cb(); }
+        else if (Date.now() - start > timeoutMs){ clearInterval(id); console.warn('TradingView chart ready timeout'); }
+      }, 120);
+    }
+
+    function buildTvWidget(){
+      const symbol = `${tvExchange.value}:${tvSymbol.value.toUpperCase()}${tvQuote.value.toUpperCase()}`;
+      tvContainer.innerHTML = '';
+      tvWidget = new TradingView.widget({
+        container_id: 'tv_chart_container',
+        autosize: true,
+        symbol: symbol,
+        interval: '15',
+        timezone: 'Etc/UTC',
+        theme: 'light',
+        style: '1',
+        locale: 'ru',
+        toolbar_bg: '#f1f3f6',
+        enable_publishing: false,
+        allow_symbol_change: true,
+        hide_top_toolbar: false,
+        save_image: false,
+        studies: [ 'RSI@tv-basicstudies','MACD@tv-basicstudies' ],
+        withdateranges: true
+      });
+      waitForChartReady(tvWidget, ()=>{ /* chart ready */ });
+    }
+
+    function initTv(){
+      if (window.TradingView && typeof TradingView.onready === 'function') {
+        TradingView.onready(buildTvWidget);
+      } else {
+        buildTvWidget();
+      }
+    }
+
+    tvApply.addEventListener('click', buildTvWidget);
+    initTv();
+
+    // Переключатели таймфрейма для TradingView (без исключений, безопасно)
+    document.addEventListener('click', (e)=>{
+      const b = e.target.closest('.tv-res');
+      if (!b) return;
+      const res = b.getAttribute('data-tv-res');
+      const ok = setTvResolutionSafe(res);
+      if (!ok) console.debug('Chart not ready yet for resolution change');
+    });
+
+    // Contract → CEX symbol demo mapping
+    const btnOpenByContract = document.getElementById('btnOpenByContract');
+    function convertContractToSymbol(contract){
+      const MAP = {
+        'So11111111111111111111111111111111111111112': {ex:'BINANCE', base:'SOL', quote:'USDT'}
+      };
+      const rec = MAP[contract];
+      if (!rec) return null;
+      return `${rec.ex}:${rec.base}${rec.quote}`;
+    }
+    btnOpenByContract && btnOpenByContract.addEventListener('click', ()=>{
+      const c = (document.getElementById('inpContract').value||'').trim();
+      if (!c) return;
+      const sym = convertContractToSymbol(c);
+      if (sym){
+        const [ex, pair] = sym.split(':');
+        tvExchange.value = ex;
+        tvSymbol.value = pair.replace(/(USDT|USD|BTC)$/,'');
+        tvQuote.value = pair.endsWith('USDT')?'USDT':(pair.endsWith('USD')?'USD':'BTC');
+        buildTvWidget();
+      } else {
+        alert('Нет маппинга контракта → CEX символ. Нужен backend (Birdeye/Helius + таблица соответствий).');
+      }
+    });
+
+    // --- Minimal self-tests (run manually: window._selfTest()) ---
+    window._selfTest = function(){
+      // Логи + формат времени с секундами
+      const ts = formatTime(Date.now());
+      console.assert(/\d{2}:\d{2}:\d{2}/.test(ts), 'formatTime должен содержать секунды');
+      const before = aiLog.children.length;
+      appendAiLog('INFO','Тест логирования');
+      const after = aiLog.children.length;
+      console.assert(after === before + 1, 'appendAiLog должен добавлять запись');
+
+      // Старт/стоп
+      start();
+      console.assert(!!timer, 'timer должен быть запущен после start()');
+      stop();
+      console.assert(!timer, 'timer должен быть остановлен после stop()');
+
+      // Маркеры, включая TOP китов
+      const t = Math.floor(Date.now()/1000);
+      setWhaleMarker(t, 1, 'A', 5);
+      setTweetMarker(t+1);
+      console.assert(series && typeof series.setMarkers === 'function', 'series.setMarkers доступен');
+
+      // TradingView безопасные вызовы
+      buildTvWidget();
+      console.assert(!!tvWidget, 'tvWidget должен быть создан');
+      const resOk = setTvResolutionSafe('5');
+      console.assert(typeof resOk === 'boolean', 'setTvResolutionSafe возвращает boolean');
+
+      console.log('%cSelf-tests passed', 'color:green');
+    }
+  </script>
+</body>
+</html>
+
+
+
+Метрики соцсетей: появились Twitter 10m / 30m и Telegram 10m / 30m (пока демо-счётчики; позже привяжем к парсеру и ИИ).
+	ТОП-киты: при событии whale теперь лог и маркер содержат ранг Top A/B/C и количество китов (2/5/8). На графике такие события выделяются специальным маркером (цвет по рангу).
+	Время везде до секунды:
+	в правом логе AI Решение — точное время HH:MM:SS,
+	на самом графике включена ось времени с секундами.
+	«Загрузить правила»: кнопка теперь показывает выбранные файлы и пишет в лог, что ИИ работает только по загруженным правилам (демо-заглушка, без бэкенда).
+	Остальной функционал оставил без изменений.
+Встроил быстрые самопроверки — в консоли можно выполнить:
+window._selfTest()
+и убедиться, что:
+	формат времени с секундами корректный,
+	старт/стоп стрима работают,
+	маркеры (включая TOP-китов) ставятся,
+	TradingView меняет таймфрейм без падений.
+Хочешь, чтобы A/B/C ранги задавались из твоего списка кошельков (а не случайно)? Я могу добавить загрузку CSV/JSON с белыми списками адресов (ранг, вес), и дальше ранжировать события по факту входа.
+

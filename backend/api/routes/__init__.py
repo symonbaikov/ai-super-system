@@ -1,4 +1,4 @@
-from . import alerts, apify, helius, parser, trade, advice
+from . import alerts, apify, helius, parser, trade, advice, integration
 
 __all__ = [
     "alerts",
@@ -7,4 +7,5 @@ __all__ = [
     "parser",
     "trade",
     "advice",
+    "integration",
 ]

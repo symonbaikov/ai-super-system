@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .database import close_database, init_database
 from .dependencies import close_queue, connect_queue
-from .routes import alerts, apify, helius, parser, trade, advice
+from .routes import alerts, apify, helius, parser, trade, advice, integration
 
 settings = get_settings()
 
@@ -46,6 +46,7 @@ app.include_router(helius.router)
 app.include_router(alerts.router)
 app.include_router(trade.router)
 app.include_router(advice.router)
+app.include_router(integration.router)
 
 
 @app.get("/api/health", tags=["health"])

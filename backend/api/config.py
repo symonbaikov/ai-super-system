@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     helius_queue_name: str = "helius:events"
     alert_queue_name: str = "alerts:dispatch"
     apify_queue_name: str = "apify:dataset"
+    whales_queue_name: str = "whales:scan"
+    whales_result_ttl_seconds: int = Field(default=600, alias="WHALES_RESULT_TTL_SECONDS")
 
     apify_base_url: str = "https://api.apify.com"
     apify_token: Optional[str] = Field(default=None, alias="APIFY_TOKEN")

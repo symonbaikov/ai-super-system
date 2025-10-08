@@ -1,5 +1,7 @@
+import json
 import os
 import uuid
+from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 
@@ -25,6 +27,9 @@ class FakeQueue:
     def __init__(self) -> None:
         self.enqueued: list[tuple[str, dict]] = []
         self.published: list[dict] = []
+        self._lists: dict[str, list[str]] = defaultdict(list)
+        self._hashes: dict[str, dict[str, str]] = defaultdict(dict)
+        self._kv: dict[str, str] = {}
 
     async def connect(self) -> None:  # pragma: no cover - compatibility stub
         return None
@@ -41,6 +46,30 @@ class FakeQueue:
 
     async def publish_alert(self, payload: dict) -> None:
         self.published.append(payload)
+
+    async def lpush_json(self, key: str, payload: dict) -> None:
+        self._lists[key].insert(0, json.dumps(payload))
+
+    async def lrange(self, key: str, start: int = 0, stop: int = -1) -> list[str]:
+        items = self._lists.get(key, [])
+        if stop == -1:
+            return items[start:]
+        return items[start : stop + 1]
+
+    async def get(self, key: str) -> Optional[str]:
+        return self._kv.get(key)
+
+    async def set_json(self, key: str, payload: dict) -> None:
+        self._kv[key] = json.dumps(payload)
+
+    async def hgetall(self, key: str) -> dict[str, str]:
+        return dict(self._hashes.get(key, {}))
+
+    async def hset_json(self, key: str, field: str, payload: dict) -> None:
+        self._hashes[key][field] = json.dumps(payload)
+
+    async def exists(self, key: str) -> bool:
+        return key in self._kv or key in self._hashes or (key in self._lists and bool(self._lists[key]))
 
 
 @pytest.fixture

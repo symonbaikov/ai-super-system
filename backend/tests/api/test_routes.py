@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from backend.api import dependencies
 from backend.api.schemas.whales import WhaleScanResult, WhaleTopEntry
 import uuid
+from pathlib import Path
 
 import pytest
 
@@ -114,6 +115,66 @@ async def test_trade_confirm_updates_candidate(api_client):
 
 
 @pytest.mark.asyncio
+async def test_signals_endpoint_maps_candidate_metadata(api_client):
+    client, _ = api_client
+    metadata = {
+        "word": "$DOGE",
+        "type": "токен",
+        "detected_at": "2025-09-17T10:15:00Z",
+        "source": "twitter",
+        "author": "@elonmusk",
+        "link": "https://x.com/elon/status/1",
+        "tweet_count": 420,
+        "community_size": 125000,
+        "name_changes": 2,
+        "spam_score": 12,
+        "dev_team": "unknown",
+        "community_link": "https://t.me/example",
+        "contract": "So1xxxx...abcd",
+        "chain": "Solana",
+        "safety": {"no_mint": True, "burn_lp": False, "blacklist": True},
+        "summary": "Высокий хайп, но есть риски с листингом.",
+        "is_og": True,
+    }
+    response = await client.post(
+        "/api/parser/run",
+        json={
+            "symbol": "DOGE",
+            "sources": ["twitter"],
+            "priority": 4,
+            "metadata": metadata,
+        },
+    )
+    assert response.status_code == 202
+
+    listing = await client.get("/api/signals")
+    assert listing.status_code == 200
+    signals = listing.json()
+    assert len(signals) == 1
+    signal = signals[0]
+
+    assert signal["word"] == "$DOGE"
+    assert signal["type"] == "токен"
+    assert signal["source"] == "Twitter"
+    assert signal["author"] == "@elonmusk"
+    assert signal["link"] == "https://x.com/elon/status/1"
+    assert signal["tweetCount"] == 420
+    assert signal["communitySize"] == 125000
+    assert signal["nameChanges"] == 2
+    assert signal["spamScore"] == 0.12
+    assert signal["devTeam"] == "unknown"
+    assert signal["communityLink"] == "https://t.me/example"
+    assert signal["contract"] == "So1xxxx...abcd"
+    assert signal["chain"] == "Solana"
+    assert signal["isOG"] is True
+    assert signal["safety"]["noMint"] is True
+    assert signal["safety"]["burnLP"] is False
+    assert signal["safety"]["blacklist"] is True
+    assert signal["summary"] == metadata["summary"]
+    assert signal["detectedAt"] == "2025-09-17 10:15"
+
+
+@pytest.mark.asyncio
 async def test_apify_run_triggers_actor(api_client):
     client, _ = api_client
 
@@ -141,82 +202,100 @@ async def test_apify_run_triggers_actor(api_client):
 
 
 @pytest.mark.asyncio
-async def test_whales_scan_flow(api_client, fake_whale_service):
-    client, fake_queue = api_client
-
+async def test_gemini_infer_returns_ranked_accounts(api_client):
+    client, _ = api_client
     response = await client.post(
-        "/api/whales/scan",
-        json={"mint": "SoTestMint"},
+        "/api/ai/infer",
+        json={
+            "provider": "gemini",
+            "model": "gemini-2.5-flash",
+            "prompt": "Highlight Solana ecosystem founders and key influencers",
+            "strategyId": "S1",
+        },
     )
-    assert response.status_code == 202
-    job_id = response.json()["jobId"]
-    assert fake_queue.enqueued[-1][0] == "whales:scan"
-    assert fake_queue.enqueued[-1][1]["filters"]["mint"] == "SoTestMint"
-
-    pending = await client.get(f"/api/whales/top3?jobId={job_id}")
-    assert pending.status_code == 202
-
-    sample_entry = WhaleTopEntry(
-        mint="SoTestMint",
-        name="$TEST",
-        whales=4,
-        sol_sum=42.5,
-        safety={"rugcheck": "ok", "solsniffer": "warn"},
-        hype={"tw_1h": 120, "tg_1h": 80},
-        links={"birdeye": "https://birdeye.so/token/SoTestMint?chain=solana"},
-    )
-    result = WhaleScanResult(
-        jobId=job_id,
-        generatedAt=datetime.now(timezone.utc),
-        items=[sample_entry],
-    )
-    await fake_whale_service.store_result(result)
-
-    final = await client.get(f"/api/whales/top3?jobId={job_id}")
-    assert final.status_code == 200
-    data = final.json()
-    assert len(data) == 1
-    assert data[0]["mint"] == "SoTestMint"
+    assert response.status_code == 200
+    data = response.json()
+    assert data["tokens"]["input"] >= 5
+    assert data["tokens"]["output"] >= 5
+    assert data["cost_usd"] > 0
+    assert any("@aeyakovenko" == entry["handle"] for entry in data["accounts"])
+    assert "Gemini scanned" in data["text"]
+    assert "Strategy context" in data["text"]
+    assert data["provider"] == "corpus"
 
 
 @pytest.mark.asyncio
-async def test_signals_endpoint(api_client):
+async def test_gemini_infer_requires_prompt(api_client):
+    client, _ = api_client
+    response = await client.post(
+        "/api/ai/infer",
+        json={"provider": "gemini", "model": "gemini-2.5-flash"},
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "prompt is required"
+
+
+@pytest.mark.asyncio
+async def test_gemini_infer_uses_flowith_when_available(monkeypatch, api_client):
     client, _ = api_client
 
-    metadata = {
-        "word": "OPTIMUS",
-        "isOG": True,
-        "type": "слово",
-        "detectedAt": "2025-10-08 12:00",
-        "source": "Twitter",
-        "author": "@alpha",
-        "link": "https://twitter.com/alpha/status/1",
-        "tweetCount": 12,
-        "communitySize": 4200,
-        "nameChanges": 1,
-        "spamScore": 0.05,
-        "devTeam": "doxxed",
-        "communityLink": "https://t.me/alpha",
-        "contract": "SoTestMint",
-        "chain": "Solana",
-        "safety": {"noMint": True, "burnLP": False, "blacklist": False},
-        "summary": "Demo candidate",
-    }
+    class DummyResponse:
+        def __init__(self, payload):
+            self._payload = payload
 
-    payload = {
-        "symbol": "OPTIMUS",
-        "sources": ["twitter"],
-        "priority": 5,
-        "metadata": metadata,
-    }
-    await client.post("/api/parser/run", json=payload)
+        def raise_for_status(self) -> None:
+            return None
 
-    response = await client.get("/api/signals")
-    assert response.status_code == 200
-    data = response.json()
-    assert isinstance(data, list)
-    assert data
-    item = data[0]
-    assert item["word"] == "OPTIMUS"
-    assert item["safety"]["noMint"] is True
-    assert item["safety"]["noMint"] is True
+        def json(self) -> dict:
+            return self._payload
+
+    class DummyClient:
+        def __init__(self, payload):
+            self.payload = payload
+            self.calls: list[dict[str, object]] = []
+
+        def post(self, url, json=None, headers=None):
+            self.calls.append({"url": url, "json": json, "headers": headers})
+            return DummyResponse(self.payload)
+
+    fake_payload = {
+        "text": "Flowith summary",
+        "tokens": {"input": 64, "output": 32},
+        "cost": {"usd": 0.045},
+        "accounts": [
+            {"handle": "@flowith", "description": "Flowith AI", "score": 9.9, "keywords": ["flowith"]},
+        ],
+        "analysis": {"sentiment": {"score": 0.88, "label": "bullish"}},
+    }
+    fake_client = DummyClient(fake_payload)
+
+    from backend.api.services.gemini import GeminiService
+
+    service = GeminiService(
+        Path("."),
+        api_url="https://api.flowith.io/v1/gemini",
+        api_key="test-token",
+        http_client=fake_client,  # type: ignore[arg-type]
+    )
+    monkeypatch.setattr(dependencies, "_gemini_service", service, raising=False)
+
+    try:
+        response = await client.post(
+            "/api/ai/infer",
+            json={
+                "provider": "gemini",
+                "prompt": "Give me Flowith insights",
+            },
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["provider"] == "flowith"
+        assert data["text"] == "Flowith summary"
+        assert data["tokens"] == {"input": 64, "output": 32}
+        assert data["cost_usd"] == 0.045
+        assert data["analysis"]["sentiment"]["label"] == "bullish"
+        assert data["accounts"][0]["handle"] == "@flowith"
+        assert fake_client.calls[0]["headers"]["Authorization"] == "Bearer test-token"
+    finally:
+        service.close()
+

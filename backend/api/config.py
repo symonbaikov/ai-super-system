@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     groq_api_key: Optional[str] = Field(default=None, alias="GROQ_API_KEY")
     groq_model: str = Field(default="mixtral-8x7b", alias="GROQ_MODEL", validation_alias="GROQ_MODEL")
 
+    gemini_base_url: str = Field(default="https://api.flowith.io/v1/gemini", alias="GEMINI_BASE_URL")
+    gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
+
     helius_webhook_secret: Optional[str] = Field(default=None, alias="HELIUS_WEBHOOK_SECRET")
     alerts_signature_secret: Optional[str] = Field(default=None, alias="ALERTS_SIGNATURE_SECRET")
 

@@ -9,6 +9,7 @@ from .config import Settings, get_settings
 from .database import get_session
 from .services.ai_pipeline import AIPipelineService
 from .services.apify import ApifyClient
+from .services.gemini import GeminiService
 from .services.groq import GroqClient
 from .services.queue import QueueService
 from .services.whales import WhaleScanService
@@ -37,6 +38,12 @@ if not _ai_config_path.is_absolute():
     repo_root = Path(__file__).resolve().parents[2]
     _ai_config_path = (repo_root / _ai_config_path).resolve()
 _ai_pipeline = AIPipelineService(_ai_config_path, groq_client=_groq_client if _settings.groq_api_key else None)
+_gemini_service = GeminiService(
+    Path(__file__).resolve().parents[2],
+    api_url=_settings.gemini_base_url,
+    api_key=_settings.gemini_api_key,
+    timeout=_settings.http_timeout_seconds,
+)
 
 
 def get_settings_dependency() -> Settings:
@@ -62,6 +69,10 @@ def get_apify_client() -> ApifyClient:
 
 def get_ai_pipeline() -> AIPipelineService:
     return _ai_pipeline
+
+
+def get_gemini_service() -> GeminiService:
+    return _gemini_service
 
 
 async def get_db_session() -> AsyncIterator[AsyncSession]:

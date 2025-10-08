@@ -1,9 +1,12 @@
+from datetime import datetime, timezone
+
 from backend.api import dependencies
+from backend.api.schemas.whales import WhaleScanResult, WhaleTopEntry
 import uuid
 
 import pytest
 
-from backend.tests.conftest import FakeQueue, _fetch_alerts, _fetch_candidates
+from backend.tests.conftest import _fetch_alerts, _fetch_candidates
 
 
 @pytest.mark.asyncio
@@ -136,3 +139,84 @@ async def test_apify_run_triggers_actor(api_client):
         if original is not None:
             dependencies._apify_client = original
 
+
+@pytest.mark.asyncio
+async def test_whales_scan_flow(api_client, fake_whale_service):
+    client, fake_queue = api_client
+
+    response = await client.post(
+        "/api/whales/scan",
+        json={"mint": "SoTestMint"},
+    )
+    assert response.status_code == 202
+    job_id = response.json()["jobId"]
+    assert fake_queue.enqueued[-1][0] == "whales:scan"
+    assert fake_queue.enqueued[-1][1]["filters"]["mint"] == "SoTestMint"
+
+    pending = await client.get(f"/api/whales/top3?jobId={job_id}")
+    assert pending.status_code == 202
+
+    sample_entry = WhaleTopEntry(
+        mint="SoTestMint",
+        name="$TEST",
+        whales=4,
+        sol_sum=42.5,
+        safety={"rugcheck": "ok", "solsniffer": "warn"},
+        hype={"tw_1h": 120, "tg_1h": 80},
+        links={"birdeye": "https://birdeye.so/token/SoTestMint?chain=solana"},
+    )
+    result = WhaleScanResult(
+        jobId=job_id,
+        generatedAt=datetime.now(timezone.utc),
+        items=[sample_entry],
+    )
+    await fake_whale_service.store_result(result)
+
+    final = await client.get(f"/api/whales/top3?jobId={job_id}")
+    assert final.status_code == 200
+    data = final.json()
+    assert len(data) == 1
+    assert data[0]["mint"] == "SoTestMint"
+
+
+@pytest.mark.asyncio
+async def test_signals_endpoint(api_client):
+    client, _ = api_client
+
+    metadata = {
+        "word": "OPTIMUS",
+        "isOG": True,
+        "type": "слово",
+        "detectedAt": "2025-10-08 12:00",
+        "source": "Twitter",
+        "author": "@alpha",
+        "link": "https://twitter.com/alpha/status/1",
+        "tweetCount": 12,
+        "communitySize": 4200,
+        "nameChanges": 1,
+        "spamScore": 0.05,
+        "devTeam": "doxxed",
+        "communityLink": "https://t.me/alpha",
+        "contract": "SoTestMint",
+        "chain": "Solana",
+        "safety": {"noMint": True, "burnLP": False, "blacklist": False},
+        "summary": "Demo candidate",
+    }
+
+    payload = {
+        "symbol": "OPTIMUS",
+        "sources": ["twitter"],
+        "priority": 5,
+        "metadata": metadata,
+    }
+    await client.post("/api/parser/run", json=payload)
+
+    response = await client.get("/api/signals")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+    assert data
+    item = data[0]
+    assert item["word"] == "OPTIMUS"
+    assert item["safety"]["noMint"] is True
+    assert item["safety"]["noMint"] is True

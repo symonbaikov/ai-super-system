@@ -3,6 +3,7 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
+import fakeredis.aioredis
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
@@ -15,6 +16,7 @@ from backend.api import dependencies  # noqa: E402
 from backend.api.database import close_database, get_session, init_database  # noqa: E402
 from backend.api.main import app  # noqa: E402
 from backend.api.models import Alert, Candidate  # noqa: E402
+from backend.api.services.whales import WhaleScanService  # noqa: E402
 
 _DB_PATH = Path("backend/tests/test_api.db")
 
@@ -58,8 +60,26 @@ def fake_queue(monkeypatch: pytest.MonkeyPatch) -> FakeQueue:
             dependencies._queue_service = original  # type: ignore[attr-defined]
 
 
+@pytest.fixture
+def fake_whale_service(monkeypatch: pytest.MonkeyPatch) -> WhaleScanService:
+    fake_redis = fakeredis.aioredis.FakeRedis(decode_responses=True)
+    service = WhaleScanService(
+        os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+        namespace="sp",
+        result_ttl=600,
+        redis_client=fake_redis,
+    )
+    original = getattr(dependencies, "_whale_service", None)
+    dependencies._whale_service = service  # type: ignore[attr-defined]
+    try:
+        yield service
+    finally:
+        if original is not None:
+            dependencies._whale_service = original  # type: ignore[attr-defined]
+
+
 @pytest_asyncio.fixture
-async def api_client(fake_queue: FakeQueue):
+async def api_client(fake_queue: FakeQueue, fake_whale_service: WhaleScanService):
     if _DB_PATH.exists():
         _DB_PATH.unlink()
 

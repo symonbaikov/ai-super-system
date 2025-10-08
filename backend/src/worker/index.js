@@ -7,6 +7,7 @@ import { RedisBullBridge } from './queue-bridge.js'
 import { handleParserRun } from './handlers/parser-run.js'
 import { handleApifyDataset } from './handlers/apify-dataset.js'
 import { handleHeliusEvent } from './handlers/helius-event.js'
+import { handleWhalesScan, closeWhalesScanRedis } from './handlers/whales-scan.js'
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
 const namespace = process.env.QUEUE_NAMESPACE || 'sp'
@@ -33,11 +34,13 @@ function buildQueue(name, processor){
 const parserQueue = buildQueue('parser-run', handleParserRun)
 const apifyQueue = buildQueue('apify-dataset', handleApifyDataset)
 const heliusQueue = buildQueue('helius-events', handleHeliusEvent)
+const whalesQueue = buildQueue('whales-scan', handleWhalesScan)
 
 const bridge = new RedisBullBridge({ redisUrl, namespace })
 bridge.register('parser:run', parserQueue.queue)
 bridge.register('apify:dataset', apifyQueue.queue)
 bridge.register('helius:events', heliusQueue.queue)
+bridge.register('whales:scan', whalesQueue.queue)
 
 export async function startWorkers(){
   await bridge.start()
@@ -48,11 +51,14 @@ export async function startWorkers(){
         parserQueue.worker.close(),
         apifyQueue.worker.close(),
         heliusQueue.worker.close(),
+        whalesQueue.worker.close(),
         parserQueue.queue.close(),
         apifyQueue.queue.close(),
         heliusQueue.queue.close(),
+        whalesQueue.queue.close(),
       ])
       await connection.quit()
+      await closeWhalesScanRedis()
     }
   }
 }

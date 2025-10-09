@@ -221,7 +221,8 @@ async def test_gemini_infer_returns_ranked_accounts(api_client):
     assert any("@aeyakovenko" == entry["handle"] for entry in data["accounts"])
     assert "Gemini scanned" in data["text"]
     assert "Strategy context" in data["text"]
-    assert data["provider"] == "corpus"
+    assert data["provider"] == "flowith-local"
+    assert data["analysis"]["coverage"]["total_accounts"] >= len(data["accounts"])
 
 
 @pytest.mark.asyncio

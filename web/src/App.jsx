@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, useEffect, useContext, createContext,
 import { createChart } from "lightweight-charts";
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis, ReferenceArea, CartesianGrid } from "recharts";
 
+
 // ✦ Alpha2 Super Parser — UI 18.09 (+ добавления 29.09) — обновлённый супер-интерфейс
 // ВАЖНО: структуру не ломал, только добавил/перенастроил то, что ты попросил.
 // Новое:
@@ -581,22 +582,22 @@ const TradingViewTab = () => {
             </div>
             <p className="text-xs text-zinc-500 mt-2">Для реального открытия по mint нужен backend-маппинг (Helius/Birdeye → CEX символ). Сейчас демо.</p>
           </div>
-          <div className="rounded-2xl border border-зinc-800 bg-зinc-900/40 p-4">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
             <Label className="text-sm font-medium text-white">Название токена</Label>
             <Input
               value={tokenValue}
               onChange={(e) => setTokenValue(e.target.value)}
               placeholder="Например: OPTIMUS"
-              className="mt-2 bg-zinc-950 border-зinc-700"
+              className="mt-2 bg-zinc-950 border-zinc-700"
             />
           </div>
         </div>
-        <div className="rounded-2xl border border-зinc-800 bg-зinc-900/40 p-4 space-y-3 text-sm text-white">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-3 text-sm text-white">
           <div>Whale threshold (SOL): <span className="font-semibold">{threshold}</span></div>
           <input type="range" min={1} max={50} value={threshold} onChange={(e) => setThreshold(parseInt(e.target.value, 10))} className="w-full" />
           <div>Окно (сек): <span className="font-semibold">{windowSec}</span>s</div>
           <input type="range" min={1} max={60} value={windowSec} onChange={(e) => setWindowSec(parseInt(e.target.value, 10))} className="w-full" />
-          <label className="inline-flex items-center gap-2 text-xs text-зinc-300">
+          <label className="inline-flex items-center gap-2 text-xs text-zinc-300">
             <input type="checkbox" checked={aggMode} onChange={(e) => setAggMode(e.target.checked)} /> Aggressive mode (1 кит = сигнал)
           </label>
         </div>
@@ -1077,7 +1078,7 @@ export default function App(){
         <LineChart data={chartData} margin={{left:12,right:12,top:8,bottom:8}}>
           <CartesianGrid stroke="#222" />
           <XAxis dataKey="i" hide/>
-          <YAxis domain={"dataMin","dataMax"} width={50} stroke="#666"/>
+          <YAxis domain={["dataMin", "dataMax"]} width={50} stroke="#666"/>
           <Tooltip formatter={(v)=>v} labelFormatter={(l)=>`t=${l}`} contentStyle={{background:"#0a0a0a", border:"1px solid #3f3f46"}}/>
           <Line type="monotone" dataKey="v" dot={false} strokeWidth={2}/>
           {overlayEvents.map(e=> (
@@ -1121,7 +1122,7 @@ export default function App(){
                 <div>Telegram: 1h <b>{hypeMetrics.tg1h}</b> · 3h <b>{hypeMetrics.tg3h}</b></div>
               </div>
               <div className="rounded-lg border border-zinc-800 p-3">
-                <div className="text-зinc-400 mb-1">Причины (почему так)</div>
+                <div className="text-zinc-400 mb-1">Причины (почему так)</div>
                 <ul className="list-disc ml-5 leading-6">
                   {reasons.length? reasons.map((t,i)=>(<li key={i}>{t}</li>)) : <li>Нажмите «Сигналы», чтобы получить анализ.</li>}
                 </ul>
@@ -1169,7 +1170,7 @@ export default function App(){
         <CardTitle>Helius мониторинг (прошедшие 5–9 проверок)</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="rounded-lg border border-зinc-800 overflow-hidden">
+        <div className="rounded-lg border border-zinc-800 overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-zinc-900/60"><tr>
               <th className="px-3 py-2">Безоп.</th><th className="px-3 py-2">Ориг.</th><th className="px-3 py-2">Twitter</th><th className="px-3 py-2">Команда</th><th className="px-3 py-2">Название</th><th className="px-3 py-2">Минт</th><th className="px-3 py-2">SOL</th><th className="px-3 py-2">Скачать</th>

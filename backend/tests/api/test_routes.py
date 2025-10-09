@@ -5,9 +5,12 @@ from backend.api.schemas.whales import WhaleScanResult, WhaleTopEntry
 import uuid
 from pathlib import Path
 
+import json
+
 import pytest
 
-from backend.tests.conftest import _fetch_alerts, _fetch_candidates
+from backend.api.services import gemini
+from backend.tests.conftest import FakeQueue, _fetch_alerts, _fetch_candidates
 
 
 @pytest.mark.asyncio
@@ -223,6 +226,37 @@ async def test_gemini_infer_returns_ranked_accounts(api_client):
     assert "Strategy context" in data["text"]
     assert data["provider"] == "flowith-local"
     assert data["analysis"]["coverage"]["total_accounts"] >= len(data["accounts"])
+
+
+def test_gemini_service_prefers_precomputed_cache(tmp_path):
+    repo_root = tmp_path
+    derived_dir = repo_root / "backend" / "configs" / "derived"
+    derived_dir.mkdir(parents=True)
+    cache_path = derived_dir / "gemini_accounts_cache.json"
+    cache_payload = [
+        {
+            "handle": "@cache_account",
+            "description": "Cached influencer",
+            "keywords": ["cache", "gemini"],
+            "clusters": ["Test"],
+            "mints": ["CACHE"],
+            "weight": 2.5,
+        }
+    ]
+    cache_path.write_text(json.dumps(cache_payload), encoding="utf-8")
+
+    service = gemini.GeminiService(repo_root)
+    try:
+        accounts = service.accounts
+    finally:
+        service.close()
+
+    assert len(accounts) == 1
+    assert accounts[0].handle == "@cache_account"
+    assert accounts[0].keywords == ("cache", "gemini")
+    assert accounts[0].clusters == ("Test",)
+    assert accounts[0].mints == ("CACHE",)
+    assert accounts[0].weight == 2.5
 
 
 @pytest.mark.asyncio

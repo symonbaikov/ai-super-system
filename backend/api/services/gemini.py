@@ -47,6 +47,7 @@ class GeminiService:
         accounts_json: Optional[Path] = None,
         accounts_metadata: Optional[Path] = None,
         accounts_doc_glob: str = "*Сводный_список_аккаунтов*",
+        accounts_cache: Optional[Path] = None,
         max_results: int = 8,
         input_cost_per_token: float = 0.0000025,
         output_cost_per_token: float = 0.000005,
@@ -73,6 +74,15 @@ class GeminiService:
             / "configs"
             / "derived"
             / "gemini_accounts.json"
+        )
+        self._accounts_cache = (
+            accounts_cache
+            if accounts_cache is not None
+            else repo_root
+            / "backend"
+            / "configs"
+            / "derived"
+            / "gemini_accounts_cache.json"
         )
         self._accounts_doc_glob = accounts_doc_glob
         self._max_results = max_results
@@ -412,6 +422,10 @@ class GeminiService:
         return sorted(keywords)
 
     def _load_accounts(self) -> list[GeminiAccount]:
+        cached = self._load_cached_accounts()
+        if cached:
+            return cached
+
         handles = self._load_handles()
         annotations = self._load_account_annotations()
         metadata = self._load_account_metadata()
@@ -467,6 +481,49 @@ class GeminiService:
             raise RuntimeError("No Gemini accounts were loaded; check documentation sources.")
 
         return accounts
+
+    def _load_cached_accounts(self) -> list[GeminiAccount]:
+        if not self._accounts_cache or not self._accounts_cache.exists():
+            return []
+        try:
+            data = json.loads(self._accounts_cache.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return []
+
+        cached: list[GeminiAccount] = []
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            handle = entry.get("handle")
+            if not isinstance(handle, str) or not handle.startswith("@"):
+                continue
+            weight = entry.get("weight", 1.0)
+            try:
+                weight_value = float(weight)
+            except (TypeError, ValueError):
+                weight_value = 1.0
+
+            cached.append(
+                GeminiAccount(
+                    handle=handle,
+                    description=entry.get("description") if isinstance(entry.get("description"), str) else None,
+                    keywords=tuple(
+                        sorted({kw.lower() for kw in entry.get("keywords", []) if isinstance(kw, str)})
+                    ),
+                    clusters=tuple(
+                        sorted({cluster for cluster in entry.get("clusters", []) if isinstance(cluster, str)})
+                    ),
+                    mints=tuple(
+                        sorted({mint for mint in entry.get("mints", []) if isinstance(mint, str)})
+                    ),
+                    weight=max(0.2, weight_value),
+                )
+            )
+
+        if cached:
+            for account in cached:
+                self._account_map[account.handle.lower()] = account
+        return cached
 
     def _load_handles(self) -> list[str]:
         if not self._accounts_json.exists():

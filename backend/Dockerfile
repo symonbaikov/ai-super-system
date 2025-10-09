@@ -22,6 +22,8 @@ COPY ai_core ./ai_core
 
 WORKDIR /srv/backend
 
+RUN python -m backend.scripts.build_gemini_corpus
+
 EXPOSE 9000
 
 CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "9000"]

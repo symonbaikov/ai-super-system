@@ -1,4 +1,7 @@
+from datetime import datetime, timezone
+
 from backend.api import dependencies
+from backend.api.schemas.whales import WhaleScanResult, WhaleTopEntry
 import uuid
 from pathlib import Path
 

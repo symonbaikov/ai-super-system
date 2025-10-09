@@ -12,10 +12,16 @@ from .services.apify import ApifyClient
 from .services.gemini import GeminiService
 from .services.groq import GroqClient
 from .services.queue import QueueService
+from .services.whales import WhaleScanService
 
 
 _settings = get_settings()
 _queue_service = QueueService(_settings.redis_url, namespace=_settings.queue_namespace)
+_whale_service = WhaleScanService(
+    _settings.redis_url,
+    _settings.queue_namespace,
+    result_ttl=_settings.whales_result_ttl_seconds,
+)
 _groq_client = GroqClient(
     _settings.groq_base_url,
     _settings.groq_api_key,
@@ -48,6 +54,10 @@ def get_queue_service() -> QueueService:
     return _queue_service
 
 
+def get_whale_service() -> WhaleScanService:
+    return _whale_service
+
+
 def get_groq_client() -> GroqClient:
     return _groq_client
 
@@ -72,7 +82,9 @@ async def get_db_session() -> AsyncIterator[AsyncSession]:
 
 async def connect_queue() -> None:
     await _queue_service.connect()
+    await _whale_service.connect()
 
 
 async def close_queue() -> None:
     await _queue_service.close()
+    await _whale_service.close()

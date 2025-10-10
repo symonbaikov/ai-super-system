@@ -8,6 +8,8 @@ x-backend-env: &backend-env
   APIFY_ACTOR_ID: ${APIFY_ACTOR_ID:-team~parserActor}
   GROQ_API_KEY: ${GROQ_API_KEY:-replace-me}
   GROQ_MODEL: mixtral-8x7b
+  GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://api.flowith.io/v1/gemini}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-replace-me}
   HELIUS_WEBHOOK_SECRET: ${HELIUS_WEBHOOK_SECRET:-replace-me}
   ALERTS_SIGNATURE_SECRET: ${ALERTS_SIGNATURE_SECRET:-replace-me}
   AI_CORE_CONFIG_DIR: ai_core/configs
@@ -22,7 +24,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-parser} -d ${POSTGRES_DB:-super_parser}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-parser} -d ${POSTGRES_DB:-super_parser}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,7 +80,8 @@ services:
       ai-core:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:9000/api/health || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -fsS http://localhost:9000/api/health || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 5

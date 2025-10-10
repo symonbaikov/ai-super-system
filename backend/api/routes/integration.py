@@ -277,3 +277,14 @@ async def post_ai_infer(
     strategy_id = payload.get("strategyId")
     model = payload.get("model")
     return gemini.infer(prompt.strip(), strategy_id=strategy_id, model=model)
+
+
+@router.get("/ai/gemini/status")
+async def get_gemini_status(
+    gemini: GeminiService = Depends(get_gemini_service),
+) -> dict[str, Any]:
+    """Lightweight status endpoint to diagnose live Flowith connectivity.
+
+    Returns whether the client is configured, last HTTP status, and ok flag.
+    """
+    return gemini.ping()

@@ -27,8 +27,9 @@ async def confirm_trade(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="candidate not found")
 
     candidate.status = payload.status
-    candidate.meta.setdefault("trades", [])
-    candidate.meta["trades"].append(
+    # Reassign nested list to ensure SQLAlchemy change tracking with MutableDict
+    trades = list(candidate.meta.get("trades", []))
+    trades.append(
         {
             "trade_id": payload.trade_id,
             "status": payload.status,
@@ -37,6 +38,7 @@ async def confirm_trade(
             "metadata": payload.metadata,
         }
     )
+    candidate.meta["trades"] = trades
 
     session.add(
         LogEntry(

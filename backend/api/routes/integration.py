@@ -94,7 +94,15 @@ async def get_latency_usage(
 ) -> dict[str, Any]:
     metrics = await _load_hash(queue, settings, "metrics:latency")
     if not metrics:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="latency metrics not available")
+        # Graceful fallback: return zeroed metrics so UI can render panel
+        return {
+            "apify_ms": 0,
+            "helius_ms": 0,
+            "parser_ms": 0,
+            "apify_credits_used": 0,
+            "groq_credits_used": 0,
+            "suggestion": "warming up",
+        }
 
     result: dict[str, Any] = {}
     for field in ("apify_ms", "helius_ms", "parser_ms", "apify_credits_used", "groq_credits_used"):
@@ -283,8 +291,19 @@ async def post_ai_infer(
 async def get_gemini_status(
     gemini: GeminiService = Depends(get_gemini_service),
 ) -> dict[str, Any]:
-    """Lightweight status endpoint to diagnose live Flowith connectivity.
-
-    Returns whether the client is configured, last HTTP status, and ok flag.
-    """
-    return gemini.ping()
+    """Lightweight status endpoint for Flowith/Google connectivity."""
+    result = gemini.ping()
+    # Try lightweight Google check if Flowith isn't OK but Google key is set
+    try:
+        test = gemini._google_api_key is not None  # type: ignore[attr-defined]
+    except Exception:
+        test = False
+    if test and not result.get("ok"):
+        try:
+            # Minimal no-cost probe; errors are swallowed, only status reported
+            payload = gemini._call_google("ping", "gemini-2.5-flash")  # type: ignore[attr-defined]
+            ok = isinstance(payload, dict) and bool(payload)
+            return {**result, "google": {"ok": ok}}
+        except Exception as exc:  # pragma: no cover - best-effort
+            return {**result, "google": {"ok": False, "error": str(exc)}}
+    return result

@@ -49,6 +49,8 @@ _gemini_service = GeminiService(
     Path(__file__).resolve().parents[2],
     api_url=_settings.gemini_base_url,
     api_key=_settings.gemini_api_key,
+    google_api_key=_settings.google_gemini_api_key,
+    google_model=_settings.google_gemini_model,
     timeout=_settings.http_timeout_seconds,
     cache_client=_gemini_cache,
 )

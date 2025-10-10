@@ -53,6 +53,9 @@ class GeminiService:
         output_cost_per_token: float = 0.000005,
         api_url: Optional[str] = None,
         api_key: Optional[str] = None,
+        # Optional direct Google Gemini fallback
+        google_api_key: Optional[str] = None,
+        google_model: str = "gemini-2.5-flash",
         timeout: float = 15.0,
         http_client: Optional[Any] = None,
         cache_client: Optional[Any] = None,
@@ -84,6 +87,8 @@ class GeminiService:
         self._api_url = api_url.strip() if api_url else None
         self._api_key = api_key.strip() if api_key else None
         self._timeout = timeout
+        self._google_api_key = google_api_key.strip() if google_api_key else None
+        self._google_model = google_model
         # Allow injecting a lightweight HTTP client for tests; default to requests
         self._http = http_client if http_client is not None else requests
         self._cache = cache_client
@@ -146,6 +151,24 @@ class GeminiService:
                     pass
             return response
 
+        # Attempt Google Gemini as a secondary live provider if configured
+        if self._google_api_key:
+            try:
+                google_payload = self._call_google(prompt, model or self._google_model)
+                if google_payload is not None:
+                    return self._build_google_response(
+                        google_payload,
+                        prompt,
+                        fallback_accounts,
+                        keywords,
+                        strategy_id=strategy_id,
+                        model=model or self._google_model,
+                    )
+            except GeminiRemoteError as exc:
+                logging.getLogger(__name__).warning("Google Gemini call failed: %s", exc)
+            except requests.exceptions.RequestException as exc:
+                logging.getLogger(__name__).warning("Google Gemini HTTP error: %s", exc)
+
         summary = self._build_summary(prompt, fallback_accounts, keywords, strategy_id=strategy_id, model=model)
         input_tokens = max(1, self._count_tokens(prompt))
         output_tokens = max(1, self._count_tokens(summary))
@@ -157,14 +180,13 @@ class GeminiService:
             "cost_usd": cost,
             "accounts": fallback_accounts,
             "provider": "flowith-local",
-            "analysis": self._build_analysis(fallback_accounts, keywords),
-            "usage": {
-                "requests": 1,
-                "matched_accounts": len(
-                    [entry for entry in fallback_accounts if (entry.get("score") or 0) > 0]
-                ),
-                "fallback_mode": True,
-            },
+        }
+        # Enrich local fallback with analysis/usage to match API contract
+        response["analysis"] = self._build_analysis(fallback_accounts, keywords)
+        response["usage"] = {
+            "requests": 1,
+            "matched_accounts": len([entry for entry in fallback_accounts if entry.get("handle")]),
+            "fallback_mode": True,
         }
         return response
 
@@ -654,6 +676,76 @@ class GeminiService:
         if isinstance(payload, str) and payload.strip():
             return payload.strip()
         return None
+
+    # --- Google Gemini (REST) minimal call/adapter ---
+    def _call_google(self, prompt: str, model: str) -> Any:
+        if not self._google_api_key:
+            raise GeminiRemoteError("Google Gemini key is not configured")
+        # REST endpoint for Google Generative Language API
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self._google_api_key}"
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}]
+        }
+        response = self._http.post(
+            url,
+            json=payload,
+            headers={
+                "Content-Type": "application/json",
+            },
+            timeout=self._timeout,
+        )
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as exc:
+            status_code = getattr(getattr(exc, "response", None), "status_code", None)
+            preview = None
+            try:
+                preview = exc.response.text[:200]  # type: ignore[union-attr]
+            except Exception:
+                preview = None
+            raise GeminiRemoteError(f"HTTP {status_code} from Google Gemini: {preview}") from exc
+        return response.json()
+
+    def _build_google_response(
+        self,
+        payload: Any,
+        prompt: str,
+        fallback_accounts: list[dict[str, object]],
+        keywords: Sequence[str],
+        *,
+        strategy_id: Optional[str],
+        model: Optional[str],
+    ) -> dict[str, object]:
+        # Extract text from Google response
+        text: Optional[str] = None
+        if isinstance(payload, dict):
+            candidates = payload.get("candidates")
+            if isinstance(candidates, list) and candidates:
+                first = candidates[0]
+                if isinstance(first, dict):
+                    content = first.get("content", {})
+                    if isinstance(content, dict):
+                        parts = content.get("parts")
+                        if isinstance(parts, list) and parts:
+                            part0 = parts[0]
+                            if isinstance(part0, dict) and isinstance(part0.get("text"), str):
+                                text = part0["text"].strip()
+        if text is None:
+            text = self._build_summary(prompt, fallback_accounts, keywords, strategy_id=strategy_id, model=model)
+
+        input_tokens = max(1, self._count_tokens(prompt))
+        output_tokens = max(1, self._count_tokens(text))
+        cost = round(input_tokens * self._input_cost + output_tokens * self._output_cost, 6)
+
+        accounts = fallback_accounts
+        response: dict[str, object] = {
+            "text": text,
+            "tokens": {"input": input_tokens, "output": output_tokens},
+            "cost_usd": float(cost),
+            "accounts": accounts,
+            "provider": "google",
+        }
+        return response
 
     # Lightweight connectivity probe for diagnostics/health endpoints
     def ping(self, timeout_seconds: float = 3.0) -> dict[str, object]:

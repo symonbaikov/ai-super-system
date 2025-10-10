@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     gemini_base_url: str = Field(default="https://api.flowith.io/v1/gemini", alias="GEMINI_BASE_URL")
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
 
+    # Optional direct Google Gemini (Generative Language) fallback
+    google_gemini_api_key: Optional[str] = Field(default=None, alias="GOOGLE_GEMINI_API_KEY")
+    google_gemini_model: str = Field(default="gemini-2.5-flash", alias="GOOGLE_GEMINI_MODEL", validation_alias="GOOGLE_GEMINI_MODEL")
+
     helius_webhook_secret: Optional[str] = Field(default=None, alias="HELIUS_WEBHOOK_SECRET")
     alerts_signature_secret: Optional[str] = Field(default=None, alias="ALERTS_SIGNATURE_SECRET")
 

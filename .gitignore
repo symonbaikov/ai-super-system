@@ -1,2 +1,23 @@
 .env
-.DS_Store.venv/
+.DS_Store
+.venv/
+
+# Node
+backend/node_modules/
+web/node_modules/
+web/.vite/
+web/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Logs & coverage
+logs/
+backend/logs/
+coverage/
+
+# IDE
+.vscode/
+.idea/

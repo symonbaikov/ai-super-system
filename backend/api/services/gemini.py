@@ -15,13 +15,23 @@ import requests
 class GeminiAccount:
     handle: str
     description: Optional[str]
+    keywords: tuple[str, ...] = ()
+    clusters: tuple[str, ...] = ()
+    mints: tuple[str, ...] = ()
+    weight: float = 1.0
 
     @property
     def searchable_text(self) -> str:
-        base = self.handle.lower()
+        parts = [self.handle.lower()]
         if self.description:
-            return f"{base} {self.description.lower()}"
-        return base
+            parts.append(self.description.lower())
+        if self.keywords:
+            parts.extend(self.keywords)
+        if self.clusters:
+            parts.extend(cluster.lower() for cluster in self.clusters)
+        if self.mints:
+            parts.extend(mint.lower() for mint in self.mints)
+        return " ".join(parts)
 
 
 class GeminiRemoteError(RuntimeError):
@@ -36,6 +46,7 @@ class GeminiService:
         repo_root: Path,
         *,
         accounts_json: Optional[Path] = None,
+        accounts_metadata: Optional[Path] = None,
         accounts_doc_glob: str = "*Сводный_список_аккаунтов*",
         max_results: int = 8,
         input_cost_per_token: float = 0.0000025,
@@ -57,6 +68,15 @@ class GeminiService:
             / "derived"
             / "accounts_x.json"
         )
+        self._accounts_metadata = (
+            accounts_metadata
+            if accounts_metadata is not None
+            else repo_root
+            / "backend"
+            / "configs"
+            / "derived"
+            / "gemini_accounts.json"
+        )
         self._accounts_doc_glob = accounts_doc_glob
         self._max_results = max_results
         self._input_cost = input_cost_per_token
@@ -68,7 +88,19 @@ class GeminiService:
         self._http = http_client if http_client is not None else requests
         self._cache = cache_client
         self._cache_ttl = max(60, int(cache_ttl_seconds))
-        self._accounts: list[GeminiAccount] = self._load_accounts()    
+        self._account_map: dict[str, GeminiAccount] = {}
+        self._accounts: list[GeminiAccount] = self._load_accounts()
+
+    def close(self) -> None:
+        """Optional lifecycle hook for cleanup; safe to call even if underlying client has no close()."""
+        try:
+            close_fn = getattr(self._http, "close", None)
+            if callable(close_fn):
+                close_fn()
+        except Exception:  # defensive
+            pass
+
+    @property
     def accounts(self) -> Sequence[GeminiAccount]:
         return tuple(self._accounts)
 
@@ -119,13 +151,22 @@ class GeminiService:
         output_tokens = max(1, self._count_tokens(summary))
         cost = round(input_tokens * self._input_cost + output_tokens * self._output_cost, 6)
 
-        return {
+        response: dict[str, object] = {
             "text": summary,
             "tokens": {"input": input_tokens, "output": output_tokens},
             "cost_usd": cost,
             "accounts": fallback_accounts,
-            "provider": "corpus",
+            "provider": "flowith-local",
+            "analysis": self._build_analysis(fallback_accounts, keywords),
+            "usage": {
+                "requests": 1,
+                "matched_accounts": len(
+                    [entry for entry in fallback_accounts if (entry.get("score") or 0) > 0]
+                ),
+                "fallback_mode": True,
+            },
         }
+        return response
 
     def _call_remote(
         self,
@@ -233,6 +274,20 @@ class GeminiService:
         analysis = self._extract_remote_analysis(payload)
         if analysis is not None:
             response["analysis"] = analysis
+        else:
+            response["analysis"] = self._build_analysis(accounts, keywords)
+
+        usage = None
+        if isinstance(payload, dict):
+            usage = payload.get("usage")
+        if isinstance(usage, dict):
+            response["usage"] = usage
+        else:
+            response["usage"] = {
+                "requests": 1,
+                "matched_accounts": len([entry for entry in accounts if entry.get("handle")]),
+                "fallback_mode": False,
+            }
 
         return response
 
@@ -250,6 +305,8 @@ class GeminiService:
                         "description": account.description,
                         "score": 0,
                         "keywords": [],
+                        "clusters": list(account.clusters),
+                        "mints": list(account.mints),
                     }
                 )
 
@@ -263,6 +320,8 @@ class GeminiService:
                         "description": acc.description,
                         "score": 1.0,
                         "keywords": [kw for kw in keywords],
+                        "clusters": list(acc.clusters),
+                        "mints": list(acc.mints),
                     })
                     break
         # trim to max_results, preserving unique handles order
@@ -281,24 +340,47 @@ class GeminiService:
         if not keywords:
             return []
 
-        scored: list[tuple[float, GeminiAccount, dict[str, int]]] = []
+        scored: list[tuple[float, GeminiAccount, dict[str, float]]] = []
         for account in self._accounts:
-            scores = {kw: account.searchable_text.count(kw) for kw in keywords if kw in account.searchable_text}
-            if not scores:
+            matches: dict[str, float] = {}
+            base = account.searchable_text
+            if not base:
                 continue
-            total = sum(scores.values()) + (0.2 if account.description else 0.0)
-            scored.append((total, account, scores))
+            for kw in keywords:
+                weight = 0.0
+                lowered = kw.lower()
+                if lowered in base:
+                    weight += base.count(lowered) * 0.6
+                if account.keywords and lowered in account.keywords:
+                    weight += 1.5
+                if account.clusters and any(lowered in cluster.lower() for cluster in account.clusters):
+                    weight += 1.1
+                if account.mints and any(lowered in mint.lower() for mint in account.mints):
+                    weight += 0.9
+                if lowered in account.handle.lower():
+                    weight += 1.2
+                if weight:
+                    matches[kw] = matches.get(kw, 0.0) + weight
+            if not matches:
+                continue
+            total = sum(matches.values()) * account.weight
+            if account.description:
+                total += 0.2
+            scored.append((total, account, matches))
 
         scored.sort(key=lambda item: (-item[0], item[1].handle.lower()))
 
         results: list[dict[str, object]] = []
         for total, account, scores in scored[: self._max_results]:
+            sorted_keywords = sorted(scores, key=lambda kw: -scores[kw])
             results.append(
                 {
                     "handle": account.handle,
                     "description": account.description,
                     "score": round(total, 3),
-                    "keywords": sorted(scores.keys()),
+                    "keywords": sorted_keywords,
+                    "clusters": list(account.clusters),
+                    "mints": list(account.mints),
                 }
             )
         return results
@@ -323,13 +405,27 @@ class GeminiService:
 
         if ranked:
             account_texts = []
+            cluster_counts: dict[str, int] = {}
+            mint_counts: dict[str, int] = {}
             for entry in ranked:
                 snippet = entry["handle"]
                 desc = entry.get("description")
                 if isinstance(desc, str) and desc:
                     snippet = f"{snippet} — {desc}"
                 account_texts.append(snippet)
+                account = self._account_map.get(entry["handle"].lower())
+                if account:
+                    for cluster in account.clusters:
+                        cluster_counts[cluster] = cluster_counts.get(cluster, 0) + 1
+                    for mint in account.mints:
+                        mint_counts[mint] = mint_counts.get(mint, 0) + 1
             parts.append("Top matches: " + "; ".join(account_texts) + ".")
+            if cluster_counts:
+                clusters_preview = ", ".join(sorted(cluster_counts, key=lambda k: -cluster_counts[k])[:3])
+                parts.append(f"Dominant clusters: {clusters_preview}.")
+            if mint_counts:
+                top_mints = ", ".join(sorted(mint_counts, key=lambda k: -mint_counts[k])[:4])
+                parts.append(f"Mentioned tokens: {top_mints}.")
         else:
             parts.append("No direct matches were found; returning the watchlist head.")
 
@@ -345,6 +441,45 @@ class GeminiService:
         if not text:
             return 0
         return len(re.findall(r"[\w$#@]+", text))
+
+    def _build_analysis(self, ranked: list[dict[str, object]], keywords: Sequence[str]) -> dict[str, Any]:
+        clusters: dict[str, int] = {}
+        mints: dict[str, int] = {}
+        for entry in ranked:
+            account = self._account_map.get(str(entry.get("handle", "")).lower())
+            if not account:
+                continue
+            for cluster in account.clusters:
+                clusters[cluster] = clusters.get(cluster, 0) + 1
+            for mint in account.mints:
+                mints[mint] = mints.get(mint, 0) + 1
+
+        sorted_clusters = sorted(clusters.items(), key=lambda item: (-item[1], item[0]))
+        sorted_mints = sorted(mints.items(), key=lambda item: (-item[1], item[0]))
+
+        return {
+            "keywords": list(keywords),
+            "clusters": [name for name, _ in sorted_clusters[:5]],
+            "mints": [name for name, _ in sorted_mints[:8]],
+            "matches": [
+                {
+                    "handle": entry.get("handle"),
+                    "score": entry.get("score"),
+                    "keywords": entry.get("keywords", []),
+                }
+                for entry in ranked
+            ],
+            "coverage": {
+                "total_accounts": len(self._accounts),
+                "matched_accounts": len(
+                    [
+                        entry
+                        for entry in ranked
+                        if entry.get("score") or entry.get("keywords") or entry.get("handle")
+                    ]
+                ),
+            },
+        }
 
     @staticmethod
     def _extract_keywords(prompt: str) -> List[str]:
@@ -365,18 +500,54 @@ class GeminiService:
     def _load_accounts(self) -> list[GeminiAccount]:
         handles = self._load_handles()
         annotations = self._load_account_annotations()
+        metadata = self._load_account_metadata()
         accounts: list[GeminiAccount] = []
         seen = set()
+
+        def build_account(handle: str, desc: Optional[str], meta: Optional[dict[str, Any]]) -> GeminiAccount:
+            keywords: tuple[str, ...] = ()
+            clusters: tuple[str, ...] = ()
+            mints: tuple[str, ...] = ()
+            weight = 1.0
+            if meta:
+                keywords = tuple(sorted({kw.lower() for kw in meta.get("keywords", []) if isinstance(kw, str)}))
+                clusters = tuple(sorted({cl for cl in meta.get("clusters", []) if isinstance(cl, str)}))
+                mints = tuple(sorted({mint for mint in meta.get("mints", []) if isinstance(mint, str)}))
+                try:
+                    weight = float(meta.get("weight", 1.0))
+                except (TypeError, ValueError):
+                    weight = 1.0
+                if not desc and isinstance(meta.get("bio"), str):
+                    desc = meta["bio"].strip()
+            account = GeminiAccount(
+                handle=handle,
+                description=desc,
+                keywords=keywords,
+                clusters=clusters,
+                mints=mints,
+                weight=max(0.2, weight),
+            )
+            self._account_map[handle.lower()] = account
+            return account
 
         for handle in handles:
             key = handle.lower()
             desc = annotations.get(key)
-            accounts.append(GeminiAccount(handle=handle, description=desc))
+            accounts.append(build_account(handle, desc, metadata.get(key)))
             seen.add(key)
 
         for key, desc in annotations.items():
             if key not in seen:
-                accounts.append(GeminiAccount(handle=key, description=desc))
+                accounts.append(build_account(key, desc, metadata.get(key)))
+                seen.add(key)
+
+        for key, meta in metadata.items():
+            if key not in seen:
+                handle = meta.get("handle") if isinstance(meta, dict) else None
+                handle = handle if isinstance(handle, str) and handle.startswith("@") else key
+                desc = annotations.get(key)
+                accounts.append(build_account(handle, desc, meta))
+                seen.add(key)
 
         # In constrained test/runtime environments docs may be absent. Provide
         # a minimal fallback watchlist so that remote Flowith calls can proceed
@@ -411,6 +582,28 @@ class GeminiService:
         for path in files:
             annotations.update(self._parse_accounts_doc(path))
         return annotations
+
+    def _load_account_metadata(self) -> dict[str, dict[str, Any]]:
+        if not self._accounts_metadata.exists():
+            return {}
+        try:
+            data = json.loads(self._accounts_metadata.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:  # pragma: no cover - defensive
+            raise RuntimeError(f"Failed to parse {self._accounts_metadata}") from exc
+
+        metadata: dict[str, dict[str, Any]] = {}
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            handle = entry.get("handle")
+            if isinstance(handle, str) and handle.startswith("@"):
+                key = handle.lower()
+            else:
+                key = (handle or "").lower()
+                if not key:
+                    continue
+            metadata[key] = entry
+        return metadata
 
     def _parse_accounts_doc(self, path: Path) -> dict[str, str]:
         annotations: dict[str, str] = {}
@@ -495,15 +688,6 @@ class GeminiService:
             }
         except requests.exceptions.RequestException as exc:
             return {**result, "ok": False, "error": str(exc)}
-
-    # Optional lifecycle hook for tests; safe to call even if underlying client has no close()
-    def close(self) -> None:  # pragma: no cover - utility for tests/cleanup
-        try:
-            close_fn = getattr(self._http, "close", None)
-            if callable(close_fn):
-                close_fn()
-        except Exception:  # defensive
-            pass
 
     @staticmethod
     def _extract_remote_tokens(payload: Any) -> Optional[Dict[str, Any]]:

@@ -1,0 +1,210 @@
+[
+  {
+    "handle": "@aeyakovenko",
+    "bio": "Solana co-founder. Performance-first blockchain scaling advocate.",
+    "keywords": ["solana", "founder", "validator", "l1", "performance"],
+    "clusters": ["Solana Core", "Founders"],
+    "mints": ["SOL", "Firedancer", "Validator"],
+    "weight": 1.6
+  },
+  {
+    "handle": "@solana",
+    "bio": "Official Solana account covering core updates, Firedancer, validator stats.",
+    "keywords": ["solana", "ecosystem", "updates", "core"],
+    "clusters": ["Solana Core"],
+    "mints": ["SOL", "Saga"],
+    "weight": 1.5
+  },
+  {
+    "handle": "@solana_devs",
+    "bio": "Engineering enablement for Solana devs, Firedancer notes and runtime deep dives.",
+    "keywords": ["developer", "runtime", "firedancer", "validator"],
+    "clusters": ["Solana Core", "Developers"],
+    "mints": ["Firedancer", "Jito"],
+    "weight": 1.4
+  },
+  {
+    "handle": "@jump_firedancer",
+    "bio": "Jump Crypto's Firedancer client delivering parallelized Solana validators.",
+    "keywords": ["firedancer", "validator", "jump", "performance"],
+    "clusters": ["Solana Core", "Infrastructure"],
+    "mints": ["Firedancer"],
+    "weight": 1.5
+  },
+  {
+    "handle": "@mertmumtaz",
+    "bio": "Helius CEO tracking Solana growth, infra velocity and onchain use cases.",
+    "keywords": ["helius", "infra", "solana", "growth"],
+    "clusters": ["Solana Core", "Infrastructure"],
+    "mints": ["Helius", "SOL"],
+    "weight": 1.4
+  },
+  {
+    "handle": "@madlads",
+    "bio": "Mad Lads and Backpack ecosystem alpha, mint coordination and community calls.",
+    "keywords": ["nft", "mad lads", "backpack", "collectibles"],
+    "clusters": ["Communities", "NFT"],
+    "mints": ["MAD", "Backpack"],
+    "weight": 1.2
+  },
+  {
+    "handle": "@backpack_app",
+    "bio": "Backpack wallet powering Mad Lads, xNFTs and Solana gaming distribution.",
+    "keywords": ["wallet", "backpack", "xnft", "gaming"],
+    "clusters": ["Infrastructure", "Communities"],
+    "mints": ["Backpack", "xNFT"],
+    "weight": 1.2
+  },
+  {
+    "handle": "@anisthesia",
+    "bio": "Anatoly-focused ecosystem research. Tracks Firedancer, stake pools, validator hardware.",
+    "keywords": ["research", "validator", "stake", "hardware"],
+    "clusters": ["Researchers", "Solana Core"],
+    "mints": ["Stake", "Firedancer"],
+    "weight": 1.1
+  },
+  {
+    "handle": "@solanastatus",
+    "bio": "Real-time Solana network telemetry and incident response updates.",
+    "keywords": ["status", "incident", "validator", "telemetry"],
+    "clusters": ["Infrastructure"],
+    "mints": ["SOL"],
+    "weight": 1.3
+  },
+  {
+    "handle": "@santimentfeed",
+    "bio": "On-chain analytics, sentiment scores and token velocity heatmaps.",
+    "keywords": ["analytics", "sentiment", "velocity", "heatmap"],
+    "clusters": ["Analytics", "Researchers"],
+    "mints": ["On-chain"],
+    "weight": 1.0
+  },
+  {
+    "handle": "@lightprotocol",
+    "bio": "Light Protocol building zk compression and privacy rails for Solana.",
+    "keywords": ["zk", "compression", "privacy", "solana"],
+    "clusters": ["Researchers", "Infrastructure"],
+    "mints": ["Light", "ZK"],
+    "weight": 1.25
+  },
+  {
+    "handle": "@jito_labs",
+    "bio": "MEV infrastructure for Solana validators, block engine updates and staking.",
+    "keywords": ["mev", "staking", "validator", "block engine"],
+    "clusters": ["Infrastructure", "Solana Core"],
+    "mints": ["Jito", "Stake"],
+    "weight": 1.35
+  },
+  {
+    "handle": "@ellio_trades",
+    "bio": "Narratives trader covering memecoins, gaming catalysts and Solana rotations.",
+    "keywords": ["narrative", "gaming", "memecoin", "rotation"],
+    "clusters": ["Traders", "Narratives"],
+    "mints": ["Narrative", "Gaming"],
+    "weight": 1.0
+  },
+  {
+    "handle": "@crypto_rand",
+    "bio": "Macro market scanner with frequent Solana and Ethereum comparisons.",
+    "keywords": ["macro", "market", "solana", "ethereum"],
+    "clusters": ["Traders"],
+    "mints": ["SOL", "ETH"],
+    "weight": 0.95
+  },
+  {
+    "handle": "@rektbuilder",
+    "bio": "Tracks rugs, exploit patterns and memecoin velocity on Solana DEXs.",
+    "keywords": ["rug", "exploit", "dex", "velocity"],
+    "clusters": ["Risk", "Traders"],
+    "mints": ["Rug", "Dex"],
+    "weight": 0.9
+  },
+  {
+    "handle": "@solbigbrain",
+    "bio": "Angel investor sharing Solana deal flow, whales and treasury allocations.",
+    "keywords": ["angel", "investor", "deal", "whale"],
+    "clusters": ["Investors", "Whales"],
+    "mints": ["SOL", "Treasury"],
+    "weight": 1.3
+  },
+  {
+    "handle": "@superteamdao",
+    "bio": "Global Solana contributor guild with bounties, hackathons and grants.",
+    "keywords": ["contributors", "bounties", "hackathon", "grants"],
+    "clusters": ["Communities", "Developers"],
+    "mints": ["Grants", "Hackathon"],
+    "weight": 1.05
+  },
+  {
+    "handle": "@solanaspaces",
+    "bio": "Experiential retail and onboarding for the Solana community.",
+    "keywords": ["retail", "onboarding", "community"],
+    "clusters": ["Communities"],
+    "mints": ["Saga", "SOL"],
+    "weight": 0.9
+  },
+  {
+    "handle": "@phantom",
+    "bio": "Phantom wallet releasing features across Solana, Ethereum and Polygon.",
+    "keywords": ["wallet", "phantom", "multichain", "defi"],
+    "clusters": ["Infrastructure", "DeFi"],
+    "mints": ["SOL", "ETH", "MATIC"],
+    "weight": 1.1
+  },
+  {
+    "handle": "@orca_so",
+    "bio": "Solana AMM pioneers with Whirlpool concentrated liquidity tooling.",
+    "keywords": ["dex", "amm", "whirlpool", "liquidity"],
+    "clusters": ["DeFi", "Infrastructure"],
+    "mints": ["ORCA", "Whirlpool"],
+    "weight": 1.15
+  },
+  {
+    "handle": "@marginfi",
+    "bio": "Lending market with margin trading primitives and risk dashboards on Solana.",
+    "keywords": ["lending", "margin", "risk", "dashboard"],
+    "clusters": ["DeFi"],
+    "mints": ["Margin", "SOL"],
+    "weight": 1.05
+  },
+  {
+    "handle": "@jup_ag",
+    "bio": "Jupiter aggregator orchestrating Solana swaps, launchpad and LST routing.",
+    "keywords": ["dex", "aggregator", "launchpad", "lst"],
+    "clusters": ["DeFi", "Infrastructure"],
+    "mints": ["JUP", "LST"],
+    "weight": 1.3
+  },
+  {
+    "handle": "@meteora_ag",
+    "bio": "Meteora building Solana LST tooling, DLMM AMMs and treasury products.",
+    "keywords": ["lst", "dlmm", "treasury", "yield"],
+    "clusters": ["DeFi", "Infrastructure"],
+    "mints": ["LST", "DLMM"],
+    "weight": 1.2
+  },
+  {
+    "handle": "@heliuslabs",
+    "bio": "Helius platform product updates, NFT infrastructure and Solana RPC analytics.",
+    "keywords": ["helius", "rpc", "infra", "nft"],
+    "clusters": ["Infrastructure"],
+    "mints": ["Helius", "RPC"],
+    "weight": 1.25
+  },
+  {
+    "handle": "@goosefx1",
+    "bio": "GooseFX hybrid exchange covering perps, NFTs and Solana trading tools.",
+    "keywords": ["perps", "nft", "trading", "solana"],
+    "clusters": ["DeFi", "Traders"],
+    "mints": ["GOFX", "Perps"],
+    "weight": 0.95
+  },
+  {
+    "handle": "@hellomoon_io",
+    "bio": "Analytics for Solana featuring hot contracts, NFT dashboards and memecoin leaderboards.",
+    "keywords": ["analytics", "dashboards", "memecoin", "leaderboard"],
+    "clusters": ["Analytics"],
+    "mints": ["Memecoin", "Dashboard"],
+    "weight": 1.05
+  }
+]

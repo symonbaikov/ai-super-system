@@ -2,7 +2,7 @@ Alpha‑2 Backend — FastAPI + BullMQ Worker (Demo Setup)
 Этот документ описывает демо‑архитектуру для интеграции FastAPI и BullMQ Worker в проект Alpha‑2. Фрилансеру Семёну необходимо собрать и протестировать модуль, чтобы он соответствовал UI‑интерфейсу PR111 + патчи.
 1. Что прислать в демо
 1) docker-compose.flowith.yml — сервисы api (FastAPI), worker (Node+BullMQ), redis
-2) .env.example — ключи: REDIS_URL, GEMINI_API_KEY, HELIUS_API_KEY, BIRDEYE_API_KEY, RUGCHECK_API_KEY, GROQ_API_KEY
+2) .env.example — ключи: REDIS_URL, GEMINI_BASE_URL, GEMINI_API_KEY, HELIUS_API_KEY, BIRDEYE_API_KEY, RUGCHECK_API_KEY, GROQ_API_KEY
 3) README.md (10 строк) — как поднять: docker compose up -d, где открывать API
 4) Postman/Bruno коллекция с эндпоинтами
 5) Короткий лог E2E: PUT → job queued → processed → UI JSON

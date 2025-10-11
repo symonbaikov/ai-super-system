@@ -39,6 +39,8 @@ async def apify_run(
     settings: Settings = Depends(get_settings_dependency),
     client: ApifyClient = Depends(get_apify_client),
 ) -> ApifyRunResponse:
+    if not settings.enable_apify:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="apify disabled")
     actor_id = payload.actor_id or settings.apify_actor_id
     if not actor_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="actor_id is required")
@@ -76,6 +78,8 @@ async def apify_callback(
     queue: QueueService = Depends(get_queue_service),
     settings: Settings = Depends(get_settings_dependency),
 ):
+    if not settings.enable_apify:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="apify disabled")
     raw_body = await request.body()
     try:
         payload = ApifyCallbackPayload.model_validate_json(raw_body)

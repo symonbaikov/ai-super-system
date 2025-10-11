@@ -29,6 +29,7 @@ _groq_client = GroqClient(
     _settings.groq_model,
     timeout=_settings.http_timeout_seconds,
 )
+_groq_client_available = bool(_settings.groq_api_key)
 _apify_client = ApifyClient(
     _settings.apify_base_url,
     _settings.apify_token,
@@ -38,7 +39,7 @@ _ai_config_path = Path(_settings.ai_core_config_dir).expanduser()
 if not _ai_config_path.is_absolute():
     repo_root = Path(__file__).resolve().parents[2]
     _ai_config_path = (repo_root / _ai_config_path).resolve()
-_ai_pipeline = AIPipelineService(_ai_config_path, groq_client=_groq_client if _settings.groq_api_key else None)
+_ai_pipeline = AIPipelineService(_ai_config_path, groq_client=_groq_client if _groq_client_available else None)
 _gemini_cache = None
 try:
     _gemini_cache = _redis.Redis.from_url(_settings.redis_url, decode_responses=True)

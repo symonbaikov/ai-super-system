@@ -8,8 +8,14 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from ..config import Settings
-from ..dependencies import get_gemini_service, get_queue_service, get_settings_dependency
+from ..dependencies import (
+    get_gemini_service,
+    get_groq_client,
+    get_queue_service,
+    get_settings_dependency,
+)
 from ..services.gemini import GeminiService
+from ..services.groq import GroqClient
 from ..services.queue import QueueService
 
 router = APIRouter(prefix="/api", tags=["integration"])
@@ -274,17 +280,50 @@ async def get_alerts(
 @router.post("/ai/infer")
 async def post_ai_infer(
     payload: dict[str, Any],
+    settings: Settings = Depends(get_settings_dependency),
     gemini: GeminiService = Depends(get_gemini_service),
+    groq: GroqClient = Depends(get_groq_client),
 ) -> dict[str, Any]:
-    if payload.get("provider") != "gemini":
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="unsupported provider")
+    provider = (payload.get("provider") or settings.ai_provider or "gemini").lower()
     prompt = payload.get("prompt")
     if not isinstance(prompt, str) or not prompt.strip():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="prompt is required")
 
-    strategy_id = payload.get("strategyId")
+    if provider not in {"gemini", "groq", "openai"}:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="unsupported provider")
+
+    prompt_text = prompt.strip()
+    strategy_id = payload.get("strategyId") or payload.get("strategy_id")
     model = payload.get("model")
-    return gemini.infer(prompt.strip(), strategy_id=strategy_id, model=model)
+
+    if provider == "groq":
+        if not settings.groq_api_key:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="groq unavailable")
+        try:
+            response = await groq.chat_completion(
+                messages=[{"role": "user", "content": prompt_text}],
+                model=model or groq.default_model,
+                metadata={"strategyId": strategy_id} if strategy_id else None,
+            )
+        except RuntimeError as exc:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
+        choices = response.get("choices") or []
+        message = choices[0]["message"].get("content") if choices else None
+        usage = response.get("usage") or {}
+        return {
+            "text": message or "",
+            "tokens": {
+                "input": usage.get("prompt_tokens", 0),
+                "output": usage.get("completion_tokens", 0),
+            },
+            "cost_usd": 0,
+            "provider": "groq",
+            "raw": response,
+        }
+
+    # Default: Gemini (primary)
+    prompt = payload.get("prompt")
+    return gemini.infer(prompt_text, strategy_id=strategy_id, model=model)
 
 
 @router.get("/ai/gemini/status")

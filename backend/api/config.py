@@ -18,8 +18,12 @@ class Settings(BaseSettings):
     helius_queue_name: str = "helius:events"
     alert_queue_name: str = "alerts:dispatch"
     apify_queue_name: str = "apify:dataset"
+    social_queue_name: str = "social:intake"
     whales_queue_name: str = "whales:scan"
     whales_result_ttl_seconds: int = Field(default=600, alias="WHALES_RESULT_TTL_SECONDS")
+
+    enable_apify: bool = Field(default=True, alias="ENABLE_APIFY")
+    enable_social_intake: bool = Field(default=False, alias="ENABLE_SOCIAL_INTAKE")
 
     apify_base_url: str = "https://api.apify.com"
     apify_token: Optional[str] = Field(default=None, alias="APIFY_TOKEN")
@@ -30,6 +34,9 @@ class Settings(BaseSettings):
     groq_base_url: str = "https://api.groq.com/openai/v1"
     groq_api_key: Optional[str] = Field(default=None, alias="GROQ_API_KEY")
     groq_model: str = Field(default="mixtral-8x7b", alias="GROQ_MODEL", validation_alias="GROQ_MODEL")
+
+    ai_provider: str = Field(default="gemini", alias="AI_PROVIDER")
+    ai_provider_fallback: Optional[str] = Field(default=None, alias="AI_PROVIDER_FALLBACK")
 
     gemini_base_url: str = Field(default="https://api.flowith.io/v1/gemini", alias="GEMINI_BASE_URL")
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")

@@ -67,6 +67,10 @@ class QueueService:
         redis = self._require_redis()
         return await redis.lrange(key, start, stop)
 
+    async def ltrim(self, key: str, start: int, stop: int) -> None:
+        redis = self._require_redis()
+        await redis.ltrim(key, start, stop)
+
     async def get(self, key: str) -> Optional[str]:
         redis = self._require_redis()
         return await redis.get(key)
@@ -82,6 +86,10 @@ class QueueService:
     async def hset_json(self, key: str, field: str, payload: Any) -> None:
         redis = self._require_redis()
         await redis.hset(key, field, self._json_dumps(payload))
+
+    async def hincrby(self, key: str, field: str, increment: int = 1) -> int:
+        redis = self._require_redis()
+        return await redis.hincrby(key, field, increment)
 
     async def exists(self, key: str) -> bool:
         redis = self._require_redis()
